@@ -8,6 +8,8 @@
 - PDDR Kit自身の記録によるdogfooding
 - AIが安全に下書きを作るためのSkill
 - 状態・必須項目・参照の最小検証
+- 既存ファイルを上書きしない初期化CLI
+- GitHub Actionsでの継続検証
 
 ## v0.2 — Reusable adoption
 

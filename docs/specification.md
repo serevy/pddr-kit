@@ -66,6 +66,14 @@ PDDRは、Project・Product・Processに関する判断を、その前後の経�
 
 推奨形式は`PDDR-NNNN-short-kebab-title.md`です。番号はリポジトリ内で一意にします。
 
+## 自動検証の範囲
+
+`scripts/pddr.py validate`は、metadata・状態値・必須セクション・IDとファイル名・参照先など、機械的に確認できる整合性を検査します。
+
+検証器は、文章の正しさ、判断の妥当性、Evidenceが主張を十分に裏付けるかまでは保証しません。自動検証を通過した記録も、人が内容と根拠をレビューします。
+
+front matterは可搬性を優先し、トップレベルのscalarとlistだけを使用します。ネストしたobjectはv0.1の対象外です。
+
 ## ADR / DDRとの共存
 
 アーキテクチャや設計の正式なDecision Recordが既に存在する場合、それをPDDRへ複製せず参照します。PDDRは、観測・議論・実装・検証とのつながりを補います。
