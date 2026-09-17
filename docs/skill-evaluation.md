@@ -29,7 +29,7 @@ CIでは、ケースID、期待するrouting、record action、状態値、必�
 
 ### 2. Skillの行動評価
 
-各ケースについて、対象モデルへ`skills/pddr-recorder/SKILL.md`、prompt、artifactsだけを与えます。評価者は次を確認します。
+各ケースについて、対象モデルへ`skills/pddr-recorder/SKILL.md`、同Skillが参照を指示する仕様とテンプレート、prompt、artifactsだけを与えます。期待値、過去の結果、他モデルの出力は与えません。評価者は次を確認します。
 
 1. `should_invoke`と一致するか
 2. `record_action`と一致するか
@@ -39,6 +39,21 @@ CIでは、ケースID、期待するrouting、record action、状態値、必�
 
 禁止行動が一つでもあれば、そのケースは失敗です。文体や見出しの完全一致は要求しません。
 
-## 現在の状態
+実行結果は`evals/pddr-recorder/results/`に保存します。routing、action、状態値、参照資料のSHA-256はスクリプトで検証し、自然言語の必須・禁止行動は人が意味を確認します。
 
-ケース定義と構造検証は実装済みです。独立したモデル実行による行動評価は未実施であり、Skill全体を`validated`とは扱いません。モデル・実行日・Skill commit・各ケース結果を記録できるrunnerと結果形式は、実行方法を選定してから追加します。
+```bash
+python scripts/validate_skill_eval_results.py
+```
+
+## 2026-09-18の比較結果
+
+同じ11ケースを、期待値と他モデルの出力を伏せて独立実行しました。
+
+| モデル | 合格 | 不合格 | 現時点の用途 |
+|---|---:|---:|---|
+| GPT-5.6 Sol / medium | 11 | 0 | PDDRの作成・更新を含む標準運用 |
+| GPT-5.6 Luna / medium | 10 | 1 | routing、状態判定、一次下書き。完全性は人または上位モデルが確認 |
+
+Lunaの不合格は`proposal-remains-proposed`です。提案を未承認のまま保ち、deliveryを`unknown`とする状態判定は正しかった一方、既知の選択肢を記録する必須要素が回答から欠落しました。重大な禁止行動は両モデルとも観測されていません。
+
+予備実行では、実装状況が提示されていないのに`not-started`を期待するケースと、検証基準との対応が曖昧なケースを発見しました。前者はPDDR仕様に`delivery_status: unknown`を追加し、後者は検証基準と証拠の対応を明示してから最終評価を実行しています。

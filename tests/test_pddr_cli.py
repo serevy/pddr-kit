@@ -129,6 +129,16 @@ class ValidationTests(unittest.TestCase):
                 {diagnostic.message for diagnostic in diagnostics},
             )
 
+    def test_unknown_delivery_status_is_valid(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "PDDR-0001-test-record.md"
+            path.write_text(
+                VALID_RECORD.replace("delivery_status: implemented", "delivery_status: unknown"),
+                encoding="utf-8",
+            )
+            _, diagnostics = pddr_cli.validate_record(path)
+            self.assertEqual(diagnostics, [])
+
 
 if __name__ == "__main__":
     unittest.main()

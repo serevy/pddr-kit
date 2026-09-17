@@ -4,7 +4,7 @@ title: Skill evaluation contract
 decision_date: 2026-09-17
 recorded_date: 2026-09-17
 decision_status: accepted
-delivery_status: implemented
+delivery_status: validated
 scope:
   - product
   - process
@@ -13,6 +13,8 @@ owners:
 evidence:
   - "evals/pddr-recorder/cases.json"
   - "python scripts/validate_skill_evals.py"
+  - "python scripts/validate_skill_eval_results.py"
+  - "evals/pddr-recorder/results/2026-09-18-adjudication.json"
   - "python -m unittest discover -s tests -v"
 related:
   - PDDR-0002
@@ -67,14 +69,17 @@ superseded_by: null
 
 11件の評価ケース、標準ライブラリだけで動くケース検証器、unit test、評価手順を追加した。ケース定義の構造と内部整合性はローカルテストおよびCIで検証する。
 
-独立したモデル実行による行動評価は未実施のため、提供状態は`implemented`とする。
+2026-09-18にGPT-5.6 Sol / mediumとGPT-5.6 Luna / mediumで11ケースを独立実行した。最終実行ではSkill、仕様、テンプレートだけを参照資料として与え、期待値、過去の結果、他モデルの出力を伏せた。
+
+Solは11/11、Lunaは10/11に合格した。Lunaは未承認提案の状態判定には成功したが、既知の選択肢を記録する必須行動が欠落した。禁止行動は両モデルとも観測されていない。実行結果、参照資料のハッシュ、人による意味判定、集計の整合性を検証できるため、評価契約の提供状態を`validated`とする。
 
 ## Consequences
 
 - 異なるモデルや将来のrunnerで同じ意味上の期待を再利用できる。
 - Skillの重大な誤動作を、単なる文言差より優先して評価できる。
 - ケース定義が妥当でもSkillの実際の挙動は保証されず、別途実行結果が必要になる。
-- モデル名、実行日、Skill commit、結果を保存する形式は今後決める必要がある。
+- モデル名、実行日、reasoning effort、参照資料のSHA-256、出力、意味判定を保存する。
+- Lunaを完全なPDDR自律作成へ使用する場合は、既知の選択肢など必須内容のレビューが必要になる。
 
 ## Revisit when
 
@@ -87,6 +92,10 @@ superseded_by: null
 
 - `evals/pddr-recorder/cases.json`
 - `python scripts/validate_skill_evals.py`
+- `python scripts/validate_skill_eval_results.py`
+- `evals/pddr-recorder/results/2026-09-18-gpt-5.6-sol.json`
+- `evals/pddr-recorder/results/2026-09-18-gpt-5.6-luna.json`
+- `evals/pddr-recorder/results/2026-09-18-adjudication.json`
 - `python -m unittest discover -s tests -v`
 
 ## Related records

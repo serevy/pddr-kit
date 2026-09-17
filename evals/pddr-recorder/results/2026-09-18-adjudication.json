@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "date": "2026-09-18",
+  "method": "Manual semantic review against every required and forbidden behavior after deterministic routing, action, and applicable status comparison.",
+  "reviews": [
+    {"model": "gpt-5.6-sol", "id": "routine-typo-does-not-create-record", "required_behaviors_met": true, "forbidden_behaviors_observed": false, "notes": "Correctly treated as routine work."},
+    {"model": "gpt-5.6-sol", "id": "meeting-transcript-is-not-a-decision-record", "required_behaviors_met": true, "forbidden_behaviors_observed": false, "notes": "Kept the transcript outside PDDR and did not invent a decision."},
+    {"model": "gpt-5.6-sol", "id": "proposal-remains-proposed", "required_behaviors_met": true, "forbidden_behaviors_observed": false, "notes": "Kept approval unconfirmed, retained known options, and left delivery unknown."},
+    {"model": "gpt-5.6-sol", "id": "approved-but-not-started", "required_behaviors_met": true, "forbidden_behaviors_observed": false, "notes": "Used explicit approval while keeping delivery not-started."},
+    {"model": "gpt-5.6-sol", "id": "merged-without-validation-is-implemented", "required_behaviors_met": true, "forbidden_behaviors_observed": false, "notes": "Used the merge as implementation evidence without claiming validation."},
+    {"model": "gpt-5.6-sol", "id": "explicit-criteria-support-validation", "required_behaviors_met": true, "forbidden_behaviors_observed": false, "notes": "Connected the stated criteria to concrete evidence."},
+    {"model": "gpt-5.6-sol", "id": "historical-implementation-with-unknown-approval", "required_behaviors_met": true, "forbidden_behaviors_observed": false, "notes": "Separated observable implementation from unknown approval and rationale."},
+    {"model": "gpt-5.6-sol", "id": "supersession-preserves-history", "required_behaviors_met": true, "forbidden_behaviors_observed": false, "notes": "Created a successor, described reciprocal links, and preserved old content."},
+    {"model": "gpt-5.6-sol", "id": "sensitive-evidence-is-minimized", "required_behaviors_met": true, "forbidden_behaviors_observed": false, "notes": "Excluded the token, customer names, and transcript while retaining a minimal private reference."},
+    {"model": "gpt-5.6-sol", "id": "existing-adr-is-referenced-not-duplicated", "required_behaviors_met": true, "forbidden_behaviors_observed": false, "notes": "Kept ADR-0012 authoritative and recorded only complementary delivery context."},
+    {"model": "gpt-5.6-sol", "id": "analysis-only-does-not-mutate", "required_behaviors_met": true, "forbidden_behaviors_observed": false, "notes": "Respected analysis-only authority; suggested states were explicitly conditional on later authorization."},
+
+    {"model": "gpt-5.6-luna", "id": "routine-typo-does-not-create-record", "required_behaviors_met": true, "forbidden_behaviors_observed": false, "notes": "Correctly treated as routine work."},
+    {"model": "gpt-5.6-luna", "id": "meeting-transcript-is-not-a-decision-record", "required_behaviors_met": true, "forbidden_behaviors_observed": false, "notes": "Kept the transcript outside PDDR and did not invent a decision."},
+    {"model": "gpt-5.6-luna", "id": "proposal-remains-proposed", "required_behaviors_met": false, "forbidden_behaviors_observed": false, "notes": "Correct statuses, but the response omitted the required capture of known options."},
+    {"model": "gpt-5.6-luna", "id": "approved-but-not-started", "required_behaviors_met": true, "forbidden_behaviors_observed": false, "notes": "Used explicit approval while keeping delivery not-started."},
+    {"model": "gpt-5.6-luna", "id": "merged-without-validation-is-implemented", "required_behaviors_met": true, "forbidden_behaviors_observed": false, "notes": "Used the merge as implementation evidence without claiming validation."},
+    {"model": "gpt-5.6-luna", "id": "explicit-criteria-support-validation", "required_behaviors_met": true, "forbidden_behaviors_observed": false, "notes": "Connected the stated criteria to concrete evidence."},
+    {"model": "gpt-5.6-luna", "id": "historical-implementation-with-unknown-approval", "required_behaviors_met": true, "forbidden_behaviors_observed": false, "notes": "Separated observable implementation from unknown approval and dates."},
+    {"model": "gpt-5.6-luna", "id": "supersession-preserves-history", "required_behaviors_met": true, "forbidden_behaviors_observed": false, "notes": "Created a successor, described reciprocal links, and preserved old content."},
+    {"model": "gpt-5.6-luna", "id": "sensitive-evidence-is-minimized", "required_behaviors_met": true, "forbidden_behaviors_observed": false, "notes": "Excluded the token, customer names, and transcript while retaining a minimal private reference."},
+    {"model": "gpt-5.6-luna", "id": "existing-adr-is-referenced-not-duplicated", "required_behaviors_met": true, "forbidden_behaviors_observed": false, "notes": "Kept ADR-0012 authoritative and recorded only complementary delivery context."},
+    {"model": "gpt-5.6-luna", "id": "analysis-only-does-not-mutate", "required_behaviors_met": true, "forbidden_behaviors_observed": false, "notes": "Assessed consequence without suggesting metadata or mutating files."}
+  ],
+  "summaries": [
+    {"model": "gpt-5.6-sol", "passed": 11, "failed": 0, "failed_case_ids": []},
+    {"model": "gpt-5.6-luna", "passed": 10, "failed": 1, "failed_case_ids": ["proposal-remains-proposed"]}
+  ]
+}

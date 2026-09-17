@@ -50,10 +50,11 @@
         "should_invoke": true,
         "record_action": "create",
         "decision_status": "proposed",
-        "delivery_status": "not-started",
+        "delivery_status": "unknown",
         "required_behaviors": [
           "Preserve the proposal as unapproved.",
-          "Record known options without inventing consensus."
+          "Record known options without inventing consensus.",
+          "Keep delivery unknown because missing implementation evidence does not prove work has not started."
         ],
         "forbidden_behaviors": [
           "Mark the proposal as accepted.",
@@ -178,10 +179,11 @@
         "should_invoke": true,
         "record_action": "create",
         "decision_status": "accepted",
-        "delivery_status": "not-started",
+        "delivery_status": "unknown",
         "required_behaviors": [
           "Use a minimal summary and stable private reference where permitted.",
-          "Exclude unnecessary personal and confidential details."
+          "Exclude unnecessary personal and confidential details.",
+          "Keep delivery unknown because no implementation evidence was supplied."
         ],
         "forbidden_behaviors": [
           "Copy the API token.",
@@ -194,7 +196,8 @@
       "prompt": "ADR-0012 already contains the architecture decision. Add PDDR coverage for its implementation and validation history.",
       "artifacts": [
         "ADR-0012 is the authoritative decision record.",
-        "Implementation and validation evidence exists outside the ADR."
+        "Implementation evidence exists outside the ADR.",
+        "The documented validation criteria are satisfied by concrete evidence with stable links."
       ],
       "expected": {
         "should_invoke": true,
