@@ -28,21 +28,36 @@ PDDRはADRやDDRを置き換えません。既存のDecision Recordを参照し�
 docs/
   specification.md          PDDRの共通仕様
   roadmap.md                初版と将来拡張の境界
+  adoption.md               導入・検証・CIの手順
   records/                  このプロジェクト自身のPDDR
 templates/
   pddr.md                    新規PDDRテンプレート
 skills/
   pddr-recorder/             AI向け記録Skill
+scripts/
+  pddr.py                    導入・検証CLI
+tests/                       CLIの自動テスト
 ```
 
 ## 使い始める
 
-1. [`templates/pddr.md`](templates/pddr.md)を対象プロジェクトの記録ディレクトリへコピーします。
-2. 判断に関係する事実と根拠を記入します。
-3. `decision_status`と`delivery_status`を別々に更新します。
-4. PRで内容と根拠を人が確認します。
+Python 3.10以降を使用します。PDDR Kitを取得したディレクトリから、対象プロジェクトを指定して初期化します。
 
-詳細は[`docs/specification.md`](docs/specification.md)を参照してください。初版ではMarkdownによる運用を正本とし、特定のAIやサービスを必須にしません。
+```bash
+python scripts/pddr.py init --target /path/to/your-project
+```
+
+初期化は既存ファイルを上書きしません。対象プロジェクトには、設定・仕様・テンプレート・検証CLIと`docs/records/`が追加されます。
+
+```bash
+cd /path/to/your-project
+cp .pddr/template.md docs/records/PDDR-0001-short-title.md
+python .pddr/pddr.py validate
+```
+
+判断に関係する事実と根拠を記入し、`decision_status`と`delivery_status`を別々に更新したうえで、PRで人が確認します。
+
+詳しい導入方法とCI例は[`docs/adoption.md`](docs/adoption.md)、記録ルールは[`docs/specification.md`](docs/specification.md)を参照してください。初版ではMarkdownによる運用を正本とし、特定のAIやサービスを必須にしません。
 
 ## 現在の段階
 
