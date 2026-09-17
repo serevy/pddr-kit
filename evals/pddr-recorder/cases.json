@@ -1,0 +1,236 @@
+{
+  "schema_version": 1,
+  "skill": "pddr-recorder",
+  "cases": [
+    {
+      "id": "routine-typo-does-not-create-record",
+      "prompt": "READMEの誤字を1文字だけ直して。判断記録も必要なら追加して。",
+      "artifacts": [],
+      "expected": {
+        "should_invoke": false,
+        "record_action": "none",
+        "decision_status": null,
+        "delivery_status": null,
+        "required_behaviors": [
+          "Treat the typo correction as routine work rather than a consequential decision."
+        ],
+        "forbidden_behaviors": [
+          "Create a PDDR only because a file changed."
+        ]
+      }
+    },
+    {
+      "id": "meeting-transcript-is-not-a-decision-record",
+      "prompt": "この会議全文を、そのままPDDRとして保存して。決定事項は特にありません。",
+      "artifacts": [
+        "The transcript contains discussion but no proposal, approval, or consequential change."
+      ],
+      "expected": {
+        "should_invoke": false,
+        "record_action": "none",
+        "decision_status": null,
+        "delivery_status": null,
+        "required_behaviors": [
+          "Explain that PDDR is not a meeting transcript archive."
+        ],
+        "forbidden_behaviors": [
+          "Copy the full transcript into a PDDR.",
+          "Invent a decision from discussion alone."
+        ]
+      }
+    },
+    {
+      "id": "proposal-remains-proposed",
+      "prompt": "We are considering replacing the local cache with Redis. Draft a PDDR, but nobody has approved the change yet.",
+      "artifacts": [
+        "The team has discussed benefits and costs.",
+        "No approval or implementation evidence exists."
+      ],
+      "expected": {
+        "should_invoke": true,
+        "record_action": "create",
+        "decision_status": "proposed",
+        "delivery_status": "not-started",
+        "required_behaviors": [
+          "Preserve the proposal as unapproved.",
+          "Record known options without inventing consensus."
+        ],
+        "forbidden_behaviors": [
+          "Mark the proposal as accepted.",
+          "Claim implementation work has started."
+        ]
+      }
+    },
+    {
+      "id": "approved-but-not-started",
+      "prompt": "I approve moving the public API to versioned endpoints. Record the decision. Implementation has not started.",
+      "artifacts": [
+        "The repository owner explicitly approved the change today."
+      ],
+      "expected": {
+        "should_invoke": true,
+        "record_action": "create",
+        "decision_status": "accepted",
+        "delivery_status": "not-started",
+        "required_behaviors": [
+          "Use the explicit approval as decision evidence.",
+          "Keep delivery separate from approval."
+        ],
+        "forbidden_behaviors": [
+          "Mark the decision as implemented or validated."
+        ]
+      }
+    },
+    {
+      "id": "merged-without-validation-is-implemented",
+      "prompt": "The approved migration was merged. No production or acceptance validation has run yet. Update its PDDR.",
+      "artifacts": [
+        "A merged pull request proves the implementation is present.",
+        "The validation criterion is still pending."
+      ],
+      "expected": {
+        "should_invoke": true,
+        "record_action": "update",
+        "decision_status": "accepted",
+        "delivery_status": "implemented",
+        "required_behaviors": [
+          "Cite the merged change as implementation evidence.",
+          "State what validation remains pending."
+        ],
+        "forbidden_behaviors": [
+          "Treat merge completion as validation."
+        ]
+      }
+    },
+    {
+      "id": "explicit-criteria-support-validation",
+      "prompt": "Update the accepted decision. The implementation is merged, the specified integration suite passed, and the owner confirmed the acceptance scenario on the target environment.",
+      "artifacts": [
+        "The PDDR defines the integration suite and target-environment scenario as its validation criteria.",
+        "Stable links to both results are available."
+      ],
+      "expected": {
+        "should_invoke": true,
+        "record_action": "update",
+        "decision_status": "accepted",
+        "delivery_status": "validated",
+        "required_behaviors": [
+          "Connect validated status to the stated criteria and concrete evidence."
+        ],
+        "forbidden_behaviors": [
+          "Add validation claims beyond the supplied evidence."
+        ]
+      }
+    },
+    {
+      "id": "historical-implementation-with-unknown-approval",
+      "prompt": "The code has used this retry policy for two years. We cannot find who approved it or why. Reconstruct a PDDR from the repository history.",
+      "artifacts": [
+        "Commits prove the policy is implemented.",
+        "No approval record or reliable decision date exists."
+      ],
+      "expected": {
+        "should_invoke": true,
+        "record_action": "create",
+        "decision_status": "needs-confirmation",
+        "delivery_status": "implemented",
+        "required_behaviors": [
+          "Separate the unknown decision state from the observable implementation state.",
+          "Use unknown for unsupported historical dates or motives."
+        ],
+        "forbidden_behaviors": [
+          "Infer approval from the age of the code.",
+          "Invent the original rationale."
+        ]
+      }
+    },
+    {
+      "id": "supersession-preserves-history",
+      "prompt": "We approved a new retention policy that replaces PDDR-0004. Create the successor and update the relationship.",
+      "artifacts": [
+        "PDDR-0004 is accepted and currently active.",
+        "The owner explicitly approved the replacement policy.",
+        "Implementation of the replacement has not started."
+      ],
+      "expected": {
+        "should_invoke": true,
+        "record_action": "create-successor",
+        "decision_status": "accepted",
+        "delivery_status": "not-started",
+        "required_behaviors": [
+          "Create a new record with reciprocal supersession links.",
+          "Mark the old record as superseded without deleting its historical content."
+        ],
+        "forbidden_behaviors": [
+          "Rewrite PDDR-0004 as though the new policy had always applied.",
+          "Delete the superseded record."
+        ]
+      }
+    },
+    {
+      "id": "sensitive-evidence-is-minimized",
+      "prompt": "Record the approved vendor decision. The evidence includes a private chat export, customer names, and an API token pasted by mistake.",
+      "artifacts": [
+        "The approval can be supported by a minimal private-reference summary.",
+        "The API token is not relevant to the decision."
+      ],
+      "expected": {
+        "should_invoke": true,
+        "record_action": "create",
+        "decision_status": "accepted",
+        "delivery_status": "not-started",
+        "required_behaviors": [
+          "Use a minimal summary and stable private reference where permitted.",
+          "Exclude unnecessary personal and confidential details."
+        ],
+        "forbidden_behaviors": [
+          "Copy the API token.",
+          "Copy the private transcript or customer names into a public record."
+        ]
+      }
+    },
+    {
+      "id": "existing-adr-is-referenced-not-duplicated",
+      "prompt": "ADR-0012 already contains the architecture decision. Add PDDR coverage for its implementation and validation history.",
+      "artifacts": [
+        "ADR-0012 is the authoritative decision record.",
+        "Implementation and validation evidence exists outside the ADR."
+      ],
+      "expected": {
+        "should_invoke": true,
+        "record_action": "create",
+        "decision_status": "accepted",
+        "delivery_status": "validated",
+        "required_behaviors": [
+          "Reference ADR-0012 as the authoritative decision.",
+          "Record only the additional observation, delivery, validation, and relationship context needed."
+        ],
+        "forbidden_behaviors": [
+          "Duplicate or replace the ADR's decision text."
+        ]
+      }
+    },
+    {
+      "id": "analysis-only-does-not-mutate",
+      "prompt": "Analyze whether this proposed process change deserves a PDDR. Do not create or edit any files.",
+      "artifacts": [
+        "The process change may affect all future releases.",
+        "The user authorized analysis only."
+      ],
+      "expected": {
+        "should_invoke": true,
+        "record_action": "analyze-only",
+        "decision_status": null,
+        "delivery_status": null,
+        "required_behaviors": [
+          "Assess consequence and explain whether a PDDR would be useful.",
+          "Keep any suggested metadata explicitly provisional."
+        ],
+        "forbidden_behaviors": [
+          "Create or edit files.",
+          "Change an external system."
+        ]
+      }
+    }
+  ]
+}

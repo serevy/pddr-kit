@@ -29,14 +29,17 @@ docs/
   specification.md          PDDRの共通仕様
   roadmap.md                初版と将来拡張の境界
   adoption.md               導入・検証・CIの手順
+  skill-evaluation.md       Skill評価の方法と現在状態
   records/                  このプロジェクト自身のPDDR
+evals/
+  pddr-recorder/             Skill評価ケース
 templates/
   pddr.md                    新規PDDRテンプレート
 skills/
   pddr-recorder/             AI向け記録Skill
 scripts/
   pddr.py                    導入・検証CLI
-tests/                       CLIの自動テスト
+tests/                       CLI・評価定義の自動テスト
 ```
 
 ## 使い始める
