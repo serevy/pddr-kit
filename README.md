@@ -1,2 +1,69 @@
-# pddr-kit
-DDRに着想を得た、プロジェクトの意思決定・背景・実装・検証をつなぐ軽量キット。人とAIが、プロジェクトが歩んだ理由を引き継ぐために。
+# PDDR Kit
+
+**Project Design Decision Record** — プロジェクトの判断・背景・実装・検証をつなぐための軽量キットです。
+
+PDDRは、最終的な決定だけでなく、観測や議論から提案が生まれ、採用され、実装・検証され、必要なら見直されるまでの流れを追跡可能にします。人とAIが「何を決めたか」だけでなく「なぜ現在の形になったか」を引き継げることを目指します。
+
+> PDDR (Project Design Decision Record) is a lightweight framework for preserving not only what a project decided, but how and why it evolved.
+
+## PDDRが扱うもの
+
+- **Project** — 目的、範囲、優先順位、公開方針など
+- **Product** — 要件、ユーザー体験、機能、品質基準など
+- **Process** — 開発手順、レビュー、AI活用、検証方法など
+
+PDDRはADRやDDRを置き換えません。既存のDecision Recordを参照しながら、判断に至る前の観測と、判断後の実装・検証・見直しをつなぐレイヤーです。
+
+## 重要な原則
+
+1. **会話にない理由を補完しない。** 不明な経緯は`unknown`、未確認の判断は`needs-confirmation`として残します。
+2. **AIの提案を人間の合意に変換しない。** 提案、採用、不採用、置換済みを区別します。
+3. **決定と実装を分ける。** 採用済みでも、未実装・未検証の場合があります。
+4. **古い記録を消さない。** 方針変更時は後継PDDRから旧記録を参照します。
+5. **根拠を追跡可能にする。** 会話、Issue、PR、テスト結果などを参照します。
+
+## リポジトリ構成
+
+```text
+docs/
+  specification.md          PDDRの共通仕様
+  roadmap.md                初版と将来拡張の境界
+  records/                  このプロジェクト自身のPDDR
+templates/
+  pddr.md                    新規PDDRテンプレート
+skills/
+  pddr-recorder/             AI向け記録Skill
+```
+
+## 使い始める
+
+1. [`templates/pddr.md`](templates/pddr.md)を対象プロジェクトの記録ディレクトリへコピーします。
+2. 判断に関係する事実と根拠を記入します。
+3. `decision_status`と`delivery_status`を別々に更新します。
+4. PRで内容と根拠を人が確認します。
+
+詳細は[`docs/specification.md`](docs/specification.md)を参照してください。初版ではMarkdownによる運用を正本とし、特定のAIやサービスを必須にしません。
+
+## 現在の段階
+
+現在は設計検証中の初期版です。まずPDDR Kit自身でdogfoodingし、その後、別の既存プロジェクトと新規プロジェクトへ導入して再利用性を確認します。
+
+Jevなどの有償・外部サービスは任意の拡張です。分類・不足判定・関連PDDRのcontext selection・typed handoff連携を強化できますが、PDDRの基本運用には不要です。
+
+## 参考文献・謝辞
+
+本プロジェクトの着想と記録フローの検討にあたり、以下を参考にしています。
+
+- 窪内 彩佳「[AIとの対話履歴を資産にする。DDR（Design Decision Record）自動記録の仕組み](https://zenn.dev/softbank/articles/ee93e87a9d5dac)」ソフトバンク テックブログ / Zenn、2026年8月21日
+- Michael Nygard, “[Documenting Architecture Decisions](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions),” 2011.
+- [Markdown Architectural Decision Records (MADR)](https://adr.github.io/madr/)
+
+特に、成果物だけでなく判断の背景を残すこと、文脈が残っているうちにAIが下書きを作ること、人による確認と記録漏れの検査を組み合わせることを参考にしています。本プロジェクトは独立した取り組みであり、参考文献の著者・所属組織による公式提供、提携、承認を示すものではありません。
+
+## Contributing
+
+初期段階のため、まずはIssueでユースケースや課題を共有してください。変更提案は[`CONTRIBUTING.md`](CONTRIBUTING.md)を参照してください。
+
+## License
+
+[MIT License](LICENSE)
