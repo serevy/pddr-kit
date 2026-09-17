@@ -61,7 +61,7 @@ python .pddr/pddr.py validate
 
 ## 現在の段階
 
-現在は設計検証中の初期版です。まずPDDR Kit自身でdogfoodingし、その後、別の既存プロジェクトと新規プロジェクトへ導入して再利用性を確認します。
+現在は設計検証中の初期版です。PDDR Kit自身でのdogfoodingに加え、別の既存プロジェクトへの初回導入とCI検証が完了しました。次は新規プロジェクトを含む異なる導入形態で再利用性を確認します。
 
 Jevなどの有償・外部サービスは任意の拡張です。分類・不足判定・関連PDDRのcontext selection・typed handoff連携を強化できますが、PDDRの基本運用には不要です。
 
