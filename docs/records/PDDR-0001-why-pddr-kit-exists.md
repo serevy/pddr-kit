@@ -4,7 +4,7 @@ title: Why PDDR Kit exists
 decision_date: 2026-09-16
 recorded_date: 2026-09-17
 decision_status: accepted
-delivery_status: in-progress
+delivery_status: validated
 scope:
   - project
   - product
@@ -13,7 +13,9 @@ owners:
   - serevy
 evidence:
   - "Project planning conversation, 2026-09-16 to 2026-09-17 (private)"
-related: []
+  - "First adoption into a separate existing project, 2026-09-17 (private)"
+related:
+  - PDDR-0003
 supersedes: []
 superseded_by: null
 ---
@@ -57,7 +59,9 @@ superseded_by: null
 
 ## Delivery and validation
 
-リポジトリ作成とMIT Licenseの設定は完了した。仕様、テンプレート、Skillの初版を作成中。異なる二つ目のプロジェクトへ、ルールを作り直さず導入できた時点を初期の再利用性検証とする。
+リポジトリ作成、MIT License、仕様、テンプレート、Skill、導入・検証CLI、CIを実装した。2026-09-17に、PDDR Kitとは別の既存プロジェクトへ共通仕様を変更せず導入し、導入先のPDDR検証CIと既存CIがともに成功した。これにより、PDDR-0001で定めた初期の再利用性検証条件を満たした。
+
+新規プロジェクトを含む複数形態での検証は、引き続きRoadmapの対象とする。
 
 ## Consequences
 
@@ -77,7 +81,8 @@ superseded_by: null
 
 - 2026-09-16から2026-09-17に行った非公開の企画会話を、人間が確認した内容に基づき要約。
 - READMEの「参考文献・謝辞」に着想元と関連資料を記載。
+- 2026-09-17、別の既存プロジェクトへ非破壊で導入し、PDDR検証CIと導入先の既存CIが成功した。非公開プロジェクトのURLや内容は公開記録へ転記しない。
 
 ## Related records
 
-なし。
+- PDDR-0003: First external adoption findings
