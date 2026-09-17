@@ -26,6 +26,7 @@ DELIVERY_STATUSES = {
     "implemented",
     "validated",
     "not-applicable",
+    "unknown",
 }
 SCOPES = {"project", "product", "process"}
 REQUIRED_FIELDS = {

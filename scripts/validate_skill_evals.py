@@ -23,6 +23,7 @@ DELIVERY_STATUSES = {
     "implemented",
     "validated",
     "not-applicable",
+    "unknown",
 }
 RECORD_ACTIONS = {
     "none",

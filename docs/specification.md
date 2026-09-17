@@ -38,8 +38,10 @@ PDDRは、Project・Product・Processに関する判断を、その前後の経�
 | `implemented` | 実装済み、検証は未完了または別途管理 |
 | `validated` | 定めた証拠により検証済み |
 | `not-applicable` | 実装対象ではない判断 |
+| `unknown` | 実装・反映状況を確認できない |
 
 `decision_status: accepted`は、`delivery_status: implemented`または`validated`を意味しません。
+実装証拠がないことだけを根拠に`not-started`と推測せず、状況を確認できない場合は`unknown`を使用します。
 
 ## 必須情報
 

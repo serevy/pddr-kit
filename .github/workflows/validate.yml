@@ -27,5 +27,8 @@ jobs:
       - name: Validate Skill eval cases
         run: python scripts/validate_skill_evals.py
 
+      - name: Validate Skill eval results
+        run: python scripts/validate_skill_eval_results.py
+
       - name: Validate repository records
         run: python scripts/pddr.py validate

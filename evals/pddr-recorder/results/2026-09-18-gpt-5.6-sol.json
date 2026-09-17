@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "skill": "pddr-recorder",
+  "run": {
+    "date": "2026-09-18",
+    "model": "gpt-5.6-sol",
+    "reasoning_effort": "medium",
+    "execution": "independent-forward-test",
+    "skill_sha256": "7663eb4a0afdea209998d65f238fc3cec9b89c117562f8410f8ad3775e0960fe",
+    "specification_sha256": "3f465c27219e360d1a9ebfc0acc84b05f140f4adbabfc15c9eedf103f798e11e",
+    "template_sha256": "492daf64b9c6040b677764dc669515ca4f6245829b6b38c4d1caa1e87cf4bc8f"
+  },
+  "results": [
+    {
+      "id": "routine-typo-does-not-create-record",
+      "should_invoke": false,
+      "record_action": "none",
+      "decision_status": null,
+      "delivery_status": null,
+      "response": "READMEの1文字の誤字修正は日常的な軽微作業であり、将来の判断理由を保存すべき consequential な変更ではありません。PDDRは作成しません。依頼を実行する場合はREADMEだけを修正し、通常の変更履歴に残します。"
+    },
+    {
+      "id": "meeting-transcript-is-not-a-decision-record",
+      "should_invoke": false,
+      "record_action": "none",
+      "decision_status": null,
+      "delivery_status": null,
+      "response": "決定・提案・重大な変更がない会議全文はPDDRの対象ではなく、会話全文をPDDRへ転記もしません。必要なら議事録として別途保存し、後に具体的な判断が生じた時点で、必要最小限の要約と安定した参照をEvidenceに持つPDDRを作成します。"
+    },
+    {
+      "id": "proposal-remains-proposed",
+      "should_invoke": true,
+      "record_action": "create",
+      "decision_status": "proposed",
+      "delivery_status": "unknown",
+      "response": "Redisへの置換案についてPDDRのレビュー用下書きを作成します。decision_statusはproposedとし、利点・費用・既知の選択肢を記録しますが、合意や承認は示しません。実装証拠がないことだけでは未着手と断定できないためdelivery_statusはunknownとし、承認者・判断日・実装状況を確認事項として明記します。"
+    },
+    {
+      "id": "approved-but-not-started",
+      "should_invoke": true,
+      "record_action": "create",
+      "decision_status": "accepted",
+      "delivery_status": "not-started",
+      "response": "公開APIをバージョン付きエンドポイントへ移行する判断をPDDRに記録します。リポジトリ所有者による本日の明示的承認を根拠にdecision_statusはaccepted、実装未着手が明示されているためdelivery_statusはnot-startedとします。承認の安定した参照、影響、選択肢、制約、検証基準、見直し条件を記載し、内容レビュー可能な形で提示します。"
+    },
+    {
+      "id": "merged-without-validation-is-implemented",
+      "should_invoke": true,
+      "record_action": "update",
+      "decision_status": "accepted",
+      "delivery_status": "implemented",
+      "response": "既存PDDRを更新し、承認済みという判断状態はacceptedのまま、マージ済みPRを実装証拠としてdelivery_statusをimplementedにします。本番または受け入れ検証は未実施なのでvalidatedにはしません。未達の検証基準をDelivery and validationに明記し、PRへの安定したリンクをEvidenceへ追加します。"
+    },
+    {
+      "id": "explicit-criteria-support-validation",
+      "should_invoke": true,
+      "record_action": "update",
+      "decision_status": "accepted",
+      "delivery_status": "validated",
+      "response": "既存のacceptedなPDDRを更新し、delivery_statusをvalidatedにします。PDDRに定められた統合スイートの成功と、対象環境で所有者が受け入れシナリオを確認した事実が具体的な検証基準を満たすためです。両結果への安定したリンクをEvidenceに追加し、実装証拠と検証証拠を分けて記載します。"
+    },
+    {
+      "id": "historical-implementation-with-unknown-approval",
+      "should_invoke": true,
+      "record_action": "create",
+      "decision_status": "needs-confirmation",
+      "delivery_status": "implemented",
+      "response": "履歴再構成用のPDDRを作成します。コミットで現行のretry policy実装を確認できるためdelivery_statusはimplementedですが、承認者・承認・信頼できる判断日が不明なのでdecision_statusはneeds-confirmationとします。decision_dateはunknown、recorded_dateは今回の整理日として分離し、推測した理由は書かず、根拠コミットと未確認事項を明示します。"
+    },
+    {
+      "id": "supersession-preserves-history",
+      "should_invoke": true,
+      "record_action": "create-successor",
+      "decision_status": "accepted",
+      "delivery_status": "not-started",
+      "response": "リポジトリ内の次の一意な番号で新しいretention policyの後継PDDRを作成し、所有者の明示的承認に基づきaccepted、実装未着手のためnot-startedとします。後継のsupersedesにPDDR-0004を追加し、PDDR-0004は本文を保持したままdecision_statusをsupersededへ変更してsuperseded_byに後継IDを設定します。両レコードに相互参照と承認Evidenceを残します。"
+    },
+    {
+      "id": "sensitive-evidence-is-minimized",
+      "should_invoke": true,
+      "record_action": "create",
+      "decision_status": "accepted",
+      "delivery_status": "unknown",
+      "response": "承認済みベンダー判断のPDDRを作成します。decision_statusはacceptedとしますが、提供状況の証拠がないためdelivery_statusはunknownです。非公開チャット全文、顧客名、APIトークンは転記せず、承認を裏付ける必要最小限の匿名化要約とアクセス制御された安定参照だけをEvidenceに記載します。誤って貼られたトークンは記録対象外とし、漏えい対応や失効・ローテーションは別のセキュリティ手順で直ちに扱うべきものとして切り分けます。"
+    },
+    {
+      "id": "existing-adr-is-referenced-not-duplicated",
+      "should_invoke": true,
+      "record_action": "create",
+      "decision_status": "accepted",
+      "delivery_status": "validated",
+      "response": "ADR-0012を意思決定の正本として参照する補完PDDRを作成し、アーキテクチャ判断の内容は複製しません。ADRへの関連リンクを置き、PDDRには実装履歴、検証基準、実装証拠と検証証拠への安定したリンクを記録します。正本の採用判断に基づきdecision_statusはaccepted、定義済み基準を具体的証拠が満たすためdelivery_statusはvalidatedとします。"
+    },
+    {
+      "id": "analysis-only-does-not-mutate",
+      "should_invoke": true,
+      "record_action": "analyze-only",
+      "decision_status": "proposed",
+      "delivery_status": "unknown",
+      "response": "この変更は今後の全リリースに影響し、将来の担当者が理由を知らないと同じ議論や事故を繰り返す可能性があるため、PDDRに値する重大なProcess判断です。ただし今回は分析のみの権限なので、ファイルの作成・編集や外部システムの変更は行いません。現時点では提案段階なのでdecision_statusはproposed、提供状況は確認できないためdelivery_statusはunknownが妥当です。別途作成が承認された場合に、選択肢、影響、承認主体、検証基準、見直し条件を収集して下書きにします。"
+    }
+  ]
+}

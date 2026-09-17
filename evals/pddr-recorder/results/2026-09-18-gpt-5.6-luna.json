@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "skill": "pddr-recorder",
+  "run": {
+    "date": "2026-09-18",
+    "model": "gpt-5.6-luna",
+    "reasoning_effort": "medium",
+    "execution": "independent-forward-test",
+    "skill_sha256": "7663eb4a0afdea209998d65f238fc3cec9b89c117562f8410f8ad3775e0960fe",
+    "specification_sha256": "3f465c27219e360d1a9ebfc0acc84b05f140f4adbabfc15c9eedf103f798e11e",
+    "template_sha256": "492daf64b9c6040b677764dc669515ca4f6245829b6b38c4d1caa1e87cf4bc8f"
+  },
+  "results": [
+    {
+      "id": "routine-typo-does-not-create-record",
+      "should_invoke": false,
+      "record_action": "none",
+      "decision_status": null,
+      "delivery_status": null,
+      "response": "READMEの1文字修正は単純な実装詳細であり、将来の判断を追跡するPDDRの対象ではありません。誤字だけを修正し、PDDRは作成しません。"
+    },
+    {
+      "id": "meeting-transcript-is-not-a-decision-record",
+      "should_invoke": false,
+      "record_action": "none",
+      "decision_status": null,
+      "delivery_status": null,
+      "response": "決定・承認・影響のある変更がない会議全文はPDDRではありません。全文をPDDRとして保存せず、必要なら通常の議事録として扱います。"
+    },
+    {
+      "id": "proposal-remains-proposed",
+      "should_invoke": true,
+      "record_action": "create",
+      "decision_status": "proposed",
+      "delivery_status": "unknown",
+      "response": "ローカルキャッシュをRedisへ置き換える案は将来の設計・運用に影響するため、PDDRの下書きを作成します。承認がないため decision_status は proposed とし、実装証拠がないだけでは未着手と断定できないため delivery_status は unknown とします。"
+    },
+    {
+      "id": "approved-but-not-started",
+      "should_invoke": true,
+      "record_action": "create",
+      "decision_status": "accepted",
+      "delivery_status": "not-started",
+      "response": "公開APIをバージョン付きエンドポイントへ移行する明示的な承認を根拠にPDDRを作成します。実装未開始が確認できるため accepted / not-started と記録します。"
+    },
+    {
+      "id": "merged-without-validation-is-implemented",
+      "should_invoke": true,
+      "record_action": "update",
+      "decision_status": "accepted",
+      "delivery_status": "implemented",
+      "response": "既存の承認済み移行PDDRを更新します。マージ済みPRは実装済みの証拠なので delivery_status を implemented とし、受入れ・本番検証が未実施であることと保留中の検証基準を明記します。"
+    },
+    {
+      "id": "explicit-criteria-support-validation",
+      "should_invoke": true,
+      "record_action": "update",
+      "decision_status": "accepted",
+      "delivery_status": "validated",
+      "response": "承認済みPDDRを更新します。定義済みの統合スイート合格と、対象環境での受入れシナリオを所有者が確認したこと、双方の安定リンクをEvidenceに記録し、validated とします。"
+    },
+    {
+      "id": "historical-implementation-with-unknown-approval",
+      "should_invoke": true,
+      "record_action": "create",
+      "decision_status": "needs-confirmation",
+      "delivery_status": "implemented",
+      "response": "リポジトリ履歴から実装済みの事実を分離して再構成したPDDRを作成します。承認者と信頼できる判断日は不明なので needs-confirmation とし、decision_date は unknown、delivery_status は implemented と記録します。"
+    },
+    {
+      "id": "supersession-preserves-history",
+      "should_invoke": true,
+      "record_action": "create-successor",
+      "decision_status": "accepted",
+      "delivery_status": "not-started",
+      "response": "新しい保持ポリシーの後継PDDRを作成し、旧PDDR-0004を superseded として内容を保持します。新旧双方に相互参照（supersedes / superseded_by）を追加し、新方針は accepted / not-started と記録します。"
+    },
+    {
+      "id": "sensitive-evidence-is-minimized",
+      "should_invoke": true,
+      "record_action": "create",
+      "decision_status": "accepted",
+      "delivery_status": "unknown",
+      "response": "承認済みベンダー判断のPDDRを作成します。Evidenceには承認を裏付ける最小限の非公開参照と要約だけを記載し、顧客名、チャット全文、APIトークンは転記しません。実装状況は提示されていないため unknown とします。"
+    },
+    {
+      "id": "existing-adr-is-referenced-not-duplicated",
+      "should_invoke": true,
+      "record_action": "create",
+      "decision_status": "accepted",
+      "delivery_status": "validated",
+      "response": "ADR-0012を正式な判断の正本として参照し、判断本文を複製しないPDDRを作成します。外部の実装証拠と、文書化された検証基準を満たす安定リンクを記録し、accepted / validated とします。"
+    },
+    {
+      "id": "analysis-only-does-not-mutate",
+      "should_invoke": true,
+      "record_action": "analyze-only",
+      "decision_status": null,
+      "delivery_status": null,
+      "response": "将来の全リリースに影響し得るプロセス変更なので、PDDR対象になり得るかを分析します。ただし分析のみの許可なので、ファイル作成・編集や外部システム変更は行いません。"
+    }
+  ]
+}
+
