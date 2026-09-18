@@ -3,7 +3,7 @@ id: PDDR-0006
 title: Safe context consumption and policy separation
 decision_date: 2026-09-18
 recorded_date: 2026-09-18
-decision_status: proposed
+decision_status: accepted
 delivery_status: implemented
 scope:
   - product
@@ -15,6 +15,7 @@ evidence:
   - "evals/pddr-recorder/consumption-cases.json"
   - "python scripts/validate_skill_evals.py evals/pddr-recorder/consumption-cases.json"
   - "python -m unittest discover -s tests -v"
+  - "https://github.com/serevy/pddr-kit/pull/7"
 related:
   - PDDR-0004
   - PDDR-0005
@@ -54,7 +55,7 @@ PDDRを無条件の命令やPolicyとして適用せず、現在のタスクに�
 
 - Benefits: 履歴を保存したまま、現在のタスクへ必要な範囲だけ安全に利用できる。
 - Costs / constraints: context selectionと意味解釈の評価が別途必要になる。
-- Status: proposed
+- Status: accepted
 
 ## Decision
 
@@ -65,7 +66,7 @@ PDDRを無条件の命令やPolicyとして適用せず、現在のタスクに�
 - 現在のタスクに必要な最小限の関連記録だけを選ぶ。
 - 個別の事故を恒常的なPolicyへ昇格する場合は、別の明示的な承認を必要とする。
 
-この判断はPRレビューとマージをもって承認済みとする。マージ前は`decision_status: proposed`を維持する。
+PR #7のレビューとマージにより、この判断は承認された。
 
 ## Delivery and validation
 
@@ -94,6 +95,7 @@ PDDRを無条件の命令やPolicyとして適用せず、現在のタスクに�
 - `evals/pddr-recorder/consumption-cases.json`
 - `python scripts/validate_skill_evals.py evals/pddr-recorder/consumption-cases.json`
 - `python -m unittest discover -s tests -v`
+- [PR #7](https://github.com/serevy/pddr-kit/pull/7)
 
 ## Related records
 
