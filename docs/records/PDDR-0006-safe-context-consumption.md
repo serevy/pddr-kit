@@ -4,7 +4,7 @@ title: Safe context consumption and policy separation
 decision_date: 2026-09-18
 recorded_date: 2026-09-18
 decision_status: accepted
-delivery_status: implemented
+delivery_status: validated
 scope:
   - product
   - process
@@ -20,6 +20,9 @@ evidence:
   - "evals/pddr-recorder/results/2026-09-18-consumption-gpt-5.6-luna.json"
   - "evals/pddr-recorder/results/2026-09-18-consumption-adjudication.json"
   - "python scripts/validate_skill_eval_results.py"
+  - "https://github.com/serevy/pddr-kit/pull/10"
+  - "https://github.com/serevy/pddr-kit/commit/2608035f2a364aa713eac9b80fbefc11ec2679bb"
+  - "https://github.com/serevy/pddr-kit/actions/runs/35331363019"
 related:
   - PDDR-0004
   - PDDR-0005
@@ -78,7 +81,7 @@ PR #7のレビューとマージにより、この判断は承認された。
 
 更新後のSkill・仕様・テンプレートを使い、期待値と他モデルの出力を伏せてSol / mediumとLuna / mediumを独立実行した。両モデルとも4件すべてに合格し、禁止行動は観測されなかった。生出力、参照資料のハッシュ、調整役による意味判定、集計の整合性は記録済みである。
 
-評価証跡に対する独立した人のレビューはPRレビューで行うため、マージまでは提供状態を`implemented`に維持する。
+PR #10で評価証跡がレビューされ、CI成功後にmainへマージされた。これを独立した人による意味確認の証拠とし、提供状態を`validated`とする。
 
 ## Consequences
 
@@ -106,6 +109,9 @@ PR #7のレビューとマージにより、この判断は承認された。
 - `evals/pddr-recorder/results/2026-09-18-consumption-gpt-5.6-luna.json`
 - `evals/pddr-recorder/results/2026-09-18-consumption-adjudication.json`
 - `python scripts/validate_skill_eval_results.py`
+- [PR #10](https://github.com/serevy/pddr-kit/pull/10)
+- [Merge commit 2608035](https://github.com/serevy/pddr-kit/commit/2608035f2a364aa713eac9b80fbefc11ec2679bb)
+- [Validation run 35331363019](https://github.com/serevy/pddr-kit/actions/runs/35331363019)
 
 ## Related records
 
