@@ -3,8 +3,8 @@ id: PDDR-0007
 title: Safe upgrades for adopted projects
 decision_date: 2026-09-18
 recorded_date: 2026-09-18
-decision_status: proposed
-delivery_status: implemented
+decision_status: accepted
+delivery_status: validated
 scope:
   - product
   - process
@@ -14,6 +14,11 @@ evidence:
   - "scripts/pddr.py"
   - "tests/test_pddr_cli.py"
   - "python -m unittest discover -s tests -v"
+  - "https://github.com/serevy/pddr-kit/pull/8"
+  - "https://github.com/serevy/obs-audio-guardian/pull/23"
+  - "https://github.com/serevy/obs-audio-guardian/commit/ccf676e9d668f656cd5a2550e9e752e8f94b91bb"
+  - "https://github.com/serevy/obs-audio-guardian/actions/runs/35302756162"
+  - "https://github.com/serevy/obs-audio-guardian/actions/runs/35302756200"
 related:
   - PDDR-0002
   - PDDR-0003
@@ -53,7 +58,7 @@ superseded_by: null
 
 - Benefits: Kit管理範囲を限定し、変更・欠落・追跡外ファイルを競合として検知できる。
 - Costs / constraints: マニフェスト導入前のプロジェクトでは、人が現状を確認して初期基準を作る必要がある。
-- Status: proposed
+- Status: accepted
 
 ## Decision
 
@@ -64,13 +69,15 @@ superseded_by: null
 - `.pddr/config.json`、PDDR記録、導入先のドキュメント・規則・CIは自動更新しない。
 - マニフェスト導入前の環境では、人による確認後に`--bootstrap-manifest`で現状のハッシュだけを登録し、同じ実行で更新しない。
 
-PRレビューとマージを、この判断の承認証拠とする。マージまでは`decision_status: proposed`を維持する。
+PR #8のレビューとマージにより、この判断は承認された。
 
 ## Delivery and validation
 
 `init`のマニフェスト作成と`upgrade`を実装した。正常更新、dry-run、利用側変更による全体停止、旧導入先のマニフェスト初期化をunit testで検証した。
 
-最初の外部導入先を実際に更新していないため、提供状態は`implemented`とする。
+既存導入先のOBS Audio Guardianでは、導入済み管理ファイルが初回導入時のKitと一致することを確認した後、`--bootstrap-manifest --dry-run`、マニフェスト作成、`upgrade --dry-run`、実更新を順に実行した。設定、既存PDDR、CI、製品コードを変更せず、最新版のCLI・仕様・テンプレートへ更新できた。
+
+Audio GuardianのPR #23でPDDR検証とWindowsのconfigure、build、test、artifact uploadが成功し、mainへマージされたため、提供状態を`validated`とする。
 
 ## Consequences
 
@@ -90,6 +97,11 @@ PRレビューとマージを、この判断の承認証拠とする。マージ
 - `scripts/pddr.py`
 - `tests/test_pddr_cli.py`
 - `python -m unittest discover -s tests -v`
+- [PDDR Kit PR #8](https://github.com/serevy/pddr-kit/pull/8)
+- [Audio Guardian PR #23](https://github.com/serevy/obs-audio-guardian/pull/23)
+- [Audio Guardian merge commit](https://github.com/serevy/obs-audio-guardian/commit/ccf676e9d668f656cd5a2550e9e752e8f94b91bb)
+- [Audio Guardian PDDR validation](https://github.com/serevy/obs-audio-guardian/actions/runs/35302756162)
+- [Audio Guardian Windows CI](https://github.com/serevy/obs-audio-guardian/actions/runs/35302756200)
 
 ## Related records
 
