@@ -13,6 +13,8 @@ owners:
 evidence:
   - "Maintainer-approved adoption into a separate existing project, 2026-09-17 (private)"
   - "PDDR validation CI and the adopter project's existing CI succeeded"
+  - "Maintainer-approved adoption into a second distinct existing project, 2026-09-18 (private)"
+  - "PDDR validation CI succeeded in the second adopter after merge"
 related:
   - PDDR-0001
   - PDDR-0002
@@ -67,11 +69,14 @@ superseded_by: null
 
 得られた導入チェック項目を`docs/adoption.md`とREADMEの現在段階へ反映した。
 
+2026-09-18には、二つ目の異なる既存プロジェクトでも、共通仕様を変更せず導入し、最初のPDDRを作成できた。メンテナーによるPR確認とマージ後、`main`上のPDDR検証CIが成功した。これにより、ロードマップの「二つ以上の異なるプロジェクトで運用検証」は完了した。公開記録には導入先の名称、URL、内部情報を含めない。
+
 ## Consequences
 
 - 初期化は引き続き安全で予測可能な範囲に限定される。
 - 導入者は、配置後にプロジェクト固有の運用接続を行う必要がある。
 - 将来、複数プロジェクトで同じ接続パターンが確認できれば、安全な自動化候補を識別できる。
+- 二つの既存プロジェクトで再利用性を確認したため、次の検証対象は新規プロジェクトとする。
 - 公開キットから非公開プロジェクトの機密情報を辿れない状態を維持する。
 
 ## Revisit when
@@ -85,6 +90,8 @@ superseded_by: null
 - 2026-09-17、別の既存プロジェクトへの導入PRをメンテナーが確認し、マージした。
 - 導入先でPDDR検証CIが成功した。
 - 導入先の既存ビルド・テストCIも変更後に成功した。
+- 2026-09-18、二つ目の異なる既存プロジェクトへの導入PRをメンテナーが確認し、マージした。
+- 二つ目の導入先でも、マージ後の`main`でPDDR検証CIが成功した。
 - 非公開プロジェクトのURLと内部情報は公開記録へ含めない。
 
 ## Related records
