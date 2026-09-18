@@ -3,7 +3,7 @@ id: PDDR-0005
 title: Unknown delivery state
 decision_date: 2026-09-18
 recorded_date: 2026-09-18
-decision_status: proposed
+decision_status: accepted
 delivery_status: validated
 scope:
   - product
@@ -16,6 +16,7 @@ evidence:
   - "evals/pddr-recorder/results/2026-09-18-adjudication.json"
   - "python scripts/validate_skill_eval_results.py"
   - "python -m unittest discover -s tests -v"
+  - "https://github.com/serevy/pddr-kit/pull/5"
 related:
   - PDDR-0002
   - PDDR-0004
@@ -54,13 +55,13 @@ superseded_by: null
 
 - Benefits: 不明な提供状態を推測せず表現できる。
 - Costs / constraints: 仕様、CLI、Skill、評価契約の更新が必要になる。
-- Status: proposed
+- Status: accepted
 
 ## Decision
 
-`delivery_status`へ`unknown`を追加する案を提示する。実装証拠がないだけでは`not-started`とせず、提供状態を確認できない場合に`unknown`を使う。
+`delivery_status`へ`unknown`を追加する。実装証拠がないだけでは`not-started`とせず、提供状態を確認できない場合に`unknown`を使う。
 
-この判断はPRレビューとマージをもって承認済みとする。マージ前は`decision_status: proposed`を維持する。
+PR #5のレビューとマージにより、この判断は承認された。
 
 ## Delivery and validation
 
@@ -82,6 +83,7 @@ superseded_by: null
 - Sol / Lunaの独立forward-test
 - `python scripts/validate_skill_eval_results.py`
 - `python -m unittest discover -s tests -v`
+- [PR #5](https://github.com/serevy/pddr-kit/pull/5)
 
 ## Related records
 
