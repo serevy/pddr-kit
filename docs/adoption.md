@@ -30,6 +30,7 @@ python scripts/pddr.py init \
 ```text
 .pddr/
   config.json        記録先などの設定
+  manifest.json      Kit管理ファイルの版とハッシュ
   pddr.py            導入先で使う検証CLI
   specification.md   導入時点の仕様
   template.md        導入時点のテンプレート
@@ -111,6 +112,45 @@ jobs:
 
 最初のPDDRを追加した後は、記録の消失を見逃さないよう`--allow-empty`を外すことを推奨します。
 
-## 更新方針
+## 導入済みプロジェクトを更新する
 
-現在の初期化処理は非破壊性を優先し、導入済みファイルを自動更新しません。PDDR Kit更新時の差分確認・移行方法は今後の導入検証を踏まえて設計します。
+PDDR Kitの新しい版を取得したディレクトリから、まず更新予定を確認します。
+
+```bash
+python scripts/pddr.py upgrade \
+  --target /path/to/your-project \
+  --dry-run
+```
+
+内容を確認した後、`--dry-run`を外して更新します。
+
+```bash
+python scripts/pddr.py upgrade --target /path/to/your-project
+```
+
+`upgrade`が更新するのは、`.pddr/manifest.json`でハッシュを追跡する次のKit管理ファイルだけです。
+
+- `.pddr/pddr.py`
+- `.pddr/specification.md`
+- `.pddr/template.md`
+
+`.pddr/config.json`、PDDR記録、導入先のREADME・AI向け規則・CIなどは更新しません。管理ファイルが導入後に編集されている、削除されている、または追跡外の同名ファイルがある場合は、すべての書き込み前に競合として停止します。
+
+導入先の`.pddr/pddr.py`自身からは更新せず、新しいPDDR Kit側の`scripts/pddr.py`を使います。
+
+### マニフェスト導入前のプロジェクト
+
+古い導入先には`.pddr/manifest.json`がありません。まず三つのKit管理ファイルが、導入時のコピーから意図せず変更されていないことを人が確認します。その後、現在の内容を初期基準として記録します。
+
+```bash
+python scripts/pddr.py upgrade \
+  --target /path/to/your-project \
+  --bootstrap-manifest \
+  --dry-run
+
+python scripts/pddr.py upgrade \
+  --target /path/to/your-project \
+  --bootstrap-manifest
+```
+
+`--bootstrap-manifest`はマニフェストだけを作り、管理ファイルを更新しません。作成後に通常の`upgrade --dry-run`、`upgrade`を順に実行します。導入先で意図的に管理ファイルを変更している場合は、その変更を別ファイルへ移すか、新版との差分を手動で統合してください。

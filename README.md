@@ -39,7 +39,7 @@ templates/
 skills/
   pddr-recorder/             AI向け記録Skill
 scripts/
-  pddr.py                    導入・検証CLI
+  pddr.py                    導入・更新・検証CLI
 tests/                       CLI・評価定義の自動テスト
 ```
 
@@ -60,6 +60,15 @@ python .pddr/pddr.py validate
 ```
 
 判断に関係する事実と根拠を記入し、`decision_status`と`delivery_status`を別々に更新したうえで、PRで人が確認します。
+
+導入済みプロジェクトは、PDDR Kitの新しい版を取得したディレクトリから、先に差分予定を確認して更新できます。
+
+```bash
+python scripts/pddr.py upgrade --target /path/to/your-project --dry-run
+python scripts/pddr.py upgrade --target /path/to/your-project
+```
+
+更新するのはマニフェストで追跡されたKit管理ファイルだけです。導入先の記録・設定・独自ルールは変更しません。
 
 詳しい導入方法とCI例は[`docs/adoption.md`](docs/adoption.md)、記録ルールは[`docs/specification.md`](docs/specification.md)を参照してください。初版ではMarkdownによる運用を正本とし、特定のAIやサービスを必須にしません。
 

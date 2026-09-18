@@ -9,6 +9,7 @@
 - AIが安全に下書きを作るためのSkill
 - 状態・必須項目・参照の最小検証
 - 既存ファイルを上書きしない初期化CLI
+- 管理ファイルの変更を検知して停止する更新CLI
 - GitHub Actionsでの継続検証
 - PDDRをPolicyと誤認しないConsumption Contract
 

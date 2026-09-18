@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 import sys
@@ -57,6 +58,13 @@ REQUIRED_SECTIONS = {
 LIST_FIELDS = {"scope", "owners", "evidence", "related", "supersedes"}
 ID_PATTERN = re.compile(r"^PDDR-(\d{4})$")
 FILENAME_PATTERN = re.compile(r"^(PDDR-\d{4})-[a-z0-9]+(?:-[a-z0-9]+)*\.md$")
+KIT_VERSION = "0.1.0-dev"
+MANIFEST_SCHEMA_VERSION = 1
+MANAGED_PATHS = (
+    ".pddr/pddr.py",
+    ".pddr/specification.md",
+    ".pddr/template.md",
+)
 
 
 @dataclass(frozen=True)
@@ -67,6 +75,58 @@ class Diagnostic:
 
 class FrontMatterError(ValueError):
     pass
+
+
+def _sha256(content: bytes) -> str:
+    return f"sha256:{hashlib.sha256(content).hexdigest()}"
+
+
+def _source_files(script_path: Path) -> dict[str, bytes]:
+    kit_root = script_path.parents[1]
+    template_source = kit_root / "templates" / "pddr.md"
+    specification_source = kit_root / "docs" / "specification.md"
+    if not template_source.is_file() or not specification_source.is_file():
+        template_source = script_path.parent / "template.md"
+        specification_source = script_path.parent / "specification.md"
+    if not template_source.is_file() or not specification_source.is_file():
+        raise ValueError("PDDR template or specification could not be found")
+    return {
+        ".pddr/pddr.py": script_path.read_bytes(),
+        ".pddr/specification.md": specification_source.read_bytes(),
+        ".pddr/template.md": template_source.read_bytes(),
+    }
+
+
+def _manifest(contents: dict[str, bytes], *, kit_version: str = KIT_VERSION) -> dict[str, Any]:
+    return {
+        "schema_version": MANIFEST_SCHEMA_VERSION,
+        "kit_version": kit_version,
+        "managed_files": {path: _sha256(contents[path]) for path in sorted(contents)},
+    }
+
+
+def _manifest_bytes(contents: dict[str, bytes], *, kit_version: str = KIT_VERSION) -> bytes:
+    return (json.dumps(_manifest(contents, kit_version=kit_version), indent=2) + "\n").encode()
+
+
+def _load_manifest(path: Path) -> dict[str, Any]:
+    try:
+        manifest = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+        raise ValueError(f"cannot read {path}: {exc}") from exc
+    if manifest.get("schema_version") != MANIFEST_SCHEMA_VERSION:
+        raise ValueError(f"{path} has an unsupported schema_version")
+    managed_files = manifest.get("managed_files")
+    if not isinstance(managed_files, dict) or not all(
+        isinstance(key, str) and isinstance(value, str)
+        for key, value in managed_files.items()
+    ):
+        raise ValueError(f"{path} must contain a managed_files object")
+    for relative_path in managed_files:
+        candidate = Path(relative_path)
+        if candidate.is_absolute() or ".." in candidate.parts:
+            raise ValueError(f"{path} contains an unsafe managed path: {relative_path}")
+    return manifest
 
 
 def _scalar(value: str) -> Any:
@@ -320,14 +380,10 @@ def command_init(args: argparse.Namespace) -> int:
         return 2
 
     script_path = Path(__file__).resolve()
-    kit_root = script_path.parents[1]
-    template_source = kit_root / "templates" / "pddr.md"
-    specification_source = kit_root / "docs" / "specification.md"
-    if not template_source.is_file() or not specification_source.is_file():
-        template_source = script_path.parent / "template.md"
-        specification_source = script_path.parent / "specification.md"
-    if not template_source.is_file() or not specification_source.is_file():
-        print("error: PDDR template or specification could not be found", file=sys.stderr)
+    try:
+        managed_contents = _source_files(script_path)
+    except ValueError as exc:
+        print(f"error: {exc}", file=sys.stderr)
         return 2
     records_dir = Path(args.records_dir)
     if records_dir.is_absolute() or ".." in records_dir.parts:
@@ -347,12 +403,8 @@ def command_init(args: argparse.Namespace) -> int:
     )
     outputs: list[tuple[Path, bytes]] = [
         (target / ".pddr" / "config.json", (json.dumps(config, indent=2) + "\n").encode()),
-        (target / ".pddr" / "pddr.py", script_path.read_bytes()),
-        (target / ".pddr" / "template.md", template_source.read_bytes()),
-        (
-            target / ".pddr" / "specification.md",
-            specification_source.read_bytes(),
-        ),
+        (target / ".pddr" / "manifest.json", _manifest_bytes(managed_contents)),
+        *[(target / path, content) for path, content in managed_contents.items()],
         (target / records_dir / "README.md", readme.encode()),
     ]
 
@@ -377,6 +429,105 @@ def command_init(args: argparse.Namespace) -> int:
     return 0
 
 
+def command_upgrade(args: argparse.Namespace) -> int:
+    target = Path(args.target).resolve()
+    if not target.is_dir():
+        print(f"error: target directory does not exist: {target}", file=sys.stderr)
+        return 2
+
+    script_path = Path(__file__).resolve()
+    installed_script = target / ".pddr" / "pddr.py"
+    if script_path == installed_script.resolve():
+        print(
+            "error: run upgrade from a newer PDDR Kit checkout, not the installed copy",
+            file=sys.stderr,
+        )
+        return 2
+    try:
+        new_contents = _source_files(script_path)
+    except ValueError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 2
+
+    manifest_path = target / ".pddr" / "manifest.json"
+    if args.bootstrap_manifest:
+        if manifest_path.exists():
+            print(f"error: manifest already exists: {manifest_path}", file=sys.stderr)
+            return 2
+        current_contents: dict[str, bytes] = {}
+        missing: list[Path] = []
+        for relative_path in MANAGED_PATHS:
+            path = target / relative_path
+            if path.is_symlink() or not path.is_file():
+                missing.append(path)
+            else:
+                current_contents[relative_path] = path.read_bytes()
+        if missing:
+            for path in missing:
+                print(f"error: managed file does not exist: {path}", file=sys.stderr)
+            return 2
+        action = "Would create" if args.dry_run else "Created"
+        print(f"{action}: .pddr/manifest.json")
+        if not args.dry_run:
+            manifest_path.write_bytes(_manifest_bytes(current_contents, kit_version="legacy"))
+        print("No managed files were changed.")
+        return 0
+
+    if not manifest_path.is_file():
+        print(
+            "error: installation manifest is missing; review the installed managed files, "
+            "then run upgrade --bootstrap-manifest first",
+            file=sys.stderr,
+        )
+        return 2
+    try:
+        installed_manifest = _load_manifest(manifest_path)
+    except ValueError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 2
+
+    expected_hashes: dict[str, str] = installed_manifest["managed_files"]
+    conflicts: list[Path] = []
+    for relative_path, expected_hash in expected_hashes.items():
+        path = target / relative_path
+        if path.is_symlink() or not path.is_file() or _sha256(path.read_bytes()) != expected_hash:
+            conflicts.append(path)
+    for relative_path in new_contents.keys() - expected_hashes.keys():
+        path = target / relative_path
+        if path.exists() or path.is_symlink():
+            conflicts.append(path)
+    if conflicts:
+        for path in sorted(conflicts):
+            print(f"conflict: managed file was changed or is untracked: {path}", file=sys.stderr)
+        print("No files were changed.", file=sys.stderr)
+        return 1
+
+    changes = [
+        relative_path
+        for relative_path, content in new_contents.items()
+        if not (target / relative_path).is_file()
+        or (target / relative_path).read_bytes() != content
+    ]
+    for relative_path in sorted(new_contents):
+        if relative_path in changes:
+            action = "Would update" if args.dry_run else "Updated"
+            print(f"{action}: {relative_path}")
+        else:
+            print(f"Unchanged: {relative_path}")
+    if args.dry_run:
+        if installed_manifest != _manifest(new_contents):
+            print("Would update: .pddr/manifest.json")
+        return 0
+
+    for relative_path in changes:
+        path = target / relative_path
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(new_contents[relative_path])
+    manifest_path.write_bytes(_manifest_bytes(new_contents))
+    print(f"Installed PDDR Kit {KIT_VERSION}")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="pddr", description=__doc__)
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -388,6 +539,20 @@ def build_parser() -> argparse.ArgumentParser:
     )
     init_parser.add_argument("--dry-run", action="store_true", help="show changes only")
     init_parser.set_defaults(handler=command_init)
+
+    upgrade_parser = subparsers.add_parser(
+        "upgrade", help="safely update files managed by PDDR Kit"
+    )
+    upgrade_parser.add_argument(
+        "--target", default=".", help="project root (default: current directory)"
+    )
+    upgrade_parser.add_argument("--dry-run", action="store_true", help="show changes only")
+    upgrade_parser.add_argument(
+        "--bootstrap-manifest",
+        action="store_true",
+        help="record hashes for a reviewed legacy installation without updating files",
+    )
+    upgrade_parser.set_defaults(handler=command_upgrade)
 
     validate_parser = subparsers.add_parser("validate", help="validate PDDR records")
     validate_parser.add_argument(
