@@ -4,7 +4,7 @@
 
 `pddr-recorder`が、記録対象の選別、判断状態と提供状態の分離、Evidenceの扱い、履歴保全、権限境界を一貫して守れるかを評価します。
 
-評価ケースの正本は[`evals/pddr-recorder/cases.json`](../evals/pddr-recorder/cases.json)です。特定モデルの回答文を固定するのではなく、満たすべき行動と禁止する行動を定義します。
+記録作成・更新の評価ケースは[`evals/pddr-recorder/cases.json`](../evals/pddr-recorder/cases.json)、記録を安全に解釈する評価ケースは[`evals/pddr-recorder/consumption-cases.json`](../evals/pddr-recorder/consumption-cases.json)です。特定モデルの回答文を固定するのではなく、満たすべき行動と禁止する行動を定義します。
 
 ## 評価する境界
 
@@ -16,6 +16,10 @@
 - 既存ADR / DDRを複製しない
 - 機密情報をEvidenceへ転記しない
 - 分析だけを求められた場合はファイルを変更しない
+- 個別の失敗を無条件のPolicyへ一般化しない
+- 強い表現や新しさを権限と誤認しない
+- supersededな記録を現在の判断として適用しない
+- 現在のタスクに必要な最小限の記録だけを選ぶ
 
 ## 二段階の検証
 
@@ -23,6 +27,7 @@
 
 ```bash
 python scripts/validate_skill_evals.py
+python scripts/validate_skill_evals.py evals/pddr-recorder/consumption-cases.json
 ```
 
 CIでは、ケースID、期待するrouting、record action、状態値、必須の行動・禁止行動に欠落や矛盾がないことを検査します。これはSkillの実際の回答品質を証明するものではありません。
@@ -39,7 +44,7 @@ CIでは、ケースID、期待するrouting、record action、状態値、必�
 
 禁止行動が一つでもあれば、そのケースは失敗です。文体や見出しの完全一致は要求しません。
 
-実行結果は`evals/pddr-recorder/results/`に保存します。routing、action、状態値、参照資料のSHA-256はスクリプトで検証し、自然言語の必須・禁止行動は人が意味を確認します。
+実行結果は`evals/pddr-recorder/results/`に保存します。routing、action、状態値、参照資料のSHA-256はスクリプトで検証し、自然言語の必須・禁止行動は人が意味を確認します。評価時点の参照資料は`evals/pddr-recorder/snapshots/`へ保存し、現在版の変更によって過去の証跡を書き換えません。
 
 ```bash
 python scripts/validate_skill_eval_results.py
@@ -57,3 +62,7 @@ python scripts/validate_skill_eval_results.py
 Lunaの不合格は`proposal-remains-proposed`です。提案を未承認のまま保ち、deliveryを`unknown`とする状態判定は正しかった一方、既知の選択肢を記録する必須要素が回答から欠落しました。重大な禁止行動は両モデルとも観測されていません。
 
 予備実行では、実装状況が提示されていないのに`not-started`を期待するケースと、検証基準との対応が曖昧なケースを発見しました。前者はPDDR仕様に`delivery_status: unknown`を追加し、後者は検証基準と証拠の対応を明示してから最終評価を実行しています。
+
+## Consumption Contractの評価状態
+
+過剰一般化、superseded記録、現在のPolicyとの優先関係、最小context selectionを扱う4ケースを追加しました。ケース定義とSkill形式は検証済みですが、更新後のSkillに対する独立モデル実行は未実施です。既存の11ケースの結果は、2026-09-18時点の参照資料スナップショットに対する証跡として維持します。

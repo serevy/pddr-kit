@@ -17,10 +17,11 @@ RESULT_FILES = (
     RESULTS_DIR / "2026-09-18-gpt-5.6-luna.json",
 )
 ADJUDICATION_FILE = RESULTS_DIR / "2026-09-18-adjudication.json"
+SNAPSHOT_DIR = ROOT / "evals" / "pddr-recorder" / "snapshots" / "2026-09-18"
 SOURCE_FILES = {
-    "skill_sha256": ROOT / "skills" / "pddr-recorder" / "SKILL.md",
-    "specification_sha256": ROOT / "docs" / "specification.md",
-    "template_sha256": ROOT / "templates" / "pddr.md",
+    "skill_sha256": SNAPSHOT_DIR / "SKILL.md",
+    "specification_sha256": SNAPSHOT_DIR / "specification.md",
+    "template_sha256": SNAPSHOT_DIR / "template.md",
 }
 RECORD_ACTIONS = {"none", "analyze-only", "create", "update", "create-successor"}
 

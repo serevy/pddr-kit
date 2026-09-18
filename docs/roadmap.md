@@ -10,6 +10,7 @@
 - 状態・必須項目・参照の最小検証
 - 既存ファイルを上書きしない初期化CLI
 - GitHub Actionsでの継続検証
+- PDDRをPolicyと誤認しないConsumption Contract
 
 ## v0.2 — Reusable adoption
 
@@ -18,7 +19,7 @@
 - 二つ以上の異なるプロジェクトで運用検証
 - 実利用に基づくテンプレートとSkillの評価ケース
 
-検証状況：2026-09-17に、別の既存プロジェクトへの非破壊な導入、最初の記録作成、PDDR検証CI、導入先の既存CIまで確認済み。2026-09-18にSkillの独立forward-testを実施し、GPT-5.6 Sol / mediumは11/11、GPT-5.6 Luna / mediumは10/11に合格。新規プロジェクトと、追加の異なるプロジェクトでの検証は未完了。
+検証状況：2026-09-17に、別の既存プロジェクトへの非破壊な導入、最初の記録作成、PDDR検証CI、導入先の既存CIまで確認済み。2026-09-18にSkillの独立forward-testを実施し、GPT-5.6 Sol / mediumは11/11、GPT-5.6 Luna / mediumは10/11に合格。Consumption Contractのケース定義は追加済みだが、独立モデル実行は未実施。新規プロジェクトと、追加の異なるプロジェクトでの検証も未完了。
 
 ## Research track — optional integrations
 
