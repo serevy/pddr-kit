@@ -15,6 +15,9 @@ evidence:
   - "PDDR validation CI and the adopter project's existing CI succeeded"
   - "Maintainer-approved adoption into a second distinct existing project, 2026-09-18 (private)"
   - "PDDR validation CI succeeded in the second adopter after merge"
+  - "https://github.com/serevy/semantic-decision-lab/pull/11"
+  - "https://github.com/serevy/semantic-decision-lab/pull/12"
+  - "https://github.com/serevy/semantic-decision-lab/actions/runs/35357704579"
 related:
   - PDDR-0001
   - PDDR-0002
@@ -35,6 +38,7 @@ superseded_by: null
 - 過去の判断を、根拠が確認できる事実とEvidenceだけからPDDRとして再構成できた。
 - 導入ファイルを配置しただけでは、READMEやAI向け指示からPDDRへ到達できず、日常の変更フローにも検証が接続されない。
 - 導入先の規則やCI構成はプロジェクト固有であり、共通CLIが一律に書き換えるべきではない。
+- 新規の実験プロジェクトでは、Issueを実験バックログ、PDDRを重要な判断記録として分けることで、全作業をPDDR化せずに運用できた。
 
 ## Options considered
 
@@ -61,6 +65,7 @@ superseded_by: null
 - `init`の非破壊な共通ファイル配置は維持する。
 - 導入手順に、READMEなどからの導線、AI・開発者向け規則、CI接続の確認項目を追加する。
 - プロジェクト固有ファイルはv0.1の`init`で自動変更しない。
+- 導入時に、既存のIssue・タスク・実験ログとPDDRの責務境界を明示するよう案内する。
 - 非公開プロジェクトの名称、URL、内部判断は、公開PDDR Kitへ転記しない。検証結果は必要最小限に要約する。
 
 ## Delivery and validation
@@ -71,12 +76,15 @@ superseded_by: null
 
 2026-09-18には、二つ目の異なる既存プロジェクトでも、共通仕様を変更せず導入し、最初のPDDRを作成できた。メンテナーによるPR確認とマージ後、`main`上のPDDR検証CIが成功した。これにより、ロードマップの「二つ以上の異なるプロジェクトで運用検証」は完了した。公開記録には導入先の名称、URL、内部情報を含めない。
 
+同日、新規プロジェクト`semantic-decision-lab`へ`init`から導入し、README、AI向け規則、実験Issueフォーム、最初のPDDR、検証CIを接続した。導入PRと検証状態更新PRをメンテナーが確認・マージし、最終`main`上でもPDDR検証CIが成功した。これにより、新規プロジェクト向け初期化から運用接続・検証までの経路を確認した。
+
 ## Consequences
 
 - 初期化は引き続き安全で予測可能な範囲に限定される。
 - 導入者は、配置後にプロジェクト固有の運用接続を行う必要がある。
 - 将来、複数プロジェクトで同じ接続パターンが確認できれば、安全な自動化候補を識別できる。
-- 二つの既存プロジェクトで再利用性を確認したため、次の検証対象は新規プロジェクトとする。
+- 二つの既存プロジェクトと一つの新規プロジェクトで再利用性を確認したため、主要なRC検証項目は完了した。
+- IssueとPDDRの境界を明示することで、PDDRの件数と文脈量を重要な判断へ限定できる。
 - 公開キットから非公開プロジェクトの機密情報を辿れない状態を維持する。
 
 ## Revisit when
@@ -93,6 +101,9 @@ superseded_by: null
 - 2026-09-18、二つ目の異なる既存プロジェクトへの導入PRをメンテナーが確認し、マージした。
 - 二つ目の導入先でも、マージ後の`main`でPDDR検証CIが成功した。
 - 非公開プロジェクトのURLと内部情報は公開記録へ含めない。
+- [semantic-decision-lab adoption PR #11](https://github.com/serevy/semantic-decision-lab/pull/11)
+- [semantic-decision-lab validation PR #12](https://github.com/serevy/semantic-decision-lab/pull/12)
+- [semantic-decision-lab final main validation](https://github.com/serevy/semantic-decision-lab/actions/runs/35357704579)
 
 ## Related records
 
