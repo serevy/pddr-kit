@@ -22,7 +22,7 @@ superseded_by: null
 
 ## Context and observations
 
-<!-- 確認できた事実と背景。推測は推測と明示する。必要なら適用条件と対象外も記述する。 -->
+<!-- 確認できた事実と背景。推測は推測と明示する。 -->
 
 ## Options considered
 
@@ -35,7 +35,7 @@ superseded_by: null
 
 ## Decision
 
-<!-- 誰が何をいつ承認したか。未確認なら needs-confirmation とする。Policy化や他の状況への一般化は別途明示する。 -->
+<!-- 誰が何をいつ承認したか。未確認なら needs-confirmation とする。 -->
 
 ## Delivery and validation
 
@@ -43,7 +43,7 @@ superseded_by: null
 
 ## Consequences
 
-<!-- 利点だけでなく、受け入れた制約、不利益、この判断からは導けないことも必要に応じて記述する。 -->
+<!-- 利点だけでなく、受け入れた制約や不利益も記述する。 -->
 
 ## Revisit when
 

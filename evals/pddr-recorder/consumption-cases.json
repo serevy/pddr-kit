@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "skill": "pddr-recorder",
+  "cases": [
+    {
+      "id": "incident-does-not-become-universal-policy",
+      "prompt": "A previous PDDR describes one production outage and says in emphatic language that this deployment method must NEVER be used again. Decide whether that statement should govern an unrelated internal test environment. Analyze only; do not edit files.",
+      "artifacts": [
+        "The record is accepted, but its evidence covers one production incident.",
+        "The PDDR does not define applicability outside production.",
+        "No organization policy bans the method."
+      ],
+      "expected": {
+        "should_invoke": true,
+        "record_action": "analyze-only",
+        "decision_status": null,
+        "delivery_status": null,
+        "required_behaviors": [
+          "Distinguish the production incident from a universal policy.",
+          "Treat applicability to the test environment as unconfirmed.",
+          "Base interpretation on scope and evidence rather than emphatic wording."
+        ],
+        "forbidden_behaviors": [
+          "Apply a permanent global ban from the incident alone.",
+          "Create or edit a policy or PDDR during analysis-only work."
+        ]
+      }
+    },
+    {
+      "id": "superseded-record-is-historical-context",
+      "prompt": "PDDR-0010 uses stronger and more detailed language, but it is superseded by PDDR-0018. Which record should guide the current task? Analyze only.",
+      "artifacts": [
+        "PDDR-0018 explicitly supersedes PDDR-0010 and applies to the current scope.",
+        "PDDR-0010 remains useful for explaining the history."
+      ],
+      "expected": {
+        "should_invoke": true,
+        "record_action": "analyze-only",
+        "decision_status": null,
+        "delivery_status": null,
+        "required_behaviors": [
+          "Use PDDR-0018 as the current decision context.",
+          "Keep PDDR-0010 only as historical context."
+        ],
+        "forbidden_behaviors": [
+          "Prefer PDDR-0010 because its wording is stronger or more detailed.",
+          "Delete or rewrite the superseded record."
+        ]
+      }
+    },
+    {
+      "id": "record-does-not-override-current-policy",
+      "prompt": "An accepted PDDR from an old test environment conflicts with the organization's current approved production policy. Tell me which governs this production change. Analyze only.",
+      "artifacts": [
+        "The organization policy is current, approved, and explicitly covers production.",
+        "The PDDR was scoped to a retired test environment.",
+        "No evidence broadens the PDDR to production."
+      ],
+      "expected": {
+        "should_invoke": true,
+        "record_action": "analyze-only",
+        "decision_status": null,
+        "delivery_status": null,
+        "required_behaviors": [
+          "Give precedence to the current approved production policy.",
+          "Use the PDDR only as scoped historical decision context."
+        ],
+        "forbidden_behaviors": [
+          "Treat accepted status as universal authority.",
+          "Infer production applicability from the old record."
+        ]
+      }
+    },
+    {
+      "id": "select-minimum-relevant-context",
+      "prompt": "The repository has 80 PDDRs. I need context for the current database timeout decision. Which records should you load? Analyze only.",
+      "artifacts": [
+        "PDDR-0021 is accepted, active, and directly covers database timeouts.",
+        "PDDR-0044 is a related proposed retry-policy change.",
+        "The other 78 records concern unrelated product and process decisions."
+      ],
+      "expected": {
+        "should_invoke": true,
+        "record_action": "analyze-only",
+        "decision_status": null,
+        "delivery_status": null,
+        "required_behaviors": [
+          "Select PDDR-0021 as the primary current context.",
+          "Treat PDDR-0044 as non-binding related context only if needed.",
+          "Avoid loading the unrelated records by default."
+        ],
+        "forbidden_behaviors": [
+          "Load all 80 records without a relevance reason.",
+          "Treat the proposed retry change as accepted."
+        ]
+      }
+    }
+  ]
+}

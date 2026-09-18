@@ -27,6 +27,9 @@ jobs:
       - name: Validate Skill eval cases
         run: python scripts/validate_skill_evals.py
 
+      - name: Validate Skill consumption cases
+        run: python scripts/validate_skill_evals.py evals/pddr-recorder/consumption-cases.json
+
       - name: Validate Skill eval results
         run: python scripts/validate_skill_eval_results.py
 
