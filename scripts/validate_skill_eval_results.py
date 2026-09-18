@@ -23,6 +23,21 @@ SOURCE_FILES = {
     "specification_sha256": SNAPSHOT_DIR / "specification.md",
     "template_sha256": SNAPSHOT_DIR / "template.md",
 }
+CONSUMPTION_RESULT_FILES = (
+    RESULTS_DIR / "2026-09-18-consumption-gpt-5.6-sol.json",
+    RESULTS_DIR / "2026-09-18-consumption-gpt-5.6-luna.json",
+)
+CONSUMPTION_ADJUDICATION_FILE = (
+    RESULTS_DIR / "2026-09-18-consumption-adjudication.json"
+)
+CONSUMPTION_SNAPSHOT_DIR = (
+    ROOT / "evals" / "pddr-recorder" / "snapshots" / "2026-09-18-consumption"
+)
+CONSUMPTION_SOURCE_FILES = {
+    "skill_sha256": CONSUMPTION_SNAPSHOT_DIR / "SKILL.md",
+    "specification_sha256": CONSUMPTION_SNAPSHOT_DIR / "specification.md",
+    "template_sha256": CONSUMPTION_SNAPSHOT_DIR / "template.md",
+}
 RECORD_ACTIONS = {"none", "analyze-only", "create", "update", "create-successor"}
 
 
@@ -35,7 +50,10 @@ def _sha256(path: Path) -> str:
 
 
 def validate_results(
-    suite: Any, result_documents: list[Any], adjudication: Any
+    suite: Any,
+    result_documents: list[Any],
+    adjudication: Any,
+    source_files: dict[str, Path] = SOURCE_FILES,
 ) -> tuple[list[str], dict[str, dict[str, Any]]]:
     errors: list[str] = []
     if not isinstance(suite, dict) or not isinstance(suite.get("cases"), list):
@@ -61,7 +79,7 @@ def validate_results(
         if not isinstance(model, str) or not model:
             errors.append("result model must be a non-empty string")
             continue
-        for field, path in SOURCE_FILES.items():
+        for field, path in source_files.items():
             if run.get(field) != _sha256(path):
                 errors.append(f"{model}: {field} does not match {path.relative_to(ROOT)}")
 
@@ -138,22 +156,49 @@ def validate_results(
 
 
 def main() -> int:
+    evaluations = (
+        (
+            "recording",
+            ROOT / "evals" / "pddr-recorder" / "cases.json",
+            RESULT_FILES,
+            ADJUDICATION_FILE,
+            SOURCE_FILES,
+        ),
+        (
+            "consumption",
+            ROOT / "evals" / "pddr-recorder" / "consumption-cases.json",
+            CONSUMPTION_RESULT_FILES,
+            CONSUMPTION_ADJUDICATION_FILE,
+            CONSUMPTION_SOURCE_FILES,
+        ),
+    )
+    all_errors: list[str] = []
+    summaries_by_evaluation: list[tuple[str, int, dict[str, dict[str, Any]]]] = []
     try:
-        suite = _read_json(ROOT / "evals" / "pddr-recorder" / "cases.json")
-        results = [_read_json(path) for path in RESULT_FILES]
-        adjudication = _read_json(ADJUDICATION_FILE)
-    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+        for name, suite_path, result_paths, adjudication_path, source_files in evaluations:
+            suite = _read_json(suite_path)
+            results = [_read_json(path) for path in result_paths]
+            adjudication = _read_json(adjudication_path)
+            errors, summaries = validate_results(
+                suite, results, adjudication, source_files
+            )
+            all_errors.extend(f"{name}: {error}" for error in errors)
+            summaries_by_evaluation.append((name, len(suite["cases"]), summaries))
+    except (OSError, UnicodeError, json.JSONDecodeError, KeyError) as exc:
         print(f"error: cannot read evaluation evidence: {exc}", file=sys.stderr)
         return 2
 
-    errors, summaries = validate_results(suite, results, adjudication)
-    for error in errors:
+    for error in all_errors:
         print(error, file=sys.stderr)
-    if errors:
-        print(f"FAILED: {len(errors)} result issue(s)", file=sys.stderr)
+    if all_errors:
+        print(f"FAILED: {len(all_errors)} result issue(s)", file=sys.stderr)
         return 1
-    for model, summary in summaries.items():
-        print(f"{model}: {summary['passed']}/11 passed; failed={summary['failed_case_ids']}")
+    for name, case_count, summaries in summaries_by_evaluation:
+        for model, summary in summaries.items():
+            print(
+                f"{name}/{model}: {summary['passed']}/{case_count} passed; "
+                f"failed={summary['failed_case_ids']}"
+            )
     return 0
 
 

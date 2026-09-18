@@ -16,6 +16,10 @@ evidence:
   - "python scripts/validate_skill_evals.py evals/pddr-recorder/consumption-cases.json"
   - "python -m unittest discover -s tests -v"
   - "https://github.com/serevy/pddr-kit/pull/7"
+  - "evals/pddr-recorder/results/2026-09-18-consumption-gpt-5.6-sol.json"
+  - "evals/pddr-recorder/results/2026-09-18-consumption-gpt-5.6-luna.json"
+  - "evals/pddr-recorder/results/2026-09-18-consumption-adjudication.json"
+  - "python scripts/validate_skill_eval_results.py"
 related:
   - PDDR-0004
   - PDDR-0005
@@ -72,7 +76,9 @@ PR #7のレビューとマージにより、この判断は承認された。
 
 仕様、Skill、テンプレート、READMEへConsumption Contractを反映し、4件の評価ケースとCIによる構造検証を追加した。既存のモデル評価は参照資料スナップショットへ固定した。
 
-更新後のSkillを使った独立モデル実行は未実施のため、提供状態は`implemented`とする。
+更新後のSkill・仕様・テンプレートを使い、期待値と他モデルの出力を伏せてSol / mediumとLuna / mediumを独立実行した。両モデルとも4件すべてに合格し、禁止行動は観測されなかった。生出力、参照資料のハッシュ、調整役による意味判定、集計の整合性は記録済みである。
+
+評価証跡に対する独立した人のレビューはPRレビューで行うため、マージまでは提供状態を`implemented`に維持する。
 
 ## Consequences
 
@@ -96,6 +102,10 @@ PR #7のレビューとマージにより、この判断は承認された。
 - `python scripts/validate_skill_evals.py evals/pddr-recorder/consumption-cases.json`
 - `python -m unittest discover -s tests -v`
 - [PR #7](https://github.com/serevy/pddr-kit/pull/7)
+- `evals/pddr-recorder/results/2026-09-18-consumption-gpt-5.6-sol.json`
+- `evals/pddr-recorder/results/2026-09-18-consumption-gpt-5.6-luna.json`
+- `evals/pddr-recorder/results/2026-09-18-consumption-adjudication.json`
+- `python scripts/validate_skill_eval_results.py`
 
 ## Related records
 
