@@ -25,12 +25,34 @@ def load_inputs():
     return suite, results, adjudication
 
 
+def load_consumption_inputs():
+    suite = json.loads(
+        (ROOT / "evals" / "pddr-recorder" / "consumption-cases.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    results = [
+        json.loads(path.read_text(encoding="utf-8"))
+        for path in validator.CONSUMPTION_RESULT_FILES
+    ]
+    adjudication = json.loads(
+        validator.CONSUMPTION_ADJUDICATION_FILE.read_text(encoding="utf-8")
+    )
+    return suite, results, adjudication, validator.CONSUMPTION_SOURCE_FILES
+
+
 class SkillEvalResultValidationTests(unittest.TestCase):
     def test_repository_results_are_consistent(self):
         errors, summaries = validator.validate_results(*load_inputs())
         self.assertEqual(errors, [])
         self.assertEqual(summaries["gpt-5.6-sol"]["passed"], 11)
         self.assertEqual(summaries["gpt-5.6-luna"]["passed"], 10)
+
+    def test_consumption_results_are_consistent(self):
+        errors, summaries = validator.validate_results(*load_consumption_inputs())
+        self.assertEqual(errors, [])
+        self.assertEqual(summaries["gpt-5.6-sol"]["passed"], 4)
+        self.assertEqual(summaries["gpt-5.6-luna"]["passed"], 4)
 
     def test_wrong_action_is_rejected(self):
         suite, results, adjudication = load_inputs()

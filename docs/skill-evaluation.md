@@ -50,7 +50,7 @@ CIでは、ケースID、期待するrouting、record action、状態値、必�
 python scripts/validate_skill_eval_results.py
 ```
 
-## 2026-09-18の比較結果
+## 2026-09-18の記録作成・更新比較
 
 同じ11ケースを、期待値と他モデルの出力を伏せて独立実行しました。
 
@@ -65,4 +65,13 @@ Lunaの不合格は`proposal-remains-proposed`です。提案を未承認のま�
 
 ## Consumption Contractの評価状態
 
-過剰一般化、superseded記録、現在のPolicyとの優先関係、最小context selectionを扱う4ケースを追加しました。ケース定義とSkill形式は検証済みですが、更新後のSkillに対する独立モデル実行は未実施です。既存の11ケースの結果は、2026-09-18時点の参照資料スナップショットに対する証跡として維持します。
+過剰一般化、superseded記録、現在のPolicyとの優先関係、最小context selectionを扱う4ケースを、SolとLunaへ期待値と他モデルの出力を伏せて独立実行しました。
+
+| モデル | 合格 | 不合格 | 確認結果 |
+|---|---:|---:|---|
+| GPT-5.6 Sol / medium | 4 | 0 | 状態・scope・Evidence・明示的Policyを優先 |
+| GPT-5.6 Luna / medium | 4 | 0 | 同上。最小context selectionも成功 |
+
+両モデルとも、強い表現を普遍的Policyへ一般化せず、superseded記録を履歴として扱い、現在の承認済みPolicyを優先しました。80件の記録をすべて読み込まず、直接関連するacceptedな記録と、必要な場合だけ非拘束のproposed記録を選択しました。禁止行動は観測されていません。
+
+生出力、人による意味判定、評価時点のSkill・仕様・テンプレートは`evals/pddr-recorder/results/`と`evals/pddr-recorder/snapshots/2026-09-18-consumption/`へ保存しています。既存の11ケースの結果は、以前の参照資料スナップショットに対する証跡として維持します。

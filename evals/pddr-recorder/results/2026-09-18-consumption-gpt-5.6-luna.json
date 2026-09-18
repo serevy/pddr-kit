@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "skill": "pddr-recorder",
+  "run": {
+    "date": "2026-09-18",
+    "model": "gpt-5.6-luna",
+    "reasoning_effort": "medium",
+    "execution": "independent-forward-test",
+    "skill_sha256": "1298687749ee29648760e77a204865ac5b700dd8f5a890d9bbe27d521812cad2",
+    "specification_sha256": "13ae16c57e59a448cc75fec002f95a747082dc81d023fed22ee2e1838743392b",
+    "template_sha256": "018b33390d8d878b8c91ff1103ea03bf971fb439697c200e3ccc0a86e1cabf56"
+  },
+  "results": [
+    {
+      "id": "incident-does-not-become-universal-policy",
+      "should_invoke": true,
+      "record_action": "analyze-only",
+      "decision_status": null,
+      "delivery_status": null,
+      "response": "No. The emphatic statement is supported only by a production incident and has no stated applicability to the internal test environment, so it must not be generalized there. Seek explicit confirmation before applying it outside production."
+    },
+    {
+      "id": "superseded-record-is-historical-context",
+      "should_invoke": true,
+      "record_action": "analyze-only",
+      "decision_status": null,
+      "delivery_status": null,
+      "response": "Use PDDR-0018 for the current task because it explicitly supersedes PDDR-0010 and applies to the current scope. Treat PDDR-0010 as historical context only."
+    },
+    {
+      "id": "record-does-not-override-current-policy",
+      "should_invoke": true,
+      "record_action": "analyze-only",
+      "decision_status": null,
+      "delivery_status": null,
+      "response": "The organization's current, approved production policy governs. The accepted PDDR was limited to a retired test environment and does not override or apply to this production change."
+    },
+    {
+      "id": "select-minimum-relevant-context",
+      "should_invoke": true,
+      "record_action": "analyze-only",
+      "decision_status": null,
+      "delivery_status": null,
+      "response": "Load PDDR-0021 as the accepted, active record directly covering database timeouts. Load PDDR-0044 only if the current decision includes retry-policy scope, and treat it as non-binding because it is proposed. Do not load the 78 unrelated records."
+    }
+  ]
+}

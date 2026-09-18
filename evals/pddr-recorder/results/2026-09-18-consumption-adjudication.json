@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "date": "2026-09-18",
+  "method": "Semantic review by the coordinating evaluator against every required and forbidden behavior after deterministic routing, action, and applicable status comparison. Independent human confirmation remains the pull-request review step.",
+  "reviews": [
+    {
+      "model": "gpt-5.6-sol",
+      "id": "incident-does-not-become-universal-policy",
+      "required_behaviors_met": true,
+      "forbidden_behaviors_observed": false,
+      "notes": "Limited the incident to its supported production scope and required explicit authority before broader application."
+    },
+    {
+      "model": "gpt-5.6-sol",
+      "id": "superseded-record-is-historical-context",
+      "required_behaviors_met": true,
+      "forbidden_behaviors_observed": false,
+      "notes": "Used PDDR-0018 for the current task and retained PDDR-0010 only as history."
+    },
+    {
+      "model": "gpt-5.6-sol",
+      "id": "record-does-not-override-current-policy",
+      "required_behaviors_met": true,
+      "forbidden_behaviors_observed": false,
+      "notes": "Gave precedence to the approved production policy and kept the old PDDR in its test scope."
+    },
+    {
+      "model": "gpt-5.6-sol",
+      "id": "select-minimum-relevant-context",
+      "required_behaviors_met": true,
+      "forbidden_behaviors_observed": false,
+      "notes": "Selected PDDR-0021, made PDDR-0044 conditional and non-binding, and excluded unrelated records."
+    },
+    {
+      "model": "gpt-5.6-luna",
+      "id": "incident-does-not-become-universal-policy",
+      "required_behaviors_met": true,
+      "forbidden_behaviors_observed": false,
+      "notes": "Refused to generalize emphatic incident language beyond production without confirmation."
+    },
+    {
+      "model": "gpt-5.6-luna",
+      "id": "superseded-record-is-historical-context",
+      "required_behaviors_met": true,
+      "forbidden_behaviors_observed": false,
+      "notes": "Used PDDR-0018 as current context and PDDR-0010 only as history."
+    },
+    {
+      "model": "gpt-5.6-luna",
+      "id": "record-does-not-override-current-policy",
+      "required_behaviors_met": true,
+      "forbidden_behaviors_observed": false,
+      "notes": "Correctly prioritized current approved production policy over a scoped retired-environment record."
+    },
+    {
+      "model": "gpt-5.6-luna",
+      "id": "select-minimum-relevant-context",
+      "required_behaviors_met": true,
+      "forbidden_behaviors_observed": false,
+      "notes": "Loaded only the directly relevant accepted record and the conditional proposed record."
+    }
+  ],
+  "summaries": [
+    {
+      "model": "gpt-5.6-sol",
+      "passed": 4,
+      "failed": 0,
+      "failed_case_ids": []
+    },
+    {
+      "model": "gpt-5.6-luna",
+      "passed": 4,
+      "failed": 0,
+      "failed_case_ids": []
+    }
+  ]
+}
