@@ -74,9 +74,9 @@ python scripts/pddr.py upgrade --target /path/to/your-project
 
 ## 現在の段階
 
-現在は**v0.1.0-rc.1リリース候補**です。PDDR Kit自身でのdogfooding、二つの異なる既存プロジェクトへの導入・CI検証、既存導入先の安全な更新、新規プロジェクトへの初期導入、SolとLunaを使った記録作成および安全解釈の独立forward-testが完了しました。主要なRC検証項目は完了し、次は安定版リリースの準備と最終確認です。
+現在の安定版は**v0.1.0**です。PDDR Kit自身でのdogfooding、二つの異なる既存プロジェクトへの導入・CI検証、既存導入先の安全な更新、新規プロジェクトへの初期導入、SolとLunaを使った記録作成および安全解釈の独立forward-testを経て公開しました。
 
-リリース候補の検証範囲と既知の制約は[`docs/releases/v0.1.0-rc.1.md`](docs/releases/v0.1.0-rc.1.md)、変更履歴は[`CHANGELOG.md`](CHANGELOG.md)を参照してください。
+安定版の検証範囲と既知の制約は[`docs/releases/v0.1.0.md`](docs/releases/v0.1.0.md)、変更履歴は[`CHANGELOG.md`](CHANGELOG.md)を参照してください。
 
 Jevなどの有償・外部サービスは任意の拡張です。分類・不足判定・関連PDDRのcontext selection・typed handoff連携を強化できますが、PDDRの基本運用には不要です。
 

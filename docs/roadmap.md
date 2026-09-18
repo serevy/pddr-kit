@@ -13,14 +13,14 @@
 - GitHub Actionsでの継続検証
 - PDDRをPolicyと誤認しないConsumption Contract
 
-## v0.2 — Reusable adoption
+## v0.1 stable validation — Reusable adoption
 
 - 既存プロジェクトへ非破壊で導入する方法
 - 新規プロジェクト向け初期化
 - 二つ以上の異なるプロジェクトで運用検証
 - 実利用に基づくテンプレートとSkillの評価ケース
 
-検証状況：2026-09-17に、別の既存プロジェクトへの非破壊な導入、最初の記録作成、PDDR検証CI、導入先の既存CIまで確認済み。2026-09-18にSkillの独立forward-testを実施し、記録作成・更新ケースではGPT-5.6 Sol / mediumが11/11、GPT-5.6 Luna / mediumが10/11に合格。Consumption Contractの4ケースは両モデルが4/4に合格した。同日、既存導入先の安全な更新と導入先CI、二つ目の異なる既存プロジェクトへの導入・記録作成・PDDR検証CI、新規プロジェクト[`semantic-decision-lab`](https://github.com/serevy/semantic-decision-lab)への初期導入と`main`上の検証CIまで確認した。上記のv0.2検証項目は完了している。
+検証状況：2026-09-17に、別の既存プロジェクトへの非破壊な導入、最初の記録作成、PDDR検証CI、導入先の既存CIまで確認済み。2026-09-18にSkillの独立forward-testを実施し、記録作成・更新ケースではGPT-5.6 Sol / mediumが11/11、GPT-5.6 Luna / mediumが10/11に合格。Consumption Contractの4ケースは両モデルが4/4に合格した。同日、既存導入先の安全な更新と導入先CI、二つ目の異なる既存プロジェクトへの導入・記録作成・PDDR検証CI、新規プロジェクト[`semantic-decision-lab`](https://github.com/serevy/semantic-decision-lab)への初期導入と`main`上の検証CIまで確認した。上記の検証項目はv0.1.0のstable判断までに完了した。
 
 ## Research track — optional integrations
 
