@@ -72,6 +72,12 @@ python scripts/pddr.py upgrade --target /path/to/your-project
 
 詳しい導入方法とCI例は[`docs/adoption.md`](docs/adoption.md)、記録ルールは[`docs/specification.md`](docs/specification.md)を参照してください。初版ではMarkdownによる運用を正本とし、特定のAIやサービスを必須にしません。
 
+## 最小サンプル
+
+[`pddr-greenfield-example`](https://github.com/serevy/pddr-greenfield-example)では、新規プロジェクトへの`v0.1.0`導入結果と、観測・選択肢・判断・成果物・検証Evidenceを結んだPDDRの完成例を確認できます。
+
+題材とEvidenceはすべて架空であり、構成と運用を理解するための最小リファレンスです。実験や実利用の記録とは分離しています。
+
 ## 現在の段階
 
 現在の安定版は**v0.1.0**です。PDDR Kit自身でのdogfooding、二つの異なる既存プロジェクトへの導入・CI検証、既存導入先の安全な更新、新規プロジェクトへの初期導入、SolとLunaを使った記録作成および安全解釈の独立forward-testを経て公開しました。
