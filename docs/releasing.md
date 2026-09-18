@@ -2,7 +2,7 @@
 
 リリース作業では、バージョン変更と検証結果を先にPRでレビューし、マージ後の同一コミットへタグを付けます。
 
-## リリース候補の手順
+## リリース手順
 
 1. `VERSION`と`scripts/pddr.py`の`KIT_VERSION`を同じSemVerへ更新する。
 2. `CHANGELOG.md`と`docs/releases/`へ変更内容、検証範囲、既知の制約を記録する。
@@ -19,7 +19,7 @@
 
 4. リリース準備PRをレビューし、CI成功後にマージする。
 5. マージコミットへ`v`付きのannotated tagを付ける。
-6. `docs/releases/`の本文を使ってGitHub Releaseを作る。RCはPre-releaseとして公開する。
+6. `docs/releases/`の本文を使ってGitHub Releaseを作る。RCだけをPre-releaseとして公開する。
 
 ## stable版の確認項目
 
