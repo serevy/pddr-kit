@@ -15,6 +15,14 @@ sys.modules[SPEC.name] = pddr_cli
 SPEC.loader.exec_module(pddr_cli)
 
 
+class VersionTests(unittest.TestCase):
+    def test_cli_version_matches_version_file(self):
+        self.assertEqual(
+            pddr_cli.KIT_VERSION,
+            (ROOT / "VERSION").read_text(encoding="utf-8").strip(),
+        )
+
+
 VALID_RECORD = """---
 id: PDDR-0001
 title: Test record
