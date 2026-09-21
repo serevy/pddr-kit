@@ -20,7 +20,7 @@ permissions:
 
 jobs:
   translate:
-    uses: serevy/readme-i18n-kit/.github/workflows/translate-readme.yml@260ea2edebdfc04b0911dcdae0417f6c8078e7e9
+    uses: serevy/readme-i18n-kit/.github/workflows/translate-readme.yml@7a94f404a62d7ce7b080fa5784565c2375ccd230
     with:
       source_file: README.md
       source_language: ja
