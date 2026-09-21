@@ -1,0 +1,32 @@
+{
+  "targetLanguages": ["en", "zh-CN", "ko", "fr"],
+  "protectedTerms": [
+    "PDDR Kit",
+    "PDDR",
+    "Project Design Decision Record",
+    "Project",
+    "Product",
+    "Process",
+    "ADR",
+    "DDR",
+    "Decision Record",
+    "decision_status",
+    "delivery_status",
+    "Evidence",
+    "needs-confirmation",
+    "Policy",
+    "Jev",
+    "Sol",
+    "Luna",
+    "Issue",
+    "PR",
+    "CI",
+    "Skill",
+    "Markdown",
+    "Python",
+    "MADR",
+    "pddr-greenfield-example",
+    "v0.1.0"
+  ],
+  "glossary": []
+}
