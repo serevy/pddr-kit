@@ -70,5 +70,11 @@
       "source": "Python",
       "target": "Python"
     }
+  ],
+  "sourceResiduePatterns": [
+    "[ぁ-んァ-ヶ]"
+  ],
+  "allowedSourceResiduePatterns": [
+    "zenn\\.dev/softbank/articles/ee93e87a9d5dac"
   ]
 }
