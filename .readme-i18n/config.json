@@ -1,32 +1,74 @@
 {
-  "targetLanguages": ["en", "zh-CN", "ko", "fr"],
+  "targetLanguages": [
+    "en",
+    "zh-CN",
+    "ko",
+    "fr"
+  ],
   "protectedTerms": [
     "PDDR Kit",
     "PDDR",
     "Project Design Decision Record",
-    "Project",
-    "Product",
-    "Process",
     "ADR",
     "DDR",
-    "Decision Record",
     "decision_status",
     "delivery_status",
-    "Evidence",
     "needs-confirmation",
-    "Policy",
     "Jev",
     "Sol",
     "Luna",
-    "Issue",
-    "PR",
-    "CI",
-    "Skill",
-    "Markdown",
-    "Python",
     "MADR",
     "pddr-greenfield-example",
     "v0.1.0"
   ],
-  "glossary": []
+  "glossary": [
+    {
+      "source": "Project",
+      "target": "Project"
+    },
+    {
+      "source": "Product",
+      "target": "Product"
+    },
+    {
+      "source": "Process",
+      "target": "Process"
+    },
+    {
+      "source": "Decision Record",
+      "target": "Decision Record"
+    },
+    {
+      "source": "Evidence",
+      "target": "Evidence"
+    },
+    {
+      "source": "Policy",
+      "target": "Policy"
+    },
+    {
+      "source": "Issue",
+      "target": "Issue"
+    },
+    {
+      "source": "PR",
+      "target": "PR"
+    },
+    {
+      "source": "CI",
+      "target": "CI"
+    },
+    {
+      "source": "Skill",
+      "target": "Skill"
+    },
+    {
+      "source": "Markdown",
+      "target": "Markdown"
+    },
+    {
+      "source": "Python",
+      "target": "Python"
+    }
+  ]
 }
