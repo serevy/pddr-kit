@@ -27,23 +27,18 @@ PDDR은 ADR이나 DDR을 대체하지 않습니다. 기존 Decision Record를 �
 
 ## 저장소 구성
 
-```text
-docs/
-  specification.md          PDDRの共通仕様
-  roadmap.md                初版と将来拡張の境界
-  adoption.md               導入・検証・CIの手順
-  skill-evaluation.md       Skill評価の方法と現在状態
-  records/                  このプロジェクト自身のPDDR
-evals/
-  pddr-recorder/             Skill評価ケース
-templates/
-  pddr.md                    新規PDDRテンプレート
-skills/
-  pddr-recorder/             AI向け記録Skill
-scripts/
-  pddr.py                    導入・更新・検証CLI
-tests/                       CLI・評価定義の自動テスト
-```
+| 경로 | 설명 |
+| --- | --- |
+| `docs/specification.md` | PDDR 공통 사양 |
+| `docs/roadmap.md` | 초판과 향후 확장의 경계 |
+| `docs/adoption.md` | 도입·검증·CI 절차 |
+| `docs/skill-evaluation.md` | Skill 평가 방법과 현재 상태 |
+| `docs/records/` | 이 프로젝트 자체의 PDDR |
+| `evals/pddr-recorder/` | Skill 평가 케이스 |
+| `templates/pddr.md` | 신규 PDDR 템플릿 |
+| `skills/pddr-recorder/` | AI용 기록 Skill |
+| `scripts/pddr.py` | 도입·업데이트·검증 CLI |
+| `tests/` | CLI 및 평가 정의 자동 테스트 |
 
 ## 사용 시작하기
 

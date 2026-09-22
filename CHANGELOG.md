@@ -4,6 +4,7 @@ PDDR Kitの主な変更をこのファイルに記録します。
 
 ## [Unreleased]
 
+- 多言語READMEのリポジトリ構成説明が日本語のまま残らないよう、翻訳対象外のfenced code blockから翻訳可能なMarkdown表へ変更しました。
 - 導入先の大きなフェーズ境界、Issue / roadmap棚卸し、複数Evidence-bearing Issue / PRのclose時に、recent workをPDDR thresholdで再点検するmilestone audit guidanceを追加しました。
 - checkpointは記録作成のquotaではなく、durable decisionがなければPDDRを追加しないことをSkillと導入ガイドへ明記しました。
 - milestone auditのno-opとdurable decision昇格を評価するSkillケースを2件追加しました。

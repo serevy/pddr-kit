@@ -27,23 +27,18 @@ PDDR ne remplace ni ADR ni DDR. Il constitue une couche qui, en se référant au
 
 ## Structure du dépôt
 
-```text
-docs/
-  specification.md          PDDRの共通仕様
-  roadmap.md                初版と将来拡張の境界
-  adoption.md               導入・検証・CIの手順
-  skill-evaluation.md       Skill評価の方法と現在状態
-  records/                  このプロジェクト自身のPDDR
-evals/
-  pddr-recorder/             Skill評価ケース
-templates/
-  pddr.md                    新規PDDRテンプレート
-skills/
-  pddr-recorder/             AI向け記録Skill
-scripts/
-  pddr.py                    導入・更新・検証CLI
-tests/                       CLI・評価定義の自動テスト
-```
+| Chemin | Description |
+| --- | --- |
+| `docs/specification.md` | Spécification commune de PDDR |
+| `docs/roadmap.md` | Limites entre la version initiale et les extensions futures |
+| `docs/adoption.md` | Procédures d’adoption, de vérification et de CI |
+| `docs/skill-evaluation.md` | Méthode d’évaluation du Skill et état actuel |
+| `docs/records/` | PDDR de ce projet |
+| `evals/pddr-recorder/` | Cas d’évaluation du Skill |
+| `templates/pddr.md` | Modèle pour un nouveau PDDR |
+| `skills/pddr-recorder/` | Skill d’enregistrement destiné à l’IA |
+| `scripts/pddr.py` | CLI d’adoption, de mise à jour et de validation |
+| `tests/` | Tests automatisés de la CLI et des définitions d’évaluation |
 
 ## Prise en main
 

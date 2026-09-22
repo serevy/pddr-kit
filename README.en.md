@@ -27,23 +27,18 @@ PDDR does not replace ADR or DDR. It is a layer that links observations made bef
 
 ## Repository structure
 
-```text
-docs/
-  specification.md          PDDRの共通仕様
-  roadmap.md                初版と将来拡張の境界
-  adoption.md               導入・検証・CIの手順
-  skill-evaluation.md       Skill評価の方法と現在状態
-  records/                  このプロジェクト自身のPDDR
-evals/
-  pddr-recorder/             Skill評価ケース
-templates/
-  pddr.md                    新規PDDRテンプレート
-skills/
-  pddr-recorder/             AI向け記録Skill
-scripts/
-  pddr.py                    導入・更新・検証CLI
-tests/                       CLI・評価定義の自動テスト
-```
+| Path | Description |
+| --- | --- |
+| `docs/specification.md` | Common PDDR specification |
+| `docs/roadmap.md` | Boundary between the initial release and future extensions |
+| `docs/adoption.md` | Adoption, verification, and CI procedures |
+| `docs/skill-evaluation.md` | Skill evaluation method and current status |
+| `docs/records/` | PDDR records for this project |
+| `evals/pddr-recorder/` | Skill evaluation cases |
+| `templates/pddr.md` | Template for a new PDDR |
+| `skills/pddr-recorder/` | Recording Skill for AI |
+| `scripts/pddr.py` | Adoption, upgrade, and validation CLI |
+| `tests/` | Automated tests for the CLI and evaluation definitions |
 
 ## Getting started
 
