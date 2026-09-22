@@ -30,6 +30,14 @@ def load_consumption_suite():
     )
 
 
+def load_milestone_audit_suite():
+    return json.loads(
+        (ROOT / "evals" / "pddr-recorder" / "milestone-audit-cases.json").read_text(
+            encoding="utf-8"
+        )
+    )
+
+
 class SkillEvalValidationTests(unittest.TestCase):
     def test_repository_suite_is_valid(self):
         suite = load_suite()
@@ -37,6 +45,10 @@ class SkillEvalValidationTests(unittest.TestCase):
 
     def test_consumption_suite_is_valid(self):
         suite = load_consumption_suite()
+        self.assertEqual(validator.validate_suite(suite), [])
+
+    def test_milestone_audit_suite_is_valid(self):
+        suite = load_milestone_audit_suite()
         self.assertEqual(validator.validate_suite(suite), [])
 
     def test_duplicate_case_id_is_rejected(self):
