@@ -4,7 +4,7 @@ title: Add milestone audits to complement opportunistic decision capture
 decision_date: 2026-09-22
 recorded_date: 2026-09-22
 decision_status: accepted
-delivery_status: in-progress
+delivery_status: validated
 scope:
   - product
   - process
@@ -14,6 +14,8 @@ evidence:
   - "Maintainer approval to feed the dogfooding finding back into PDDR Kit, 2026-09-22 (private)"
   - "https://github.com/serevy/semantic-decision-lab/pull/66"
   - "https://github.com/serevy/semantic-decision-lab/actions/runs/35732721814"
+  - "https://github.com/serevy/pddr-kit/pull/29"
+  - "https://github.com/serevy/pddr-kit/actions/runs/35735441734"
 related:
   - PDDR-0003
   - PDDR-0004
@@ -76,7 +78,9 @@ checkpointは記録作成のquotaではなく、durable decisionがなければP
 
 semantic-decision-labでは、2026-09-22のcheckpoint auditで未記録だったdurable decisionを3件抽出し、既存PDDRのEvidence更新と合わせてPR #66へまとめた。同PRでは再発防止としてAGENTS.mdへcheckpointを追加し、merge後のmainでPDDR validationが成功した。これにより、導入先でmilestone auditが記録漏れの再点検として機能することを確認した。
 
-PDDR Kit側では、本判断をSkill、導入ガイド、Skill評価ケース、Changelogへ反映する作業を本変更で開始している。mainへのmergeとKit自身のvalidation完了前のため、delivery statusは`in-progress`とする。
+PDDR Kit側では、本判断をSkill、導入ガイド、独立したmilestone audit Skill評価suite、Changelogへ反映した。PR #29をmainへmergeし、merge commit上のValidate PDDR Kitが成功した。これにより、Kit本体への実装とrepository-level validationが完了したため、delivery statusを`validated`とする。
+
+追加したmilestone audit 2ケースはschema・repository validationまで完了しているが、Sol / Luna等による独立forward-testはまだ実施していない。このため、`validated`はmilestone audit運用とKit統合が検証済みであることを示し、新評価ケースのモデル品質まで証明するものではない。
 
 ## Consequences
 
@@ -99,6 +103,8 @@ PDDR Kit側では、本判断をSkill、導入ガイド、Skill評価ケース�
 - Maintainer approval to feed the dogfooding finding back into PDDR Kit, 2026-09-22 (private).
 - [semantic-decision-lab PR #66](https://github.com/serevy/semantic-decision-lab/pull/66)
 - [semantic-decision-lab main PDDR validation after PR #66](https://github.com/serevy/semantic-decision-lab/actions/runs/35732721814)
+- [PDDR Kit PR #29: milestone audit checkpoint](https://github.com/serevy/pddr-kit/pull/29)
+- [PDDR Kit main validation after PR #29](https://github.com/serevy/pddr-kit/actions/runs/35735441734)
 
 ## Related records
 
