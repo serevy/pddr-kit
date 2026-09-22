@@ -20,6 +20,8 @@
 - 強い表現や新しさを権限と誤認しない
 - supersededな記録を現在の判断として適用しない
 - 現在のタスクに必要な最小限の記録だけを選ぶ
+- 節目のauditでも、durable decisionがなければPDDRを作らない
+- 複数Issue / PRのEvidenceから、routine workではなくdurable decisionだけを昇格する
 
 ## 二段階の検証
 
@@ -49,6 +51,12 @@ CIでは、ケースID、期待するrouting、record action、状態値、必�
 ```bash
 python scripts/validate_skill_eval_results.py
 ```
+
+## 2026-09-22のmilestone auditケース追加
+
+semantic-decision-labでのdogfoodingを受け、節目の棚卸しが「PDDRを必ず作るイベント」にならないことと、複数のrecent Issues / PRsからdurable decisionだけを昇格できることを確認する2ケースを追加しました。
+
+これにより記録作成・更新suiteは13ケースになりました。下記2026-09-18の11ケース比較結果は当時の固定snapshotに対する履歴Evidenceとして維持し、新しい2ケースを合格済みとは扱いません。追加ケースの独立forward-testは別途実施します。
 
 ## 2026-09-18の記録作成・更新比較
 
