@@ -61,6 +61,35 @@ Issue、タスク、実験ログなど既存の作業管理を、すべてPDDR�
 
 作業や実験の開始・変更・完了だけを理由にPDDRを作成しません。重要な判断が生じた場合は、PDDRから根拠となるIssueを参照し、Issue側からもPDDRへリンクします。詳細な時系列はIssueに残し、PDDRには判断に必要な要約とEvidenceだけを記録します。
 
+## 節目でPDDRを棚卸しする
+
+個々の作業中にPDDR候補へ気づく運用だけでは、AI Skillを読み込まない経路や、複数Issueへ判断根拠が分散した場合に重要な判断を取りこぼすことがあります。導入先の`AGENTS.md`や開発者向け規則に、節目でrecent Issues / PRsを再点検するcheckpointを置くことを推奨します。
+
+代表的なcheckpointは次です。
+
+- 大きな実験・リリース・開発フェーズの境界
+- Issueまたはroadmapの棚卸し
+- Evidenceを持つ複数Issue / PRをまとめてclose・統合するタイミング
+
+checkpointでは、対象期間のIssue、PR、既存PDDR、検証Evidenceを通常のPDDR thresholdで再評価します。将来も理由を参照すべきProject / Product / Process判断だけを作成・更新し、通常実装、途中観測、実験完了そのものは昇格させません。
+
+**checkpointを実施したからといってPDDRを作る必要はありません。** durable decisionが見つからなければ「追加記録なし」が正常な結果です。
+
+例えばAI・開発者向け規則には、次のようなプロジェクト固有ルールを追加できます。
+
+```text
+## PDDR checkpoints
+
+At a major phase boundary, Issue/roadmap audit, or consolidation of
+multiple Evidence-bearing Issues/PRs, review recent work against the
+normal PDDR threshold.
+
+Create or update a PDDR only for a durable Project, Product, or Process
+decision. Do not create a PDDR merely because the checkpoint occurred.
+```
+
+PDDR Kitの`init`と`upgrade`は、引き続き導入先の`AGENTS.md`などを自動変更しません。既存規則との重複や上書きを避けるため、checkpointの追加は導入先ごとにレビューして接続します。
+
 ## 記録を作る
 
 ```bash
