@@ -2,6 +2,12 @@
 
 PDDR Kitの主な変更をこのファイルに記録します。
 
+## [Unreleased]
+
+- 導入先の大きなフェーズ境界、Issue / roadmap棚卸し、複数Evidence-bearing Issue / PRのclose時に、recent workをPDDR thresholdで再点検するmilestone audit guidanceを追加しました。
+- checkpointは記録作成のquotaではなく、durable decisionがなければPDDRを追加しないことをSkillと導入ガイドへ明記しました。
+- milestone auditのno-opとdurable decision昇格を評価するSkillケースを2件追加しました。
+
 ## [0.1.0] - 2026-09-18
 
 最初の安定版です。リリース候補の機能に加え、二つ目の異なる既存プロジェクト、新規プロジェクト、既存導入先の安全な更新で導入経路を検証しました。Issueを実験・作業の記録、PDDRを重要な判断の記録とする責務境界も導入ガイドへ追加しています。
