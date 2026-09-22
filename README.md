@@ -1,5 +1,7 @@
 # PDDR Kit
 
+[English](README.en.md) | **日本語** | [简体中文](README.zh-CN.md) | [한국어](README.ko.md) | [Français](README.fr.md)
+
 **Project Design Decision Record** — プロジェクトの判断・背景・実装・検証をつなぐための軽量キットです。
 
 PDDRは、最終的な決定だけでなく、観測や議論から提案が生まれ、採用され、実装・検証され、必要なら見直されるまでの流れを追跡可能にします。人とAIが「何を決めたか」だけでなく「なぜ現在の形になったか」を引き継げることを目指します。

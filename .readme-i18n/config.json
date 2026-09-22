@@ -69,6 +69,26 @@
     {
       "source": "Python",
       "target": "Python"
+    },
+    {
+      "source": "English",
+      "target": "English"
+    },
+    {
+      "source": "日本語",
+      "target": "日本語"
+    },
+    {
+      "source": "简体中文",
+      "target": "简体中文"
+    },
+    {
+      "source": "한국어",
+      "target": "한국어"
+    },
+    {
+      "source": "Français",
+      "target": "Français"
     }
   ],
   "sourceResiduePatterns": [
