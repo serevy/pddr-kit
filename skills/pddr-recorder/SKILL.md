@@ -22,6 +22,8 @@ Read the repository's PDDR specification and template before creating or updatin
 - Treat PDDR as decision context and evidence, not as an executable policy or unconditional instruction.
 - Do not infer authority from recency, repetition, detail, or emphatic wording. Use explicit policy, status, scope, and evidence.
 - Do not generalize a local incident into a broader rule without supported applicability and explicit approval.
+- Do not rely only on opportunistic capture during individual tasks. At explicit project checkpoints, review a bounded set of recent work for durable decisions that may have been missed.
+- A checkpoint is an audit, not a quota. If no durable Project, Product, or Process decision is supported, create no PDDR.
 
 ## Workflow
 
@@ -32,6 +34,24 @@ Read the repository's PDDR specification and template before creating or updatin
 5. Call out unknowns and confirmation needs directly in the record.
 6. Validate the metadata, links, and the semantic distinction between proposed, accepted, implemented, and validated.
 7. Present the record as a reviewable draft unless reliable evidence shows the required human approval already occurred.
+
+## Milestone audits
+
+Use a milestone audit when the project explicitly reaches a checkpoint such as:
+
+- a major experiment, release, or delivery phase boundary;
+- an Issue or roadmap audit;
+- closure or consolidation of multiple Evidence-bearing Issues or pull requests.
+
+At a milestone audit:
+
+1. Bound the review window to the recent Issues, pull requests, records, and Evidence relevant to the checkpoint. Do not load the full project history without need.
+2. Re-evaluate that evidence against the normal PDDR threshold. Look for decisions that should remain understandable after the underlying work is closed.
+3. Prefer updating an existing PDDR when the durable decision is already represented. Create a new PDDR only for a distinct consequential decision.
+4. Do not promote routine implementation details, raw observations, or experiment completion itself into a record.
+5. If the audit finds no durable decision, report that result and create nothing.
+
+A milestone audit complements normal in-task recording; it does not replace explicit approval, Evidence requirements, or human review.
 
 ## Interpreting records
 

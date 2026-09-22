@@ -4,7 +4,7 @@
 
 `pddr-recorder`が、記録対象の選別、判断状態と提供状態の分離、Evidenceの扱い、履歴保全、権限境界を一貫して守れるかを評価します。
 
-記録作成・更新の評価ケースは[`evals/pddr-recorder/cases.json`](../evals/pddr-recorder/cases.json)、記録を安全に解釈する評価ケースは[`evals/pddr-recorder/consumption-cases.json`](../evals/pddr-recorder/consumption-cases.json)です。特定モデルの回答文を固定するのではなく、満たすべき行動と禁止する行動を定義します。
+記録作成・更新の評価ケースは[`evals/pddr-recorder/cases.json`](../evals/pddr-recorder/cases.json)、記録を安全に解釈する評価ケースは[`evals/pddr-recorder/consumption-cases.json`](../evals/pddr-recorder/consumption-cases.json)、milestone auditの追加forward-testケースは[`evals/pddr-recorder/milestone-audit-cases.json`](../evals/pddr-recorder/milestone-audit-cases.json)です。特定モデルの回答文を固定するのではなく、満たすべき行動と禁止する行動を定義します。
 
 ## 評価する境界
 
@@ -20,6 +20,8 @@
 - 強い表現や新しさを権限と誤認しない
 - supersededな記録を現在の判断として適用しない
 - 現在のタスクに必要な最小限の記録だけを選ぶ
+- 節目のauditでも、durable decisionがなければPDDRを作らない
+- 複数Issue / PRのEvidenceから、routine workではなくdurable decisionだけを昇格する
 
 ## 二段階の検証
 
@@ -49,6 +51,12 @@ CIでは、ケースID、期待するrouting、record action、状態値、必�
 ```bash
 python scripts/validate_skill_eval_results.py
 ```
+
+## 2026-09-22のmilestone auditケース追加
+
+semantic-decision-labでのdogfoodingを受け、節目の棚卸しが「PDDRを必ず作るイベント」にならないことと、複数のrecent Issues / PRsからdurable decisionだけを昇格できることを確認する2ケースを、独立した`milestone-audit-cases.json`として追加しました。
+
+2026-09-18の11ケースsuiteと既存resultsは固定Evidenceとして変更しません。新しい2ケースを過去のモデル結果へ混ぜず、独立forward-testとして評価します。追加ケースは定義・schema検証のみ完了しており、モデル合格済みとは扱いません。
 
 ## 2026-09-18の記録作成・更新比較
 

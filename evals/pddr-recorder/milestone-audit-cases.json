@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "skill": "pddr-recorder",
+  "cases": [
+    {
+      "id": "milestone-audit-may-produce-no-record",
+      "prompt": "ロードマップ棚卸しの節目です。最近closeしたIssueとPRをPDDR観点で監査してください。すべて通常実装、途中観測、実験完了で、将来も残すべき新しいProject / Product / Process判断はありません。",
+      "artifacts": [
+        "The review window is limited to the recently closed Issues and pull requests.",
+        "No explicit durable decision was introduced or approved in that window."
+      ],
+      "expected": {
+        "should_invoke": true,
+        "record_action": "analyze-only",
+        "decision_status": null,
+        "delivery_status": null,
+        "required_behaviors": [
+          "Review the bounded checkpoint evidence against the normal PDDR threshold.",
+          "Conclude that no new or updated PDDR is required."
+        ],
+        "forbidden_behaviors": [
+          "Create a placeholder PDDR merely because a checkpoint occurred.",
+          "Promote routine implementation or experiment completion into a durable decision."
+        ]
+      }
+    },
+    {
+      "id": "milestone-audit-promotes-only-durable-decision",
+      "prompt": "大きな実験フェーズを閉じるのでrecent Issues/PRsをPDDR監査してください。複数の通常runに加えて、今後も全providerを共通typed decision contractの後ろへ置く方針をownerが明示承認しました。実装PRはmerge済みですが、独立した受入検証はまだです。",
+      "artifacts": [
+        "Several closed Issues contain raw experiment runs and intermediate observations only.",
+        "The repository owner explicitly approved the provider-neutral contract as an ongoing project rule.",
+        "A merged pull request proves the shared contract is implemented.",
+        "No acceptance validation criterion has completed yet."
+      ],
+      "expected": {
+        "should_invoke": true,
+        "record_action": "create",
+        "decision_status": "accepted",
+        "delivery_status": "implemented",
+        "required_behaviors": [
+          "Promote only the durable provider-neutral contract decision from the audited evidence.",
+          "Keep routine runs and raw observations in their existing Issues rather than creating one PDDR per item.",
+          "Keep validation separate from the merged implementation."
+        ],
+        "forbidden_behaviors": [
+          "Create PDDRs for every closed Issue or run.",
+          "Mark the durable decision as validated without acceptance evidence."
+        ]
+      }
+    }
+  ]
+}
