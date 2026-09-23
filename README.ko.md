@@ -73,7 +73,7 @@ GitHub Actions를 사용하는 프로젝트에서는 Agent Skill이 지속적으
 
 ## 최소 예시
 
-[`pddr-greenfield-example`](https://github.com/serevy/pddr-greenfield-example)에서는 신규 Project에 `v0.1.0`을 도입한 결과와 관찰·선택지·판단·산출물·검증 Evidence를 연결한 완성된 PDDR 예시를 확인할 수 있습니다. managed core는 stable 도입 예시로서 의도적으로 `v0.1.0`을 유지하면서, `v0.2.0`에서 추가된 optional checkpoint CI도 dogfood하고 있습니다.
+[`pddr-greenfield-example`](https://github.com/serevy/pddr-greenfield-example)에서는 신규 Project에 처음 `v0.1.0`을 도입했던 이력을 보존하면서, 관찰·선택지·판단·산출물·검증 Evidence를 연결한 완성된 PDDR 예시를 확인할 수 있습니다. 현재 managed core는 `v0.2.1`로 업데이트되었고, read-only signal workflow와 trusted marker writer로 분리된 hardened optional checkpoint CI도 dogfood하고 있습니다.
 
 주제와 Evidence는 모두 허구이며, 구성과 운영을 이해하기 위한 최소 참조 자료입니다. 실험이나 실제 사용 기록과는 분리되어 있습니다.
 
