@@ -1,0 +1,105 @@
+name: Publish PDDR Kit release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version without the v prefix; must match VERSION
+        required: true
+        type: string
+      kind:
+        description: GitHub Release kind
+        required: true
+        default: stable
+        type: choice
+        options:
+          - stable
+          - prerelease
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pddr-kit-release
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require default branch
+        env:
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          if [ "$REF_NAME" != "$DEFAULT_BRANCH" ]; then
+            echo "Release workflow must be dispatched from $DEFAULT_BRANCH, not $REF_NAME." >&2
+            exit 1
+          fi
+
+      - name: Check out release commit
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.10"
+
+      - name: Run unit tests
+        run: python -m unittest discover -s tests -v
+
+      - name: Validate Skill eval cases
+        run: python scripts/validate_skill_evals.py
+
+      - name: Validate Skill consumption cases
+        run: python scripts/validate_skill_evals.py evals/pddr-recorder/consumption-cases.json
+
+      - name: Validate Skill eval results
+        run: python scripts/validate_skill_eval_results.py
+
+      - name: Validate repository records
+        run: python scripts/pddr.py validate
+
+      - name: Validate release metadata
+        env:
+          RELEASE_VERSION: ${{ inputs.version }}
+          RELEASE_KIND: ${{ inputs.kind }}
+        run: |
+          python scripts/release_guard.py \
+            --expected-version "$RELEASE_VERSION" \
+            --kind "$RELEASE_KIND"
+
+      - name: Refuse an existing tag or release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: v${{ inputs.version }}
+        run: |
+          if git ls-remote --exit-code --tags origin "refs/tags/$RELEASE_TAG" >/dev/null 2>&1; then
+            echo "$RELEASE_TAG already exists." >&2
+            exit 1
+          fi
+
+          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            echo "GitHub Release $RELEASE_TAG already exists." >&2
+            exit 1
+          fi
+
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_VERSION: ${{ inputs.version }}
+          RELEASE_KIND: ${{ inputs.kind }}
+        shell: bash
+        run: |
+          args=()
+          if [ "$RELEASE_KIND" = "prerelease" ]; then
+            args+=(--prerelease)
+          fi
+
+          gh release create "v$RELEASE_VERSION" \
+            --target "$GITHUB_SHA" \
+            --title "PDDR Kit v$RELEASE_VERSION" \
+            --notes-file "docs/releases/v$RELEASE_VERSION.md" \
+            "${args[@]}"

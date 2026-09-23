@@ -4,6 +4,9 @@ PDDR Kitの主な変更をこのファイルに記録します。
 
 ## [Unreleased]
 
+- maintainer向けに、version metadata・release note・CHANGELOG・repository validation・既存tagをguardする手動dispatchのGitHub Release workflowを常設しました。
+- v0.2.0後の最初のminor capabilityとしてmainのdevelopment versionを`0.3.0-dev`へ進めました。
+
 ## [0.2.0] - 2026-09-23
 
 v0.1.0のportableなmanaged coreを維持しながら、PDDR候補の取りこぼしを節目で再点検するmilestone auditと、その実行漏れを補完するoptional checkpoint CIを追加したminor releaseです。product release全体とconsumer managed coreのprovenanceを分けるversion contractも明文化しました。
