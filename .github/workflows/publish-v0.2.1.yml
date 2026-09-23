@@ -1,0 +1,31 @@
+name: Publish PDDR Kit v0.2.1
+
+on:
+  push:
+    branches:
+      - publish/v0.2.1
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Publish v0.2.1
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: v0.2.1
+          RELEASE_TARGET: b2f13aafc1a010d65615badc5a8527d2ab4ae1b8
+        run: |
+          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            echo "$RELEASE_TAG already exists; nothing to do."
+            exit 0
+          fi
+
+          gh release create "$RELEASE_TAG" \
+            --target "$RELEASE_TARGET" \
+            --title "PDDR Kit v0.2.1" \
+            --notes-file docs/releases/v0.2.1.md
