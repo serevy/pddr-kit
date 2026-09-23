@@ -79,9 +79,9 @@ python scripts/pddr.py upgrade --target /path/to/your-project
 
 ## 当前阶段
 
-当前稳定版是 **v0.2.0**。在 v0.1.0 基础上，本版新增 milestone audit、product-level versioning contract，以及用于补充 Agent 无法持续观察的变更路径的 optional checkpoint CI。checkpoint CI 已在 greenfield example 中完成 high-signal 触发、pending marker 回收、既有 PDDR 更新以及 routine change 不触发 signal 的 dogfood。
+当前稳定版是 **v0.2.1**。本版保持 v0.2.0 的功能边界，同时将 optional checkpoint CI 拆分为只读的 PR signal workflow 与基于可信 default branch 的 marker writer，以强化最小权限边界。greenfield example 已验证 pending marker 自动写入、completed 状态回收以及 marker 不重复生成。
 
-有关稳定版的验证范围和已知限制，请参阅 [`docs/releases/v0.2.0.md`](docs/releases/v0.2.0.md)；有关变更历史，请参阅 [`CHANGELOG.md`](CHANGELOG.md)。
+有关稳定版的验证范围，请参阅 [`docs/releases/v0.2.1.md`](docs/releases/v0.2.1.md)；有关变更历史，请参阅 [`CHANGELOG.md`](CHANGELOG.md)。
 
 Jev 等付费或外部服务属于可选扩展。它们可以增强分类、缺失判定、相关 PDDR 的 context selection 以及 typed handoff 集成，但并非 PDDR 基本运作所必需。
 
