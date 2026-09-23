@@ -73,7 +73,7 @@ python scripts/pddr.py upgrade --target /path/to/your-project
 
 ## 最小示例
 
-[`pddr-greenfield-example`](https://github.com/serevy/pddr-greenfield-example) 提供了一个完整的 PDDR 示例，将在新 Project 中导入 `v0.1.0` 的结果与观察、备选方案、决策、产出物和验证 Evidence 连接起来。其 managed core 有意保持在 `v0.1.0`，作为稳定版导入示例，同时也对 `v0.2.0` 新增的 optional checkpoint CI 进行了 dogfood。
+[`pddr-greenfield-example`](https://github.com/serevy/pddr-greenfield-example) 保留了在新 Project 中最初导入 `v0.1.0` 的历史，并提供了一个将观察、备选方案、决策、产出物和验证 Evidence 连接起来的完整 PDDR 示例。其 managed core 现已更新到 `v0.2.1`，并对拆分为只读 signal workflow 与可信 marker writer 的 hardened optional checkpoint CI 进行了 dogfood。
 
 题材与 Evidence 均为虚构内容，仅作为理解结构与运作方式的最小参考，与实验记录和实际使用记录相互分离。
 
