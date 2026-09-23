@@ -4,10 +4,21 @@ PDDR Kitの主な変更をこのファイルに記録します。
 
 ## [Unreleased]
 
-- optional checkpoint CIをread-only signal workflowとtrusted `workflow_run` marker writerへ分離し、PR headのコード実行とwrite-capable tokenを同じjobに置かない権限境界へ強化しました。
 
 - maintainer向けに、version metadata・release note・CHANGELOG・repository validation・既存tagをguardする手動dispatchのGitHub Release workflowを常設しました。
 - v0.2.0後の最初のminor capabilityとしてmainのdevelopment versionを`0.3.0-dev`へ進めました。
+
+## [0.2.1] - 2026-09-24
+
+v0.2.0のoptional checkpoint CIをleast-privilege構成へhardeningするpatch releaseです。
+
+- PR headを観測する `PDDR checkpoint` workflowをread-only化しました。
+- PR本文 / commentへのwriteをdefault branchのtrusted `workflow_run` writerへ分離しました。
+- privileged writerはPR headのcode / artifactを実行せず、GitHub APIからPR metadata / changed filesを取得してtrusted detectorでsignalを再計算します。
+- workflow security boundaryをunit testで固定しました。
+- greenfield exampleでpending marker自動追記、completed回収、再実行時のmarker重複なしをE2E確認しました。
+
+詳細な検証結果は[`docs/releases/v0.2.1.md`](docs/releases/v0.2.1.md)を参照してください。
 
 ## [0.2.0] - 2026-09-23
 
