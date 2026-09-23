@@ -4,6 +4,7 @@ PDDR Kitの主な変更をこのファイルに記録します。
 
 ## [Unreleased]
 
+- Agent Skillが常時観測しない変更経路を補完するoptional checkpoint CI、deterministic signal detector、PR checkpoint marker運用を追加しました。
 - PDDR Kitのversionをproduct release全体のversionとして定義し、managed coreのprovenanceとoptional integrationの導入状態を分離しました。
 - patch / minor / pre-1.0 breaking changeの基準とrelease checklistを`docs/versioning.md`へ追加しました。
 - v0.1.0後の後方互換なcapability追加を反映し、mainのdevelopment versionを`0.2.0-dev`へ進めました。

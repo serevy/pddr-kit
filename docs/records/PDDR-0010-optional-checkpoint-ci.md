@@ -1,0 +1,125 @@
+---
+id: PDDR-0010
+title: Provide optional checkpoint CI as an advisory safety net
+decision_date: 2026-09-23
+recorded_date: 2026-09-23
+decision_status: accepted
+delivery_status: implemented
+scope:
+  - product
+  - process
+owners:
+  - serevy
+evidence:
+  - "https://github.com/serevy/pddr-kit/issues/32"
+  - "Maintainer approved optional recommended checkpoint CI, 2026-09-23 (private)"
+  - "scripts/pddr_checkpoint.py"
+  - "templates/checkpoint-ci/pddr-checkpoint.yml"
+  - "tests/test_pddr_checkpoint.py"
+related:
+  - PDDR-0008
+  - PDDR-0009
+supersedes: []
+superseded_by: null
+---
+
+# PDDR-0010: Provide optional checkpoint CI as an advisory safety net
+
+## Summary
+
+PDDR milestone auditをAgent Skillやproject guidanceだけに依存させず、GitHub Actionsを利用するconsumer向けにoptional / recommendedなcheckpoint CIを提供する。
+
+CIはPDDRの必要性を意味的に判定したり記録を自動作成したりせず、deterministicなhigh-signal changeを検出して「checkpoint review recommended」という留守番signalを残す。
+
+## Context and observations
+
+- PDDR-0008では、opportunistic captureを補完するmilestone auditを標準運用として採用した。
+- その後のdogfoodで、ChatGPT経由のcloud development、GitHub上の直接変更、人手編集など、Agent Skillが常時観測しない開発経路ではcheckpoint自体の実行が漏れることが確認された。
+- local AgentでもSkillやrepository contextの再読込は実行環境・session・cache状態に依存し、常に同じ運用知識がactiveとは限らない。
+- Semantic Decision LabではPR本文末尾の `## PDDR checkpoint` が実運用上のreview surfaceとして定着したが、これはAgentがその場でrepository guidanceや過去PRを参照できている場合に成立していた。
+- 全consumerがGitHub Actionsを利用するわけではないため、checkpoint CIをPDDR Kitの必須要件にすると可搬性を損なう。
+- CIがPDDR作成義務を判定すると、PDDR-0008で避けた記録ノルマとfalse positiveを再導入する。
+
+## Options considered
+
+### Agent Skill / AGENTS guidanceだけに依存する
+
+- Benefits: CI権限やplatform依存を追加しない。
+- Costs / constraints: Agentが不在、contextを再読込していない、または手動変更経路ではcheckpoint signal自体が残らない。
+- Status: rejected as the only mechanism
+
+### checkpoint CIを必須にする
+
+- Benefits: GitHub Actions環境では一貫してsignalを残せる。
+- Costs / constraints: GitHub Actionsを使わないconsumerを不完全扱いし、PDDR Kitのplatform portabilityを損なう。
+- Status: rejected
+
+### optional / recommendedなadvisory CIを提供する
+
+- Benefits: Skill中心の運用を維持しながら、監視外経路にrepo側のdurableな目印を残せる。
+- Costs / constraints: signalはsemantic decisionではなく、後続Agent / maintainerによるbounded auditが必要。
+- Status: accepted
+
+## Decision
+
+- checkpoint CIはoptional / recommended integrationとし、PDDR Kit利用の必須条件にしない。
+- 通常の主経路はAgent Skillとproject guidanceによるmilestone auditのままとする。
+- v1のdetectorはhigh-confidenceなdeterministic signalに限定する。
+  - `AGENTS.md`変更
+  - roadmap surface変更
+  - architecture surface変更
+  - `pddr-checkpoint` label
+  - PR本文の明示marker `[pddr-checkpoint]`
+- PR数だけの閾値やEvidence量だけの推測はv1に含めない。
+- CIはPDDRを自動作成・更新・承認しない。
+- **Checkpoint Signal ≠ PDDR required** を明示し、audit結果がno-opでも正常とする。
+- Check / Job Summaryには実行時点のsignalを常に残し、後から同期更新する必要のないexecution traceとする。
+- recommended signalがあり、PR本文に既存の `## PDDR checkpoint` がなければ、PR本文末尾へpending markerを追加する。
+- PR本文を更新できない場合は既存checkpoint commentの更新または新規commentをfallbackとする。
+- PR本文・commentへのwriteができない場合もCI自体は失敗させず、Check / Job Summaryを最低限のtraceとして残す。
+- pending markerを後続Agent / maintainerが確認した場合、通常のPDDR thresholdでbounded auditし、PR本文のcurrent review stateを更新する。過去のCheck Summaryは書き換えない。
+- security上、template workflowは `pull_request_target` を使わず通常の `pull_request` eventを使用する。
+- optional integrationはPDDR-0009どおりproduct releaseのversioning対象だが、managed-core `upgrade`では自動導入・更新しない。
+
+## Delivery and validation
+
+deterministic signal detectorを `scripts/pddr_checkpoint.py` として実装し、high-signal path、明示label / marker、routine changeのno-op、既存checkpoint surface、advisory markerをunit testで検証する。
+
+consumer向けtemplate workflowを `templates/checkpoint-ci/pddr-checkpoint.yml` として提供する。導入時はdetectorをconsumerの `.pddr/pddr_checkpoint.py` へ明示的にコピーし、workflowと合わせてreviewする。
+
+PDDR Recorder Skillにはpending markerを「PDDR required」ではなくmilestone audit requestとして扱う指針を追加する。
+
+repository-level unit testsとPDDR validationで実装整合性は検証するが、実consumer PR上でのbody marker / comment fallback / Check Summaryのend-to-end dogfoodはまだ行っていない。このためdeliveryは `implemented` とし、dogfood後に `validated` を再評価する。
+
+## Consequences
+
+- Agentが一時的にPDDR運用contextを失っても、repository側にcheckpoint候補の目印を残せる。
+- GitHub Actionsを使わないconsumerは従来どおりSkill / guidanceだけで運用できる。
+- PR本文のcheckpoint sectionをcurrent review surfaceとして再利用でき、Semantic Decision Labで自然発生した運用と揃う。
+- Check Summaryは履歴、PR本文はcurrent stateという役割分担になり、過去Checkの同期更新は不要になる。
+- false positiveを完全には避けられないが、v1はhigh-signal surfaceに限定し、signal自体にPDDR作成義務を持たせない。
+- optional workflowはpull requestへのwrite permissionを要求する。fork等でwriteできない場合はSummary-onlyへ安全にdegradeする。
+- optional integrationはmanaged-core upgradeの対象外なので、consumerごとに明示的な導入・更新が必要になる。
+
+## Revisit when
+
+- 複数consumerでfalse positive / false negativeが蓄積した場合。
+- Evidence-bearing PR / Issue consolidationを安全にdeterministic signal化できる場合。
+- GitHub以外のCI向けadapter需要が生じた場合。
+- markerのmachine-readable schemaやoptional integration inventoryが必要になった場合。
+- consumer dogfoodでPR本文更新・comment fallback・fork権限の扱いに問題が見つかった場合。
+
+## Evidence
+
+- [Issue #32: OptionalなPDDR checkpoint CIを提供する](https://github.com/serevy/pddr-kit/issues/32)
+- Maintainer approval of optional recommended checkpoint CI, 2026-09-23 (private).
+- `scripts/pddr_checkpoint.py`
+- `templates/checkpoint-ci/pddr-checkpoint.yml`
+- `tests/test_pddr_checkpoint.py`
+- PDDR-0008: Add milestone audits to complement opportunistic decision capture
+- PDDR-0009: Define product-level versioning and optional integration boundaries
+
+## Related records
+
+- PDDR-0008: Add milestone audits to complement opportunistic decision capture
+- PDDR-0009: Define product-level versioning and optional integration boundaries

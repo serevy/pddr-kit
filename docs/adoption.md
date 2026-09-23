@@ -90,6 +90,54 @@ decision. Do not create a PDDR merely because the checkpoint occurred.
 
 PDDR Kitの`init`と`upgrade`は、引き続き導入先の`AGENTS.md`などを自動変更しません。既存規則との重複や上書きを避けるため、checkpointの追加は導入先ごとにレビューして接続します。
 
+
+### Optional checkpoint CI
+
+GitHub Actionsを利用するconsumerでは、Agent Skillが常時repoを観測していない作業経路を補完するため、optionalなcheckpoint CIを導入できます。これは**推奨オプション**であり、PDDR Kit利用の必須条件ではありません。
+
+PDDR Kit checkoutから、detectorとworkflow templateを明示的にコピーします。
+
+```bash
+mkdir -p /path/to/your-project/.pddr
+mkdir -p /path/to/your-project/.github/workflows
+
+cp scripts/pddr_checkpoint.py \
+  /path/to/your-project/.pddr/pddr_checkpoint.py
+
+cp templates/checkpoint-ci/pddr-checkpoint.yml \
+  /path/to/your-project/.github/workflows/pddr-checkpoint.yml
+```
+
+このoptional integrationはmanaged coreの`upgrade`対象ではありません。導入先の既存CI・権限・branch運用を確認してから追加してください。
+
+v1 detectorは、誤検知を抑えるため次のhigh-confidence signalだけを扱います。
+
+- `AGENTS.md`の変更
+- roadmap系surfaceの変更
+- architecture系surfaceの変更
+- PR label `pddr-checkpoint`
+- PR本文の明示marker `[pddr-checkpoint]`
+
+PR数やEvidence量だけを根拠に「PDDRが必要」と判定しません。
+
+workflowは毎回Check / Job Summaryへsignal結果を残します。checkpoint reviewを推奨するsignalがあり、PR本文に既存の`## PDDR checkpoint`がなければ、次のpending markerをPR本文末尾へ追加します。
+
+```md
+## PDDR checkpoint
+
+- Signal: recommended
+- Review: pending
+- Reason: <deterministic signal>
+
+Checkpoint Signal ≠ PDDR required.
+```
+
+PR本文を更新できない場合はcheckpoint commentをfallbackとして使用します。fork等でwrite permissionがない場合は、Check / Job Summaryだけを残して成功終了します。
+
+後続Agent / maintainerがmarkerを回収したら、PR本文のcurrent stateを`Review: completed`へ更新します。過去のCheck Summaryはsignal発生時点の履歴なので同期更新しません。
+
+template workflowは`pull_request_target`を使用せず、通常の`pull_request` eventで動作します。CIはPDDRの自動作成・自動承認を行いません。
+
 ## 記録を作る
 
 ```bash
