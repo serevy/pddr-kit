@@ -4,7 +4,7 @@ title: Define product-level versioning and optional integration boundaries
 decision_date: 2026-09-23
 recorded_date: 2026-09-23
 decision_status: accepted
-delivery_status: in-progress
+delivery_status: validated
 scope:
   - project
   - product
@@ -16,6 +16,8 @@ evidence:
   - "Maintainer approved the product-level versioning contract, 2026-09-23 (private)"
   - "docs/versioning.md"
   - "tests/test_pddr_cli.py"
+  - "https://github.com/serevy/pddr-kit/pull/34"
+  - "https://github.com/serevy/pddr-kit/actions/runs/35854662290"
 related:
   - PDDR-0007
   - PDDR-0008
@@ -66,7 +68,7 @@ consumer manifestの`kit_version`はmanaged coreを最後に導入・更新し�
 - root `VERSION`と`scripts/pddr.py`の`KIT_VERSION`は一致させる。
 - stable releaseのversionとGit tag `vX.Y.Z`を対応させる。
 - stable release間のmainは次release候補の`-dev` versionを使用する。
-- 現在のmainは、v0.1.0後に後方互換なcapability追加が存在するため`0.2.0-dev`とする。
+- v0.1.0後のdevelopment lineは、後方互換なcapability追加を反映して`0.2.0-dev`とし、v0.2.0 release時に`0.2.0`へ確定する。
 - manifestの`kit_version`はmanaged coreを最後に導入・更新したsource versionのprovenanceとする。
 - manifestのmanaged hashesをmanaged core実体の追跡に使用する。
 - Skill、AGENTS guidance、validation / checkpoint CI等はproduct releaseのversioning対象だが、自動upgrade対象には含めない。
@@ -80,7 +82,7 @@ version contractを`docs/versioning.md`へ明文化し、consumer向けadoption 
 
 root `VERSION`とCLIの`KIT_VERSION`を`0.2.0-dev`へ更新する。既存unit testは両者の一致を検証しており、PR上のrepository validationで確認する。
 
-本PRがmainへmergeされ、repository validationが成功するまではdeliveryを`in-progress`とする。
+version contractはPR #34でmainへmergeされ、merge commit `5beb746dfccac81d172fa4a431f644f6ce75ec76` を対象としたValidate PDDR Kit run `35854662290` が成功した。root `VERSION` とCLIの `KIT_VERSION` の一致を含むunit testとrepository validationが完了したため、deliveryを `validated` とする。
 
 ## Consequences
 
@@ -105,6 +107,8 @@ root `VERSION`とCLIの`KIT_VERSION`を`0.2.0-dev`へ更新する。既存unit t
 - Maintainer approval of the product-level versioning contract, 2026-09-23 (private).
 - `docs/versioning.md`
 - `tests/test_pddr_cli.py`
+- [PR #34: PDDR Kitのversion contractを定義](https://github.com/serevy/pddr-kit/pull/34)
+- [main validation after PR #34](https://github.com/serevy/pddr-kit/actions/runs/35854662290)
 - PDDR-0007: Safe upgrades for adopted projects
 - PDDR-0008: Add milestone audits to complement opportunistic decision capture
 
