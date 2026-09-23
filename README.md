@@ -69,6 +69,8 @@ python scripts/pddr.py upgrade --target /path/to/your-project
 
 詳しい導入方法とCI例は[`docs/adoption.md`](docs/adoption.md)、記録ルールは[`docs/specification.md`](docs/specification.md)を参照してください。初版ではMarkdownによる運用を正本とし、特定のAIやサービスを必須にしません。
 
+GitHub Actionsを利用するプロジェクトでは、Agent Skillが常時観測しない変更経路を補完する**optional checkpoint CI**も利用できます。high-signal changeに対して棚卸し用のmarkerを残すだけで、PDDRの作成を強制しません。セットアップは[`docs/adoption.md`](docs/adoption.md#optional-checkpoint-ci)を参照してください。
+
 ## 最小サンプル
 
 [`pddr-greenfield-example`](https://github.com/serevy/pddr-greenfield-example)では、新規プロジェクトへの`v0.1.0`導入結果と、観測・選択肢・判断・成果物・検証Evidenceを結んだPDDRの完成例を確認できます。
