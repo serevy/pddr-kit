@@ -53,6 +53,16 @@ At a milestone audit:
 
 A milestone audit complements normal in-task recording; it does not replace explicit approval, Evidence requirements, or human review.
 
+### Pending checkpoint markers
+
+When a pull request contains a `## PDDR checkpoint` section with `Review: pending`, treat it as a request to perform a bounded milestone audit, not as evidence that a PDDR is required.
+
+- Review the recent Issues, pull requests, existing records, and Evidence relevant to the signal.
+- Apply the normal PDDR threshold; a no-op is a valid result.
+- If authorized to update the pull request description, change the current review state to `Review: completed` and record the result (for example, no durable decision, existing PDDR updated, or new PDDR created).
+- Do not rewrite historical Check / Job Summary output. It is an execution-time trace of when the signal was emitted.
+- Do not infer approval or create a record solely because the CI emitted a signal.
+
 ## Interpreting records
 
 - Current explicit user instructions and approved project or organization policies take precedence over PDDR prose.
