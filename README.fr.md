@@ -79,9 +79,9 @@ Le scénario et les Evidence sont entièrement fictifs et servent de référence
 
 ## Étape actuelle
 
-La version stable actuelle est **v0.2.0**. En s’appuyant sur la base de v0.1.0, cette version ajoute les milestone audits, un product-level versioning contract et un optional checkpoint CI qui couvre les chemins de modification qu’un Agent ne peut pas observer en permanence. Le checkpoint CI a été dogfoodé dans le greenfield example pour la détection high-signal, la collecte du pending marker, la mise à jour d’un PDDR existant et le comportement no-signal sur les changements routiniers.
+La version stable actuelle est **v0.2.1**. Elle conserve le périmètre fonctionnel de v0.2.0 tout en renforçant le optional checkpoint CI grâce à la séparation entre un PR signal workflow en lecture seule et un marker writer exécuté depuis la default branch de confiance. Le greenfield example a validé l’ajout automatique du pending marker, la collecte de l’état completed et l’absence de duplication des markers.
 
-Consultez [`docs/releases/v0.2.0.md`](docs/releases/v0.2.0.md) pour connaître le périmètre de vérification et les limites connues de la version stable, et [`CHANGELOG.md`](CHANGELOG.md) pour l’historique des modifications.
+Consultez [`docs/releases/v0.2.1.md`](docs/releases/v0.2.1.md) pour connaître le périmètre de vérification de la version stable, et [`CHANGELOG.md`](CHANGELOG.md) pour l’historique des modifications.
 
 Les services payants et externes tels que Jev sont des extensions facultatives. Ils peuvent renforcer la classification, la détection des informations manquantes, la context selection des PDDR associés et l’intégration de typed handoff, mais ils ne sont pas nécessaires au fonctionnement de base de PDDR.
 
