@@ -79,9 +79,9 @@ GitHub Actionsを利用するプロジェクトでは、Agent Skillが常時観�
 
 ## 現在の段階
 
-現在の安定版は**v0.2.0**です。v0.1.0の基盤に加えて、milestone audit、product-level versioning contract、Agentが常時観測しない変更経路を補完するoptional checkpoint CIを追加しました。checkpoint CIはgreenfield exampleでhigh-signal発火、pending marker回収、既存PDDR更新、routine changeのno-signalまでdogfoodしています。
+現在の安定版は**v0.2.1**です。v0.2.0で追加したmilestone audit、product-level versioning contract、optional checkpoint CIの機能境界は維持しつつ、checkpoint CIをread-only signal workflowとtrusted marker writerへ権限分離しました。greenfield exampleでpending marker自動追記、completed回収、再実行時のmarker重複なしまでdogfoodしています。
 
-安定版の検証範囲と既知の制約は[`docs/releases/v0.2.0.md`](docs/releases/v0.2.0.md)、変更履歴は[`CHANGELOG.md`](CHANGELOG.md)を参照してください。
+安定版の検証範囲は[`docs/releases/v0.2.1.md`](docs/releases/v0.2.1.md)、変更履歴は[`CHANGELOG.md`](CHANGELOG.md)を参照してください。
 
 Jevなどの有償・外部サービスは任意の拡張です。分類・不足判定・関連PDDRのcontext selection・typed handoff連携を強化できますが、PDDRの基本運用には不要です。
 
