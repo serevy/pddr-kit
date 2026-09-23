@@ -4,7 +4,7 @@ title: Provide optional checkpoint CI as an advisory safety net
 decision_date: 2026-09-23
 recorded_date: 2026-09-23
 decision_status: accepted
-delivery_status: implemented
+delivery_status: validated
 scope:
   - product
   - process
@@ -22,6 +22,13 @@ evidence:
   - "https://github.com/serevy/pddr-greenfield-example/actions/runs/35860608772"
   - "https://github.com/serevy/pddr-greenfield-example/pull/19"
   - "https://github.com/serevy/pddr-greenfield-example/actions/runs/35860852749"
+  - "https://github.com/serevy/pddr-kit/pull/39"
+  - "https://github.com/serevy/pddr-kit/actions/runs/35885546317"
+  - "https://github.com/serevy/pddr-greenfield-example/pull/21"
+  - "https://github.com/serevy/pddr-greenfield-example/actions/runs/35886025597"
+  - "https://github.com/serevy/pddr-greenfield-example/actions/runs/35886046614"
+  - "https://github.com/serevy/pddr-greenfield-example/actions/runs/35886130669"
+  - "https://github.com/serevy/pddr-greenfield-example/actions/runs/35886151266"
 related:
   - PDDR-0008
   - PDDR-0009
@@ -108,7 +115,13 @@ v0.2.0で同一repository内PRのprimary flowをE2E確認した後、横展開�
 
 このため、PR headを観測するread-only signal workflowと、default branchのtrusted detectorだけを実行するprivileged `workflow_run` marker writerへ分離した。unit testでsignal workflowにwrite permissionがないこと、writerがdefault branchをcheckoutしPR headをcheckoutしないことを固定する。
 
-新しい2段構成はrepository-level testまで実装済みだがconsumer E2E dogfood前のため、deliveryを一時的に `implemented` へ戻す。greenfield exampleでhigh-signal marker writeとroutine no-signalを再確認した後に `validated` を再評価する。
+新しい2段構成はPR #39でmainへmergeし、main validation run `35885546317` が成功した。
+
+その後、greenfield example PR #21でread-only signal workflowとtrusted marker writerを導入した。既存PR #20へ明示markerを追加してdogfoodし、signal run `35886025597` が成功した後、trusted `workflow_run` marker writer `35886046614` がPR本文へ `Review: pending` markerを自動追記した。
+
+markerを `Review: completed` / `no new PDDR` へ回収した後もsignal run `35886130669` とwriter run `35886151266` が成功し、PR本文の `## PDDR checkpoint` headingは1件のままで重複しなかった。
+
+read-only signal、trusted writer、pending marker write、completed state、重複防止をconsumer E2Eで確認できたため、deliveryを再び `validated` とする。
 
 ## Consequences
 
@@ -142,6 +155,13 @@ v0.2.0で同一repository内PRのprimary flowをE2E確認した後、横展開�
 - [completed-marker checkpoint run](https://github.com/serevy/pddr-greenfield-example/actions/runs/35860608772)
 - [routine UI PR #19](https://github.com/serevy/pddr-greenfield-example/pull/19)
 - [routine no-signal checkpoint run](https://github.com/serevy/pddr-greenfield-example/actions/runs/35860852749)
+- [PDDR Kit PR #39: checkpoint CI privilege hardening](https://github.com/serevy/pddr-kit/pull/39)
+- [main validation after PR #39](https://github.com/serevy/pddr-kit/actions/runs/35885546317)
+- [greenfield hardening PR #21](https://github.com/serevy/pddr-greenfield-example/pull/21)
+- [read-only signal dogfood run](https://github.com/serevy/pddr-greenfield-example/actions/runs/35886025597)
+- [trusted marker writer dogfood run](https://github.com/serevy/pddr-greenfield-example/actions/runs/35886046614)
+- [completed-state signal run](https://github.com/serevy/pddr-greenfield-example/actions/runs/35886130669)
+- [completed-state writer run](https://github.com/serevy/pddr-greenfield-example/actions/runs/35886151266)
 - PDDR-0008: Add milestone audits to complement opportunistic decision capture
 - PDDR-0009: Define product-level versioning and optional integration boundaries
 
