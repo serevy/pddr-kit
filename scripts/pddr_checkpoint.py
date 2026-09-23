@@ -51,10 +51,10 @@ def detect_reasons(
 
     normalized_labels = {label.strip().lower() for label in labels if label.strip()}
     if EXPLICIT_LABEL in normalized_labels:
-        reasons.append(f"explicit label: \`{EXPLICIT_LABEL}\`")
+        reasons.append(f"explicit label: `{EXPLICIT_LABEL}`")
 
     if EXPLICIT_BODY_MARKER in pr_body.lower():
-        reasons.append(f"explicit PR marker: \`{EXPLICIT_BODY_MARKER}\`")
+        reasons.append(f"explicit PR marker: `{EXPLICIT_BODY_MARKER}`")
 
     for path in changed_files:
         reason = _path_reason(path)
