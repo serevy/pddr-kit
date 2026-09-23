@@ -69,17 +69,19 @@ python scripts/pddr.py upgrade --target /path/to/your-project
 
 자세한 도입 방법과 CI 예시는 [`docs/adoption.md`](docs/adoption.md), 기록 규칙은 [`docs/specification.md`](docs/specification.md)를 참조하세요. 초판에서는 Markdown 기반 운영을 정본으로 하며, 특정 AI나 서비스를 필수로 요구하지 않습니다.
 
+GitHub Actions를 사용하는 프로젝트에서는 Agent Skill이 지속적으로 관찰하지 못하는 변경 경로를 보완하기 위해 **optional checkpoint CI**도 사용할 수 있습니다. high-signal 변경에 대해 검토 marker만 남기며 PDDR 생성을 강제하지 않습니다. 설정 방법은 [`docs/adoption.md`](docs/adoption.md#optional-checkpoint-ci)를 참조하세요.
+
 ## 최소 예시
 
-[`pddr-greenfield-example`](https://github.com/serevy/pddr-greenfield-example)에서는 신규 Project에 `v0.1.0`을 도입한 결과와 관찰·선택지·판단·산출물·검증 Evidence를 연결한 완성된 PDDR 예시를 확인할 수 있습니다.
+[`pddr-greenfield-example`](https://github.com/serevy/pddr-greenfield-example)에서는 신규 Project에 `v0.1.0`을 도입한 결과와 관찰·선택지·판단·산출물·검증 Evidence를 연결한 완성된 PDDR 예시를 확인할 수 있습니다. managed core는 stable 도입 예시로서 의도적으로 `v0.1.0`을 유지하면서, `v0.2.0`에서 추가된 optional checkpoint CI도 dogfood하고 있습니다.
 
 주제와 Evidence는 모두 허구이며, 구성과 운영을 이해하기 위한 최소 참조 자료입니다. 실험이나 실제 사용 기록과는 분리되어 있습니다.
 
 ## 현재 단계
 
-현재 안정 버전은 **v0.1.0**입니다. PDDR Kit 자체의 dogfooding, 서로 다른 두 기존 프로젝트에 대한 도입 및 CI 검증, 기존 도입처의 안전한 업데이트, 신규 프로젝트의 초기 도입, 그리고 Sol과 Luna를 이용한 기록 작성 및 안전 해석에 대한 독립 forward-test를 거쳐 공개되었습니다.
+현재 안정 버전은 **v0.2.0**입니다. v0.1.0의 기반에 더해 milestone audit, product-level versioning contract, 그리고 Agent가 지속적으로 관찰하지 못하는 변경 경로를 보완하는 optional checkpoint CI를 추가했습니다. checkpoint CI는 greenfield example에서 high-signal 감지, pending marker 회수, 기존 PDDR 업데이트, routine change의 no-signal 동작까지 dogfood했습니다.
 
-안정 버전의 검증 범위와 알려진 제약 사항은 [`docs/releases/v0.1.0.md`](docs/releases/v0.1.0.md)를, 변경 이력은 [`CHANGELOG.md`](CHANGELOG.md)를 참조하세요.
+안정 버전의 검증 범위와 알려진 제약 사항은 [`docs/releases/v0.2.0.md`](docs/releases/v0.2.0.md)를, 변경 이력은 [`CHANGELOG.md`](CHANGELOG.md)를 참조하세요.
 
 Jev 등의 유료·외부 서비스는 선택적 확장 기능입니다. 분류, 누락 판정, 관련 PDDR의 context selection, typed handoff 연계를 강화할 수 있지만 PDDR의 기본 운영에는 필요하지 않습니다.
 
