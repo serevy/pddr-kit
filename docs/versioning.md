@@ -97,6 +97,19 @@ stable releaseを作るときは最低限、次を確認します。
 6. repository validationを成功させる
 7. `vX.Y.Z` tag / GitHub Releaseを作成する
 
+PDDR Kit repositoryでは、release metadataをmainへmergeした後、default branch上の恒久workflow `.github/workflows/release.yml` を手動dispatchしてtag / GitHub Releaseを公開します。
+
+workflowでは次を再確認します。
+
+- dispatch元がdefault branchであること
+- 指定versionがroot `VERSION` と `scripts/pddr.py` の `KIT_VERSION` に一致すること
+- release kind（stable / prerelease）とversion表記が整合すること
+- `docs/releases/vX.Y.Z.md` とCHANGELOG release sectionが存在すること
+- repository unit tests / Skill eval validation / PDDR validationが成功すること
+- 同名tag / GitHub Releaseがまだ存在しないこと
+
+条件を満たした場合だけ、workflow実行時のmain commitをtargetとしてGit tagとGitHub Releaseを作成します。release publication自体は自動push連動にせず、人がversionとrelease kindを確認して明示的に開始します。
+
 release後に次の開発を始める場合は、最初のunreleased changeの分類に応じて次の`-dev` versionへ進めます。
 
 ## Deferred
