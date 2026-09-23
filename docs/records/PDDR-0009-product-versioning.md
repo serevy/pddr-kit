@@ -4,7 +4,7 @@ title: Define product-level versioning and optional integration boundaries
 decision_date: 2026-09-23
 recorded_date: 2026-09-23
 decision_status: accepted
-delivery_status: in-progress
+delivery_status: validated
 scope:
   - project
   - product
@@ -16,6 +16,8 @@ evidence:
   - "Maintainer approved the product-level versioning contract, 2026-09-23 (private)"
   - "docs/versioning.md"
   - "tests/test_pddr_cli.py"
+  - "https://github.com/serevy/pddr-kit/pull/34"
+  - "https://github.com/serevy/pddr-kit/actions/runs/35854662290"
 related:
   - PDDR-0007
   - PDDR-0008
@@ -80,7 +82,7 @@ version contractを`docs/versioning.md`へ明文化し、consumer向けadoption 
 
 root `VERSION`とCLIの`KIT_VERSION`を`0.2.0-dev`へ更新する。既存unit testは両者の一致を検証しており、PR上のrepository validationで確認する。
 
-本PRがmainへmergeされ、repository validationが成功するまではdeliveryを`in-progress`とする。
+version contractはPR #34でmainへmergeされ、merge commit `5beb746dfccac81d172fa4a431f644f6ce75ec76` を対象としたValidate PDDR Kit run `35854662290` が成功した。root `VERSION` とCLIの `KIT_VERSION` の一致を含むunit testとrepository validationが完了したため、deliveryを `validated` とする。
 
 ## Consequences
 
@@ -105,6 +107,8 @@ root `VERSION`とCLIの`KIT_VERSION`を`0.2.0-dev`へ更新する。既存unit t
 - Maintainer approval of the product-level versioning contract, 2026-09-23 (private).
 - `docs/versioning.md`
 - `tests/test_pddr_cli.py`
+- [PR #34: PDDR Kitのversion contractを定義](https://github.com/serevy/pddr-kit/pull/34)
+- [main validation after PR #34](https://github.com/serevy/pddr-kit/actions/runs/35854662290)
 - PDDR-0007: Safe upgrades for adopted projects
 - PDDR-0008: Add milestone audits to complement opportunistic decision capture
 
