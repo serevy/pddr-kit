@@ -4,7 +4,7 @@ title: Provide optional checkpoint CI as an advisory safety net
 decision_date: 2026-09-23
 recorded_date: 2026-09-23
 decision_status: accepted
-delivery_status: implemented
+delivery_status: validated
 scope:
   - product
   - process
@@ -16,6 +16,11 @@ evidence:
   - "scripts/pddr_checkpoint.py"
   - "templates/checkpoint-ci/pddr-checkpoint.yml"
   - "tests/test_pddr_checkpoint.py"
+  - "https://github.com/serevy/pddr-greenfield-example/pull/18"
+  - "https://github.com/serevy/pddr-greenfield-example/actions/runs/35860389299"
+  - "https://github.com/serevy/pddr-greenfield-example/actions/runs/35860608772"
+  - "https://github.com/serevy/pddr-greenfield-example/pull/19"
+  - "https://github.com/serevy/pddr-greenfield-example/actions/runs/35860852749"
 related:
   - PDDR-0008
   - PDDR-0009
@@ -89,7 +94,13 @@ consumer向けtemplate workflowを `templates/checkpoint-ci/pddr-checkpoint.yml`
 
 PDDR Recorder Skillにはpending markerを「PDDR required」ではなくmilestone audit requestとして扱う指針を追加する。
 
-repository-level unit testsとPDDR validationで実装整合性は検証するが、実consumer PR上でのbody marker / comment fallback / Check Summaryのend-to-end dogfoodはまだ行っていない。このためdeliveryは `implemented` とし、dogfood後に `validated` を再評価する。
+repository-level unit testsとPDDR validationに加え、`pddr-greenfield-example`で実consumer dogfoodを行った。
+
+PR #18ではcheckpoint sectionを事前記載せずに`AGENTS.md`を変更し、checkpoint run `35860389299` がhigh-signal changeを検出してPR本文末尾へ `Signal: recommended / Review: pending` を自動追記した。後続のbounded auditでは新規PDDRを量産せず、既存PDDR-0002のrevisit conditionに該当すると判断して同記録を更新し、PR本文を `Review: completed` / `existing PDDR-0002 updated` へ回収した。更新後のcheckpoint run `35860608772` も成功し、checkpoint headingは1件のままで重複しなかった。
+
+PR #19では`app.js` / `styles.css`だけのroutine UI変更に対してcheckpoint run `35860852749` が成功し、PR本文へcheckpoint markerを追加しなかった。これによりhigh-signal positive pathとroutine no-signal pathの両方を実consumerで確認した。
+
+同一repository内PRでのprimary flowをE2E確認できたためdeliveryを `validated` とする。PR本文を書けない場合のcomment fallbackと、fork等でwrite permissionがない場合のSummary-only degradationは設計・実装済みだが未dogfoodであり、validatedの範囲には含めない。
 
 ## Consequences
 
@@ -116,6 +127,11 @@ repository-level unit testsとPDDR validationで実装整合性は検証する�
 - `scripts/pddr_checkpoint.py`
 - `templates/checkpoint-ci/pddr-checkpoint.yml`
 - `tests/test_pddr_checkpoint.py`
+- [greenfield dogfood PR #18](https://github.com/serevy/pddr-greenfield-example/pull/18)
+- [first high-signal checkpoint run](https://github.com/serevy/pddr-greenfield-example/actions/runs/35860389299)
+- [completed-marker checkpoint run](https://github.com/serevy/pddr-greenfield-example/actions/runs/35860608772)
+- [routine UI PR #19](https://github.com/serevy/pddr-greenfield-example/pull/19)
+- [routine no-signal checkpoint run](https://github.com/serevy/pddr-greenfield-example/actions/runs/35860852749)
 - PDDR-0008: Add milestone audits to complement opportunistic decision capture
 - PDDR-0009: Define product-level versioning and optional integration boundaries
 
