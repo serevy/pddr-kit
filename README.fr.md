@@ -69,17 +69,19 @@ Seuls les fichiers gérés par le Kit et suivis dans le manifeste sont mis à jo
 
 Pour les instructions détaillées d’adoption et les exemples de CI, consultez [`docs/adoption.md`](docs/adoption.md). Pour les règles de consignation, consultez [`docs/specification.md`](docs/specification.md). Dans la première version, le fonctionnement fondé sur Markdown fait foi et aucun service ni aucune IA particulière n’est obligatoire.
 
+Les projets utilisant GitHub Actions peuvent également adopter le **optional checkpoint CI** afin de couvrir les chemins de modification qu’un Agent Skill ne peut pas observer en permanence. Il se contente de laisser un marker de revue pour les changements à signal fort et n’impose pas la création d’un PDDR. Consultez [`docs/adoption.md`](docs/adoption.md#optional-checkpoint-ci) pour la configuration.
+
 ## Exemple minimal
 
-[`pddr-greenfield-example`](https://github.com/serevy/pddr-greenfield-example) fournit un exemple complet de PDDR reliant le résultat de l’adoption de `v0.1.0` dans un nouveau Project aux observations, options, décisions, livrables et Evidence de vérification.
+[`pddr-greenfield-example`](https://github.com/serevy/pddr-greenfield-example) fournit un exemple complet de PDDR reliant le résultat de l’adoption de `v0.1.0` dans un nouveau Project aux observations, options, décisions, livrables et Evidence de vérification. Son managed core reste volontairement en `v0.1.0` comme exemple d’adoption stable, tout en servant aussi de dogfood pour le optional checkpoint CI ajouté en `v0.2.0`.
 
 Le scénario et les Evidence sont entièrement fictifs et servent de référence minimale pour comprendre la structure et le fonctionnement. Ils sont distincts des enregistrements d’expériences ou d’utilisations réelles.
 
 ## Étape actuelle
 
-La version stable actuelle est **v0.1.0**. Elle a été publiée après le dogfooding de PDDR Kit lui-même, son adoption et sa vérification CI dans deux projets existants distincts, la mise à jour sûre des installations existantes, l’adoption initiale dans un nouveau projet, ainsi que des forward-tests indépendants de la création d’enregistrements et de l’interprétation sûre à l’aide de Sol et Luna.
+La version stable actuelle est **v0.2.0**. En s’appuyant sur la base de v0.1.0, cette version ajoute les milestone audits, un product-level versioning contract et un optional checkpoint CI qui couvre les chemins de modification qu’un Agent ne peut pas observer en permanence. Le checkpoint CI a été dogfoodé dans le greenfield example pour la détection high-signal, la collecte du pending marker, la mise à jour d’un PDDR existant et le comportement no-signal sur les changements routiniers.
 
-Consultez [`docs/releases/v0.1.0.md`](docs/releases/v0.1.0.md) pour connaître le périmètre de vérification et les limites connues de la version stable, et [`CHANGELOG.md`](CHANGELOG.md) pour l’historique des modifications.
+Consultez [`docs/releases/v0.2.0.md`](docs/releases/v0.2.0.md) pour connaître le périmètre de vérification et les limites connues de la version stable, et [`CHANGELOG.md`](CHANGELOG.md) pour l’historique des modifications.
 
 Les services payants et externes tels que Jev sont des extensions facultatives. Ils peuvent renforcer la classification, la détection des informations manquantes, la context selection des PDDR associés et l’intégration de typed handoff, mais ils ne sont pas nécessaires au fonctionnement de base de PDDR.
 
