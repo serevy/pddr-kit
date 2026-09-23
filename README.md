@@ -73,15 +73,15 @@ GitHub Actionsを利用するプロジェクトでは、Agent Skillが常時観�
 
 ## 最小サンプル
 
-[`pddr-greenfield-example`](https://github.com/serevy/pddr-greenfield-example)では、新規プロジェクトへの`v0.1.0`導入結果と、観測・選択肢・判断・成果物・検証Evidenceを結んだPDDRの完成例を確認できます。
+[`pddr-greenfield-example`](https://github.com/serevy/pddr-greenfield-example)では、新規プロジェクトへの`v0.1.0`導入結果と、観測・選択肢・判断・成果物・検証Evidenceを結んだPDDRの完成例を確認できます。managed coreはstable導入例として`v0.1.0`を維持しつつ、`v0.2.0`で追加したoptional checkpoint CIのdogfoodも行っています。
 
 題材とEvidenceはすべて架空であり、構成と運用を理解するための最小リファレンスです。実験や実利用の記録とは分離しています。
 
 ## 現在の段階
 
-現在の安定版は**v0.1.0**です。PDDR Kit自身でのdogfooding、二つの異なる既存プロジェクトへの導入・CI検証、既存導入先の安全な更新、新規プロジェクトへの初期導入、SolとLunaを使った記録作成および安全解釈の独立forward-testを経て公開しました。
+現在の安定版は**v0.2.0**です。v0.1.0の基盤に加えて、milestone audit、product-level versioning contract、Agentが常時観測しない変更経路を補完するoptional checkpoint CIを追加しました。checkpoint CIはgreenfield exampleでhigh-signal発火、pending marker回収、既存PDDR更新、routine changeのno-signalまでdogfoodしています。
 
-安定版の検証範囲と既知の制約は[`docs/releases/v0.1.0.md`](docs/releases/v0.1.0.md)、変更履歴は[`CHANGELOG.md`](CHANGELOG.md)を参照してください。
+安定版の検証範囲と既知の制約は[`docs/releases/v0.2.0.md`](docs/releases/v0.2.0.md)、変更履歴は[`CHANGELOG.md`](CHANGELOG.md)を参照してください。
 
 Jevなどの有償・外部サービスは任意の拡張です。分類・不足判定・関連PDDRのcontext selection・typed handoff連携を強化できますが、PDDRの基本運用には不要です。
 
