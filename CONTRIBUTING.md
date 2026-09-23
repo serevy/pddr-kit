@@ -16,6 +16,18 @@ PDDR Kit is in an early design-validation stage. Issues describing real use case
 - Do not mark a proposal as accepted or validated without evidence.
 - By contributing, you agree that your contribution is licensed under the repository's MIT License.
 
+## Protected main branch
+
+The default branch `main` is protected by a repository ruleset.
+
+- Changes to `main` must go through a pull request.
+- The required `validate` status check must pass before merge.
+- Force pushes and branch deletion are blocked.
+- Linear history is required.
+- Approving reviews are currently not required for this single-maintainer repository.
+
+Use focused branches and the normal pull-request workflow instead of pushing directly to `main`.
+
 ## Versioning and releases
 
 PDDR Kitのversionはproduct release全体を表します。変更内容をpatch / minor / breakingのどれとして扱うか、development versionとstable tagの同期方法は[`docs/versioning.md`](docs/versioning.md)に従ってください。
