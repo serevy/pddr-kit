@@ -150,6 +150,16 @@ jobs:
 
 最初のPDDRを追加した後は、記録の消失を見逃さないよう`--allow-empty`を外すことを推奨します。
 
+## Kit versionとmanifestの意味
+
+PDDR Kitのversionは、managed filesだけでなくSkillやoptional integrationを含むproduct release全体を表します。
+
+consumerの`.pddr/manifest.json`にある`kit_version`は、managed coreを最後に導入・更新したKit source versionのprovenanceです。`kit_version`が新しいからといって、Agent Skill、`AGENTS.md`の運用規則、validation CI、checkpoint CI等のoptional integrationまで導入済み・最新であることは保証しません。
+
+stable releaseを利用する場合は対応する`vX.Y.Z` tag / Releaseを取得してください。`main`は開発版で、stable release間は`0.2.0-dev`のようなpre-release versionを使用します。
+
+versionの詳細とpatch / minor / breakingの基準は[`docs/versioning.md`](versioning.md)を参照してください。
+
 ## 導入済みプロジェクトを更新する
 
 PDDR Kitの新しい版を取得したディレクトリから、まず更新予定を確認します。

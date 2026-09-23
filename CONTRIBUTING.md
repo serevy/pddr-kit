@@ -16,6 +16,12 @@ PDDR Kit is in an early design-validation stage. Issues describing real use case
 - Do not mark a proposal as accepted or validated without evidence.
 - By contributing, you agree that your contribution is licensed under the repository's MIT License.
 
+## Versioning and releases
+
+PDDR Kitのversionはproduct release全体を表します。変更内容をpatch / minor / breakingのどれとして扱うか、development versionとstable tagの同期方法は[`docs/versioning.md`](docs/versioning.md)に従ってください。
+
+managed core以外のSkill、guidance、optional CI / integrationの後方互換なcapability追加もminor updateとして扱います。
+
 ## Commit style
 
 Use a short imperative summary. Japanese or English is acceptable; keep one language consistent within a pull request.
