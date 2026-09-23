@@ -18,6 +18,10 @@ evidence:
   - "tests/test_pddr_cli.py"
   - "https://github.com/serevy/pddr-kit/pull/34"
   - "https://github.com/serevy/pddr-kit/actions/runs/35854662290"
+  - "https://github.com/serevy/pddr-kit/releases/tag/v0.2.0"
+  - "https://github.com/serevy/pddr-kit/actions/runs/35876327284"
+  - ".github/workflows/release.yml"
+  - "scripts/release_guard.py"
 related:
   - PDDR-0007
   - PDDR-0008
@@ -74,6 +78,8 @@ consumer manifestの`kit_version`はmanaged coreを最後に導入・更新し�
 - Skill、AGENTS guidance、validation / checkpoint CI等はproduct releaseのversioning対象だが、自動upgrade対象には含めない。
 - 新しい利用能力を追加しない後方互換修正はpatch、後方互換なcapability追加はminorとする。optional integrationの追加もminorに含む。
 - `0.x`期間のbreaking changeはminorを上げ、CHANGELOG / release noteでbreakingとmigrationを明示する。`1.0.0`以降はmajorを上げる。
+- release publicationは自動push連動にせず、default branch上の恒久GitHub Actions workflowを人が明示的にdispatchして行う。
+- release workflowはversion / release note / CHANGELOG / repository validation / existing tagをguardし、実行時のmain commitをtargetとしてtagとGitHub Releaseを作成する。
 - remote latest discoveryやoptional integration自動更新は今回の判断に含めない。
 
 ## Delivery and validation
@@ -84,6 +90,8 @@ root `VERSION`とCLIの`KIT_VERSION`を`0.2.0-dev`へ更新する。既存unit t
 
 version contractはPR #34でmainへmergeされ、merge commit `5beb746dfccac81d172fa4a431f644f6ce75ec76` を対象としたValidate PDDR Kit run `35854662290` が成功した。root `VERSION` とCLIの `KIT_VERSION` の一致を含むunit testとrepository validationが完了したため、deliveryを `validated` とする。
 
+v0.2.0では、release commit `c9adbe37a1ab9d381c072fc723326e2ca2116a9f` に対して一時的なGitHub Actions release workflowをdogfoodし、run `35876327284` が成功した。tag `v0.2.0` が指定commitを指し、正式なGitHub Release `PDDR Kit v0.2.0` が公開されたことを確認した。この再現可能な経路を恒久化するため、手動dispatch・metadata guard・validation再実行・existing tag拒否を備えた `.github/workflows/release.yml` と `scripts/release_guard.py` を追加する。
+
 ## Consequences
 
 - product capabilityがmanaged core外で追加されても、release versionへ反映できる。
@@ -91,6 +99,8 @@ version contractはPR #34でmainへmergeされ、merge commit `5beb746dfccac81d1
 - `kit_version`はoptional integrationの完全なinventoryではないため、その意味を誤解しないためのguidanceが必要になる。
 - optional integrationは引き続きconsumerごとに明示的に導入・更新する。
 - checkpoint CIのような後方互換なoptional capabilityはminor release対象として整理できる。
+- release時のブラウザ手作業を標準経路にせず、同じrepository evidenceとguardを持つ再現可能なworkflowへ寄せられる。
+- release publicationは手動dispatchのままなので、意図しないpushだけでtag / Releaseが作られない。
 - remote update discoveryを急いで実装せず、まずversion semanticsを安定させられる。
 
 ## Revisit when
@@ -109,6 +119,10 @@ version contractはPR #34でmainへmergeされ、merge commit `5beb746dfccac81d1
 - `tests/test_pddr_cli.py`
 - [PR #34: PDDR Kitのversion contractを定義](https://github.com/serevy/pddr-kit/pull/34)
 - [main validation after PR #34](https://github.com/serevy/pddr-kit/actions/runs/35854662290)
+- [PDDR Kit v0.2.0 release](https://github.com/serevy/pddr-kit/releases/tag/v0.2.0)
+- [v0.2.0 publish workflow dogfood](https://github.com/serevy/pddr-kit/actions/runs/35876327284)
+- `.github/workflows/release.yml`
+- `scripts/release_guard.py`
 - PDDR-0007: Safe upgrades for adopted projects
 - PDDR-0008: Add milestone audits to complement opportunistic decision capture
 
