@@ -1,0 +1,33 @@
+name: Publish PDDR Kit v0.2.0
+
+on:
+  push:
+    branches:
+      - release/v0.2.0
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    if: github.repository == 'serevy/pddr-kit'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out release branch
+        uses: actions/checkout@v7
+
+      - name: Publish v0.2.0
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: v0.2.0
+          RELEASE_TARGET: c9adbe37a1ab9d381c072fc723326e2ca2116a9f
+        run: |
+          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            echo "$RELEASE_TAG already exists; nothing to do."
+            exit 0
+          fi
+
+          gh release create "$RELEASE_TAG" \
+            --target "$RELEASE_TARGET" \
+            --title "PDDR Kit v0.2.0" \
+            --notes-file docs/releases/v0.2.0.md
