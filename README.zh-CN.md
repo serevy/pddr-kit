@@ -69,17 +69,19 @@ python scripts/pddr.py upgrade --target /path/to/your-project
 
 有关详细的导入方法和 CI 示例，请参阅 [`docs/adoption.md`](docs/adoption.md)；有关记录规则，请参阅 [`docs/specification.md`](docs/specification.md)。初版以基于 Markdown 的运作为准，不要求使用特定的 AI 或服务。
 
+使用 GitHub Actions 的项目还可以采用 **optional checkpoint CI**，用于补充 Agent Skill 无法持续观察的变更路径。它只会针对高信号变更留下复盘 marker，并不会强制创建 PDDR。设置方法请参阅 [`docs/adoption.md`](docs/adoption.md#optional-checkpoint-ci)。
+
 ## 最小示例
 
-[`pddr-greenfield-example`](https://github.com/serevy/pddr-greenfield-example) 提供了一个完整的 PDDR 示例，将在新 Project 中导入 `v0.1.0` 的结果与观察、备选方案、决策、产出物和验证 Evidence 连接起来。
+[`pddr-greenfield-example`](https://github.com/serevy/pddr-greenfield-example) 提供了一个完整的 PDDR 示例，将在新 Project 中导入 `v0.1.0` 的结果与观察、备选方案、决策、产出物和验证 Evidence 连接起来。其 managed core 有意保持在 `v0.1.0`，作为稳定版导入示例，同时也对 `v0.2.0` 新增的 optional checkpoint CI 进行了 dogfood。
 
 题材与 Evidence 均为虚构内容，仅作为理解结构与运作方式的最小参考，与实验记录和实际使用记录相互分离。
 
 ## 当前阶段
 
-当前稳定版是 **v0.1.0**。该版本是在 PDDR Kit 自身完成 dogfooding、在两个不同的现有项目中完成导入与 CI 验证、验证现有导入环境的安全更新、完成新项目的初始导入，以及使用 Sol 和 Luna 对记录创建和安全解释进行独立 forward-test 之后发布的。
+当前稳定版是 **v0.2.0**。在 v0.1.0 基础上，本版新增 milestone audit、product-level versioning contract，以及用于补充 Agent 无法持续观察的变更路径的 optional checkpoint CI。checkpoint CI 已在 greenfield example 中完成 high-signal 触发、pending marker 回收、既有 PDDR 更新以及 routine change 不触发 signal 的 dogfood。
 
-有关稳定版的验证范围和已知限制，请参阅 [`docs/releases/v0.1.0.md`](docs/releases/v0.1.0.md)；有关变更历史，请参阅 [`CHANGELOG.md`](CHANGELOG.md)。
+有关稳定版的验证范围和已知限制，请参阅 [`docs/releases/v0.2.0.md`](docs/releases/v0.2.0.md)；有关变更历史，请参阅 [`CHANGELOG.md`](CHANGELOG.md)。
 
 Jev 等付费或外部服务属于可选扩展。它们可以增强分类、缺失判定、相关 PDDR 的 context selection 以及 typed handoff 集成，但并非 PDDR 基本运作所必需。
 
