@@ -79,9 +79,9 @@ GitHub Actions를 사용하는 프로젝트에서는 Agent Skill이 지속적으
 
 ## 현재 단계
 
-현재 안정 버전은 **v0.2.0**입니다. v0.1.0의 기반에 더해 milestone audit, product-level versioning contract, 그리고 Agent가 지속적으로 관찰하지 못하는 변경 경로를 보완하는 optional checkpoint CI를 추가했습니다. checkpoint CI는 greenfield example에서 high-signal 감지, pending marker 회수, 기존 PDDR 업데이트, routine change의 no-signal 동작까지 dogfood했습니다.
+현재 안정 버전은 **v0.2.1**입니다. v0.2.0의 기능 경계를 유지하면서 optional checkpoint CI를 read-only PR signal workflow와 trusted default-branch marker writer로 분리해 최소 권한 경계를 강화했습니다. greenfield example에서 pending marker 자동 추가, completed 상태 회수, marker 중복 방지까지 dogfood했습니다.
 
-안정 버전의 검증 범위와 알려진 제약 사항은 [`docs/releases/v0.2.0.md`](docs/releases/v0.2.0.md)를, 변경 이력은 [`CHANGELOG.md`](CHANGELOG.md)를 참조하세요.
+안정 버전의 검증 범위는 [`docs/releases/v0.2.1.md`](docs/releases/v0.2.1.md)를, 변경 이력은 [`CHANGELOG.md`](CHANGELOG.md)를 참조하세요.
 
 Jev 등의 유료·외부 서비스는 선택적 확장 기능입니다. 분류, 누락 판정, 관련 PDDR의 context selection, typed handoff 연계를 강화할 수 있지만 PDDR의 기본 운영에는 필요하지 않습니다.
 
