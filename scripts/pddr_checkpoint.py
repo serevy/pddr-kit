@@ -27,14 +27,16 @@ def _path_reason(path: str) -> str | None:
     parts = [part for part in lower.split("/") if part]
     name = parts[-1] if parts else lower
 
+    safe_path = normalized.replace("`", "'")
+
     if name == "agents.md":
-        return f"agent guidance changed: \`{normalized.replace('`', "'")}\`"
+        return f"agent guidance changed: `{safe_path}`"
 
     if name.startswith("roadmap") or "roadmap" in parts[:-1]:
-        return f"roadmap surface changed: \`{normalized.replace('`', "'")}\`"
+        return f"roadmap surface changed: `{safe_path}`"
 
     if name.startswith("architecture") or "architecture" in parts[:-1]:
-        return f"architecture surface changed: \`{normalized.replace('`', "'")}\`"
+        return f"architecture surface changed: `{safe_path}`"
 
     return None
 
