@@ -79,9 +79,9 @@ The scenario and Evidence are entirely fictional and serve as a minimal referenc
 
 ## Current stage
 
-The current stable release is **v0.2.0**. Building on the v0.1.0 foundation, it adds milestone audits, a product-level versioning contract, and optional checkpoint CI that covers change paths an Agent may not continuously observe. The checkpoint CI was dogfooded in the greenfield example across high-signal detection, pending-marker collection, existing-PDDR updates, and routine-change no-signal behavior.
+The current stable release is **v0.2.1**. It keeps the v0.2.0 feature boundary while hardening optional checkpoint CI by separating the read-only PR signal workflow from a trusted default-branch marker writer. The greenfield example dogfoods pending-marker creation, completed-state collection, and duplicate-marker prevention.
 
-See [`docs/releases/v0.2.0.md`](docs/releases/v0.2.0.md) for the stable release’s verification scope and known limitations, and [`CHANGELOG.md`](CHANGELOG.md) for the change history.
+See [`docs/releases/v0.2.1.md`](docs/releases/v0.2.1.md) for the stable release’s verification scope, and [`CHANGELOG.md`](CHANGELOG.md) for the change history.
 
 Paid and external services such as Jev are optional extensions. They can strengthen classification, missing-information detection, context selection for related PDDR records, and typed handoff integration, but they are not required for basic PDDR operation.
 
