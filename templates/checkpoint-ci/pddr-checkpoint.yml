@@ -6,8 +6,7 @@ on:
 
 permissions:
   contents: read
-  pull-requests: write
-  issues: write
+  pull-requests: read
 
 concurrency:
   group: pddr-checkpoint-${{ github.event.pull_request.number }}
@@ -30,57 +29,8 @@ jobs:
         run: git diff --name-only "$BASE_SHA" "$HEAD_SHA" > "$RUNNER_TEMP/pddr-changed-files.txt"
 
       - name: Detect checkpoint signal
-        id: detect
         run: |
           python .pddr/pddr_checkpoint.py \
             --changed-files "$RUNNER_TEMP/pddr-changed-files.txt" \
             --event-path "$GITHUB_EVENT_PATH" \
-            --github-output "$GITHUB_OUTPUT" \
-            --summary "$GITHUB_STEP_SUMMARY" \
-            --marker "$RUNNER_TEMP/pddr-checkpoint.md"
-
-      - name: Add pending marker to pull request
-        if: steps.detect.outputs.pending == 'true'
-        env:
-          GH_TOKEN: ${{ github.token }}
-          GH_REPO: ${{ github.repository }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
-        shell: bash
-        run: |
-          set +e
-
-          marker="$(cat "$RUNNER_TEMP/pddr-checkpoint.md")"
-          body="$(gh api "repos/$GH_REPO/pulls/$PR_NUMBER" --jq '.body // ""' 2>/dev/null)"
-
-          if printf '%s\n' "$body" | grep -qi '^## PDDR checkpoint'; then
-            exit 0
-          fi
-
-          new_body="$body"
-          if [ -n "$new_body" ]; then
-            new_body="$new_body"$'\n\n'"$marker"
-          else
-            new_body="$marker"
-          fi
-
-          if gh api -X PATCH "repos/$GH_REPO/pulls/$PR_NUMBER" -f body="$new_body" >/dev/null 2>&1; then
-            exit 0
-          fi
-
-          existing_comment_id="$(
-            gh api --paginate "repos/$GH_REPO/issues/$PR_NUMBER/comments" \
-              --jq '.[] | select(.body | contains("<!-- pddr-checkpoint-signal -->")) | .id' \
-              2>/dev/null | head -n 1
-          )"
-
-          if [ -n "$existing_comment_id" ]; then
-            gh api -X PATCH "repos/$GH_REPO/issues/comments/$existing_comment_id" \
-              -f body="$marker" >/dev/null 2>&1
-          else
-            gh api -X POST "repos/$GH_REPO/issues/$PR_NUMBER/comments" \
-              -f body="$marker" >/dev/null 2>&1
-          fi
-
-          # The Check Summary remains the guaranteed low-noise trace even when
-          # pull-request write permissions are unavailable (for example, forks).
-          exit 0
+            --summary "$GITHUB_STEP_SUMMARY"

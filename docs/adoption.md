@@ -95,7 +95,7 @@ PDDR Kitの`init`と`upgrade`は、引き続き導入先の`AGENTS.md`などを�
 
 GitHub Actionsを利用するconsumerでは、Agent Skillが常時repoを観測していない作業経路を補完するため、optionalなcheckpoint CIを導入できます。これは**推奨オプション**であり、PDDR Kit利用の必須条件ではありません。
 
-PDDR Kit checkoutから、detectorとworkflow templateを明示的にコピーします。
+PDDR Kit checkoutから、detectorと2つのworkflow templateを明示的にコピーします。
 
 ```bash
 mkdir -p /path/to/your-project/.pddr
@@ -106,6 +106,9 @@ cp scripts/pddr_checkpoint.py \
 
 cp templates/checkpoint-ci/pddr-checkpoint.yml \
   /path/to/your-project/.github/workflows/pddr-checkpoint.yml
+
+cp templates/checkpoint-ci/pddr-checkpoint-marker.yml \
+  /path/to/your-project/.github/workflows/pddr-checkpoint-marker.yml
 ```
 
 このoptional integrationはmanaged coreの`upgrade`対象ではありません。導入先の既存CI・権限・branch運用を確認してから追加してください。
@@ -120,7 +123,14 @@ v1 detectorは、誤検知を抑えるため次のhigh-confidence signalだけ�
 
 PR数やEvidence量だけを根拠に「PDDRが必要」と判定しません。
 
-workflowは毎回Check / Job Summaryへsignal結果を残します。checkpoint reviewを推奨するsignalがあり、PR本文に既存の`## PDDR checkpoint`がなければ、次のpending markerをPR本文末尾へ追加します。
+checkpoint CIは権限を分離した2段構成です。
+
+- `PDDR checkpoint`: `pull_request`上でPR headを検査するread-only signal workflow。Check / Job Summaryへsignal結果を残します。
+- `PDDR checkpoint marker`: signal workflow完了後の`workflow_run`で動くtrusted writer。default branch上のdetectorだけを実行し、PRの現在のchanged files / body / labelsからsignalを再計算してからmarkerを書き込みます。
+
+write権限を持つmarker workflowはPR headのコードをcheckout・実行しません。PR側でsignal workflowやdetectorを変更しても、その変更コードがwrite-capable jobで実行されない境界を維持します。
+
+checkpoint reviewを推奨するsignalがあり、PR本文に既存の`## PDDR checkpoint`がなければ、trusted marker workflowが次のpending markerをPR本文末尾へ追加します。
 
 ```md
 ## PDDR checkpoint
@@ -132,11 +142,13 @@ workflowは毎回Check / Job Summaryへsignal結果を残します。checkpoint 
 Checkpoint Signal ≠ PDDR required.
 ```
 
-PR本文を更新できない場合はcheckpoint commentをfallbackとして使用します。fork等でwrite permissionがない場合は、Check / Job Summaryだけを残して成功終了します。
+PR本文を更新できない場合はcheckpoint commentをfallbackとして使用します。repository policy等でtrusted marker workflowからもwriteできない場合は、read-only signal workflowのCheck / Job Summaryが最低限のtraceとして残ります。
 
 後続Agent / maintainerがmarkerを回収したら、PR本文のcurrent stateを`Review: completed`へ更新します。過去のCheck Summaryはsignal発生時点の履歴なので同期更新しません。
 
-template workflowは`pull_request_target`を使用せず、通常の`pull_request` eventで動作します。CIはPDDRの自動作成・自動承認を行いません。
+PR headを観測するworkflowは通常の`pull_request` eventをread-onlyで使用し、PR本文への書き込みはdefault branchのtrusted `workflow_run`へ分離します。`pull_request_target`は使用しません。CIはPDDRの自動作成・自動承認を行いません。
+
+初回導入PRでは、trusted marker workflowがまだdefault branchに存在しないため、signal workflowだけが動く場合があります。2つのworkflowがmainへ入った次のPRからmarker write pathが有効になります。
 
 ## 記録を作る
 

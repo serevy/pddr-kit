@@ -4,7 +4,7 @@ title: Provide optional checkpoint CI as an advisory safety net
 decision_date: 2026-09-23
 recorded_date: 2026-09-23
 decision_status: accepted
-delivery_status: validated
+delivery_status: implemented
 scope:
   - product
   - process
@@ -15,6 +15,7 @@ evidence:
   - "Maintainer approved optional recommended checkpoint CI, 2026-09-23 (private)"
   - "scripts/pddr_checkpoint.py"
   - "templates/checkpoint-ci/pddr-checkpoint.yml"
+  - "templates/checkpoint-ci/pddr-checkpoint-marker.yml"
   - "tests/test_pddr_checkpoint.py"
   - "https://github.com/serevy/pddr-greenfield-example/pull/18"
   - "https://github.com/serevy/pddr-greenfield-example/actions/runs/35860389299"
@@ -83,14 +84,17 @@ CIはPDDRの必要性を意味的に判定したり記録を自動作成した�
 - PR本文を更新できない場合は既存checkpoint commentの更新または新規commentをfallbackとする。
 - PR本文・commentへのwriteができない場合もCI自体は失敗させず、Check / Job Summaryを最低限のtraceとして残す。
 - pending markerを後続Agent / maintainerが確認した場合、通常のPDDR thresholdでbounded auditし、PR本文のcurrent review stateを更新する。過去のCheck Summaryは書き換えない。
-- security上、template workflowは `pull_request_target` を使わず通常の `pull_request` eventを使用する。
+- PR headをcheckout・実行するsignal workflowは通常の `pull_request` eventを使用し、`contents: read` / `pull-requests: read` のread-only権限に限定する。
+- PR本文・commentへのwriteは、signal workflow完了後にdefault branchのtrusted codeだけを実行する `workflow_run` writerへ分離する。
+- privileged writerはPR headのコード・artifactをcheckoutまたは実行せず、GitHub APIからPR metadata / changed filesを取得してtrusted detectorでsignalを再計算する。
+- security上、`pull_request_target`は使用しない。
 - optional integrationはPDDR-0009どおりproduct releaseのversioning対象だが、managed-core `upgrade`では自動導入・更新しない。
 
 ## Delivery and validation
 
 deterministic signal detectorを `scripts/pddr_checkpoint.py` として実装し、high-signal path、明示label / marker、routine changeのno-op、既存checkpoint surface、advisory markerをunit testで検証する。
 
-consumer向けtemplate workflowを `templates/checkpoint-ci/pddr-checkpoint.yml` として提供する。導入時はdetectorをconsumerの `.pddr/pddr_checkpoint.py` へ明示的にコピーし、workflowと合わせてreviewする。
+consumer向けtemplateをread-only signal workflow `templates/checkpoint-ci/pddr-checkpoint.yml` とtrusted marker writer `templates/checkpoint-ci/pddr-checkpoint-marker.yml` に分離して提供する。導入時はdetectorをconsumerの `.pddr/pddr_checkpoint.py` へ明示的にコピーし、2つのworkflowと合わせてreviewする。
 
 PDDR Recorder Skillにはpending markerを「PDDR required」ではなくmilestone audit requestとして扱う指針を追加する。
 
@@ -100,7 +104,11 @@ PR #18ではcheckpoint sectionを事前記載せずに`AGENTS.md`を変更し、
 
 PR #19では`app.js` / `styles.css`だけのroutine UI変更に対してcheckpoint run `35860852749` が成功し、PR本文へcheckpoint markerを追加しなかった。これによりhigh-signal positive pathとroutine no-signal pathの両方を実consumerで確認した。
 
-同一repository内PRでのprimary flowをE2E確認できたためdeliveryを `validated` とする。PR本文を書けない場合のcomment fallbackと、fork等でwrite permissionがない場合のSummary-only degradationは設計・実装済みだが未dogfoodであり、validatedの範囲には含めない。
+v0.2.0で同一repository内PRのprimary flowをE2E確認した後、横展開前のsecurity reviewで、`pull_request` workflowがPR headのdetectorを実行しながらPR write permissionも持つ構成はsame-repository branch PRに対するleast-privilege境界として不十分だと判断した。
+
+このため、PR headを観測するread-only signal workflowと、default branchのtrusted detectorだけを実行するprivileged `workflow_run` marker writerへ分離した。unit testでsignal workflowにwrite permissionがないこと、writerがdefault branchをcheckoutしPR headをcheckoutしないことを固定する。
+
+新しい2段構成はrepository-level testまで実装済みだがconsumer E2E dogfood前のため、deliveryを一時的に `implemented` へ戻す。greenfield exampleでhigh-signal marker writeとroutine no-signalを再確認した後に `validated` を再評価する。
 
 ## Consequences
 
@@ -109,7 +117,8 @@ PR #19では`app.js` / `styles.css`だけのroutine UI変更に対してcheckpoi
 - PR本文のcheckpoint sectionをcurrent review surfaceとして再利用でき、Semantic Decision Labで自然発生した運用と揃う。
 - Check Summaryは履歴、PR本文はcurrent stateという役割分担になり、過去Checkの同期更新は不要になる。
 - false positiveを完全には避けられないが、v1はhigh-signal surfaceに限定し、signal自体にPDDR作成義務を持たせない。
-- optional workflowはpull requestへのwrite permissionを要求する。fork等でwriteできない場合はSummary-onlyへ安全にdegradeする。
+- untrusted PR codeを観測するsignal workflowはread-onlyになり、PR write権限はtrusted default-branch writerだけが持つ。
+- marker writeがrepository policy等で拒否されても、read-only signal workflowのSummaryは残る。
 - optional integrationはmanaged-core upgradeの対象外なので、consumerごとに明示的な導入・更新が必要になる。
 
 ## Revisit when
@@ -126,6 +135,7 @@ PR #19では`app.js` / `styles.css`だけのroutine UI変更に対してcheckpoi
 - Maintainer approval of optional recommended checkpoint CI, 2026-09-23 (private).
 - `scripts/pddr_checkpoint.py`
 - `templates/checkpoint-ci/pddr-checkpoint.yml`
+- `templates/checkpoint-ci/pddr-checkpoint-marker.yml`
 - `tests/test_pddr_checkpoint.py`
 - [greenfield dogfood PR #18](https://github.com/serevy/pddr-greenfield-example/pull/18)
 - [first high-signal checkpoint run](https://github.com/serevy/pddr-greenfield-example/actions/runs/35860389299)
