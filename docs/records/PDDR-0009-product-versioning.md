@@ -68,7 +68,7 @@ consumer manifestの`kit_version`はmanaged coreを最後に導入・更新し�
 - root `VERSION`と`scripts/pddr.py`の`KIT_VERSION`は一致させる。
 - stable releaseのversionとGit tag `vX.Y.Z`を対応させる。
 - stable release間のmainは次release候補の`-dev` versionを使用する。
-- 現在のmainは、v0.1.0後に後方互換なcapability追加が存在するため`0.2.0-dev`とする。
+- v0.1.0後のdevelopment lineは、後方互換なcapability追加を反映して`0.2.0-dev`とし、v0.2.0 release時に`0.2.0`へ確定する。
 - manifestの`kit_version`はmanaged coreを最後に導入・更新したsource versionのprovenanceとする。
 - manifestのmanaged hashesをmanaged core実体の追跡に使用する。
 - Skill、AGENTS guidance、validation / checkpoint CI等はproduct releaseのversioning対象だが、自動upgrade対象には含めない。
