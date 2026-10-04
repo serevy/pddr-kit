@@ -4,7 +4,7 @@ title: Bound CI execution and make efficient adoption explicit
 decision_date: 2026-10-04
 recorded_date: 2026-10-04
 decision_status: accepted
-delivery_status: in-progress
+delivery_status: validated
 scope:
   - product
   - process
@@ -12,6 +12,10 @@ owners:
   - serevy
 evidence:
   - "https://github.com/serevy/pddr-kit/issues/47"
+  - "https://github.com/serevy/pddr-kit/pull/48"
+  - "https://github.com/serevy/pddr-kit/actions/runs/37184616296"
+  - "https://github.com/serevy/pddr-greenfield-example/pull/23"
+  - "https://github.com/serevy/pddr-greenfield-example/actions/runs/37184618931"
   - "Maintainer authorized source defaults, greenfield validation and explicit consumer adoption, 2026-10-04 (private summary)"
   - "docs/adoption.md"
   - "templates/checkpoint-ci/pddr-checkpoint.yml"
@@ -76,13 +80,17 @@ PDDR-0010のadvisory signal / trusted writer分離と既存の検出範囲を維
 
 ## Delivery and validation
 
-sourceの実装対象は導入ガイド、2つのcheckpoint template、Kit自身のvalidation設定、Unreleased CHANGELOGである。managed core、detector、Skill、release / translation workflowは変更しない。現在のdevelopment version `0.3.0-dev`で追跡し、stable releaseの公開とは分ける。
+2026-10-04に[Kit PR #48](https://github.com/serevy/pddr-kit/pull/48)、[greenfield PR #23](https://github.com/serevy/pddr-greenfield-example/pull/23)、明示的に採用した対象consumerのPRをマージし、各merge SHAに対する通常のmain CI成功を確認した。この採用範囲の実装と検証の完了を根拠に、deliveryを `validated` とする。
 
-repositoryの既存unit tests、Skill eval検証、PDDR検証を実施する。templateは追加したtimeout以外が従来と同じであること、独立サンプルとKit validationの取消し範囲、公開文書のリンクと導入境界を確認する。
+sourceには導入ガイド、2つのcheckpoint template、Kit自身のvalidation設定、Unreleased CHANGELOGを反映した。managed core、detector、Skill、release / translation workflowは変更していない。現在のdevelopment version `0.3.0-dev`で追跡し、stable releaseの公開とは分ける。
 
-greenfieldでは通常のPR更新を使い、routine変更のno-signal、AGENTS変更のrecommended signal、trusted default-branch writer、completed回収と重複防止を確認する。その後に対象consumerへ必要な差分だけを提案する。
+[Kitのmain CI](https://github.com/serevy/pddr-kit/actions/runs/37184616296)では既存unit tests 37件、recording 11件 / consumption 4件のeval定義検証、保存済みeval結果の整合性検証、PDDR 12件の検証が成功した。モデル評価を新たに実行した結果ではない。templateの差分がtimeout追加に限定されること、独立サンプルとKit validationの取消し範囲、公開文書のリンクと導入境界も確認した。
 
-具体的なPR / CI結果、sourceとconsumerのmerge状態はIssue #47で追跡する。各採用先の検証・反映が完了するまで、この記録のdeliveryは `in-progress` とする。
+greenfieldでは通常のPR更新を使い、routine変更のno-signal、AGENTS変更のrecommended signal、trusted default-branch writerによるpending表示、completed回収と重複防止を確認した。[merge後のmain CI](https://github.com/serevy/pddr-greenfield-example/actions/runs/37184618931)ではPDDR 4件の検証が成功し、validator / checkpoint / markerの5分上限と取消し範囲がmainへ反映されたことを確認した。
+
+PR段階のmarker確認は、その時点のtrusted default branch設定を使用した。新しいmarkerの5分上限はmerge後のmain上の設定として確認しており、上限到達や取消しを発生させる追加実験は行っていない。checkpointの既存イベントと`fetch-depth: 0`も維持している。
+
+公開範囲のPR / CI結果とsource / consumerのmerge状態は[Issue #47](https://github.com/serevy/pddr-kit/issues/47)に記録する。非公開の採用証拠は非公開の管理先で追跡する。通常実行の秒数は検証時の観測値であり、今回の設定変更による月間使用量の削減実績とは扱わない。
 
 ## Consequences
 
@@ -104,6 +112,8 @@ greenfieldでは通常のPR更新を使い、routine変更のno-signal、AGENTS�
 ## Evidence
 
 - [Issue #47](https://github.com/serevy/pddr-kit/issues/47)
+- [Kit PR #48](https://github.com/serevy/pddr-kit/pull/48) and [merged main validation](https://github.com/serevy/pddr-kit/actions/runs/37184616296)
+- [Greenfield PR #23](https://github.com/serevy/pddr-greenfield-example/pull/23) and [merged main validation](https://github.com/serevy/pddr-greenfield-example/actions/runs/37184618931)
 - Maintainer authorization for the scoped source and consumer work, 2026-10-04 (private summary).
 - [GitHub job conditions](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/control-jobs-with-conditions)
 - [GitHub concurrency](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/control-workflow-concurrency)
