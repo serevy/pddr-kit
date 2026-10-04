@@ -259,7 +259,7 @@ required checkにするworkflowは、必要なPRで必ず結果が出る構成�
 このページのCI設定は、`init` / `upgrade`では自動反映されません。各consumerでworkflow差分をレビューし、`AGENTS.md`等の既存ルールに次の確認事項を明示的に接続します。
 
 - 新しいjobを増やす前に、既存のread-only検証へstepを追加できるか確認する。
-- 同一PRの旧実行だけを取り消し、別PRや独立したmain/manual実行のgroupを共有しない。
+- read-only検証jobの取消しは同一PRの旧実行に限定し、別PRや独立したmain/manual実行とはgroupを共有しない。状態を書き込むmarkerにはconcurrencyによる旧実行取消しを追加しない。
 - cold実行に余裕を持つtimeoutを設定し、依存のない検証へcache用Actionを追加しない。
 - required check、失敗の伝播、既存のpath条件と検証範囲を維持する。
 - checkpointのread-only PR検証とtrusted default-branch writerを分離する。
