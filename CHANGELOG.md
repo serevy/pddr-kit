@@ -4,6 +4,9 @@ PDDR Kitの主な変更をこのファイルに記録します。
 
 ## [Unreleased]
 
+- CI導入ガイドに既存のread-only jobへPDDR検証を追加する方法を先に示し、独立サンプルへPR限定の旧実行取消しと5分上限を追加しました。
+- optional checkpointのsignal / trusted marker templateに5分上限を設定しました。イベント検査、正確なbase/head比較、権限分離は維持し、consumerごとの明示的な採用・検証手順を追加しました。
+- Kit自身のread-only validationにも5分上限とPR限定の旧実行取消しを適用しました。
 
 - maintainer向けに、version metadata・release note・CHANGELOG・repository validation・既存tagをguardする手動dispatchのGitHub Release workflowを常設しました。
 - v0.2.0後の最初のminor capabilityとしてmainのdevelopment versionを`0.3.0-dev`へ進めました。
