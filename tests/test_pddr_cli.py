@@ -279,6 +279,49 @@ class SkillUpgradeTests(unittest.TestCase):
             self.assertFalse((target / ".pddr" / "skill-manifest.json").exists())
             self.assertEqual((target / ".pddr" / "manifest.json").read_bytes(), core_before)
 
+    def test_upgrade_replaces_clean_older_tracked_skill(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            self.assertEqual(self.initialize(target), 0)
+            self.assertEqual(self.upgrade(target, skill_path=self.SKILL_PATH), 0)
+
+            installed = target / self.SKILL_PATH
+            old_bytes = b"legacy verified Skill content\n"
+            installed.write_bytes(old_bytes)
+            skill_manifest = target / ".pddr" / "skill-manifest.json"
+            manifest = self.manifest(target)
+            manifest["source_kit_version"] = "0.2.1"
+            manifest["sha256"] = pddr_cli._sha256(old_bytes)
+            skill_manifest.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+
+            self.assertEqual(self.upgrade(target, dry_run=True), 0)
+            self.assertEqual(installed.read_bytes(), old_bytes)
+            self.assertEqual(self.manifest(target)["sha256"], pddr_cli._sha256(old_bytes))
+            self.assertEqual(self.upgrade(target), 0)
+            source = (ROOT / "skills" / "pddr-recorder" / "SKILL.md").read_bytes()
+            self.assertEqual(installed.read_bytes(), source)
+            self.assertEqual(self.manifest(target)["sha256"], pddr_cli._sha256(source))
+            self.assertEqual(self.manifest(target)["source_kit_version"], pddr_cli.KIT_VERSION)
+
+    def test_noninteger_skill_manifest_schema_versions_are_rejected(self):
+        for invalid in (True, 1.0):
+            with self.subTest(schema_version=invalid):
+                with tempfile.TemporaryDirectory() as directory:
+                    target = Path(directory)
+                    self.assertEqual(self.initialize(target), 0)
+                    self.assertEqual(self.upgrade(target, skill_path=self.SKILL_PATH), 0)
+                    manifest_path = target / ".pddr" / "skill-manifest.json"
+                    original = json.loads(manifest_path.read_text(encoding="utf-8"))
+                    original["schema_version"] = invalid
+                    manifest_path.write_text(
+                        json.dumps(original, indent=2) + "\n", encoding="utf-8"
+                    )
+                    skill_before = (target / self.SKILL_PATH).read_bytes()
+                    manifest_before = manifest_path.read_bytes()
+                    self.assertEqual(self.upgrade(target), 1)
+                    self.assertEqual((target / self.SKILL_PATH).read_bytes(), skill_before)
+                    self.assertEqual(manifest_path.read_bytes(), manifest_before)
+
     def test_modified_skill_conflict_stops_core_upgrade_too(self):
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory)
