@@ -25,6 +25,7 @@ locations = (
     ".claude/skills/yomiyasu/SKILL.md",
     ".codex/skills/yomiyasu/SKILL.md",
     ".cursor/skills/yomiyasu/SKILL.md",
+    "skills/yomiyasu/SKILL.md",
 )
 found = False
 for scope, root in (("project", Path.cwd()), ("user", Path.home())):
@@ -49,7 +50,7 @@ PY
 | まだ必要な環境にない | はじめてインストールを検討する。ツールが提案する追加・変更・同期先を確認する |
 | 上流v1.1.0と結果を再現して比較したい | 既存のSkillを変更せず、別checkoutの**固定版スクリプト**か下記の手動Workflowを利用する |
 
-PDDR Kitの`pddr-recorder`は**判断・承認・Evidenceの解釈**を担当し、yomiyasuは**人間向け日本語の推敲**を担当します。複数Skillを使う際も、文章表現の改善を理由にPDDRの承認や提供状態を変えないでください。
+PDDR Kitの`pddr-recorder`は**判断・承認・Evidenceの解釈**を担当し、yomiyasuは**人間向け日本語の推敲**を担当します。複数Skillを使う際も、文章表現の改善を理由にPDDRの承認や提供状態を変えないでください。 PDDR Kit v0.3.0の`upgrade --include-skill`が追跡・更新できるのは**`pddr-recorder`のみ**で、既存のyomiyasuは管理・更新しません。
 
 ## 任意のSkill利用とCLI検査
 
