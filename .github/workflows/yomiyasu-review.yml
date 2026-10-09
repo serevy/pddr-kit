@@ -27,6 +27,13 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Protect an existing local review-tool directory
+        shell: bash
+        run: |
+          if [[ -L .external || ( -e .external && ! -d .external ) || -e .external/yomiyasu || -L .external/yomiyasu ]]; then
+            echo '::error::Reserved .external/yomiyasu path already exists or is unsafe; no checkout will overwrite it.'
+            exit 1
+          fi
       - name: Check out pinned yomiyasu v1.1.0 (read-only)
         uses: actions/checkout@v7
         with:
@@ -35,6 +42,42 @@ jobs:
           path: .external/yomiyasu
           persist-credentials: false
 
+      - name: Report pre-existing project Skill candidates (read-only)
+        env:
+          PYTHONUTF8: '1'
+        run: |
+          python - <<'PY'
+          import os
+          from pathlib import Path
+
+          candidates = (
+              '.agents/skills/yomiyasu/SKILL.md',
+              '.claude/skills/yomiyasu/SKILL.md',
+              '.codex/skills/yomiyasu/SKILL.md',
+              '.cursor/skills/yomiyasu/SKILL.md',
+              'skills/yomiyasu/SKILL.md',
+          )
+          found = []
+          for candidate in candidates:
+              path = Path(candidate)
+              if path.exists() or path.is_symlink():
+                  found.append(candidate)
+                  print(f'Existing project-local candidate (untouched): {candidate}')
+          if not found:
+              print('No Skill found at the common project paths; this does not prove absence.')
+          summary = [
+              '## Existing project-local yomiyasu candidates (advisory)',
+              '',
+              'The workflow does not load, install, update, or remove these Skills.',
+              'User-scoped Skills, plugins and custom paths are not inspected.',
+              '',
+              *(f'- `{p}` (presence only; active version not verified)' for p in found),
+              *(['- No candidate found at the listed project paths.'] if not found else []),
+              '',
+          ]
+          with Path(os.environ['GITHUB_STEP_SUMMARY']).open('a', encoding='utf-8') as output:
+              output.write('\n'.join(summary) + '\n')
+          PY
       - name: Set up Python
         uses: actions/setup-python@v7
         with:
