@@ -52,7 +52,13 @@ managed coreの実体は、manifestの`managed_files` hashesで追跡します�
 - checkpoint CI等のoptional integration
 - examples / adoption guidance
 
-optional integrationは、各consumerの既存構成と権限を尊重して明示的に導入・更新します。
+optional integrationは、各consumerの既存構成と権限を尊重して明示的に導入・更新します。**Agent Skillのみ**、オプトインしたconsumerが`upgrade --include-skill`を明示的に実行した場合、独立manifestのハッシュで安全性を確認して更新できます。通常のcore `upgrade`でSkillを暗黙に更新するものではありません。
+
+### Optional Agent Skill provenance
+
+`.pddr/skill-manifest.json`は初回の明示的なSkill登録時だけ追加されます。`schema_version`、`skill_path`（target-relative）、`source_kit_version`、`sha256`を保存し、登録済みSkillが導入先で変更されていないか確認します。core `.pddr/manifest.json`の`managed_files`や`kit_version`は従来どおりcoreのみを追跡し、意味を変えません。
+
+初回登録時の未追跡Skillが新版sourceと異なる場合は自動更新しません。変更済み・欠落・不正path・symlink・配置先変更の競合も、coreやSkillに何も書く前に停止します。Skillの独自カスタマイズを上書きする機能や、他のoptional integrationの自動導入は提供しません。
 
 ## Version bump policy
 
@@ -114,6 +120,6 @@ release後に次の開発を始める場合は、最初のunreleased changeの�
 
 ## Deferred
 
-現段階では、remote latest releaseを問い合わせる`pddr upgrade --check`や、optional integrationの自動更新は導入しません。
+現段階では、remote latest releaseを問い合わせる`pddr upgrade --check`や、Skill以外のoptional integrationの自動更新、およびSkillの無条件自動更新は導入しません。
 
 consumerが最新版を自動発見する仕組みは、このversion contractと複数consumerの運用実績を踏まえて別途検討します。
