@@ -4,6 +4,8 @@ PDDR Kitの主な変更をこのファイルに記録します。
 
 ## [Unreleased]
 
+- `upgrade --include-skill`を明示した場合に限り、任意の配置先へ導入した`pddr-recorder` Skillを独立manifestで追跡・更新できるようにしました。既存ファイルのハッシュが合わない場合はcore更新前に停止し、通常の`upgrade`は従来どおりcoreのみ更新します。
+
 - CI導入ガイドに既存のread-only jobへPDDR検証を追加する方法を先に示し、独立サンプルへPR限定の旧実行取消しと5分上限を追加しました。
 - optional checkpointのsignal / trusted marker templateに5分上限を設定しました。イベント検査、正確なbase/head比較、権限分離は維持し、consumerごとの明示的な採用・検証手順を追加しました。
 - Kit自身のread-only validationにも5分上限とPR限定の旧実行取消しを適用しました。
