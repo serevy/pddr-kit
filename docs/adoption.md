@@ -52,6 +52,40 @@ docs/records/
 
 これらはプロジェクトごとに既存の構成や規則が異なるため、v0.1では確認項目として扱います。一律の追記や上書きは行いません。
 
+### AIツール別の運用ルール配置（例）
+
+`AGENTS.md`はPDDR Kitの必須ファイルではありません。**実際に利用するAIツールが読み込む規則ファイル**へ接続してください。PDDR Kitの`init` / `upgrade`は、これらのファイルを自動生成・更新しません。
+
+| 作業環境 | 接続先の例 | 読み込みの注意 |
+| --- | --- | --- |
+| Codex CLIなど`AGENTS.md`を読む環境 | リポジトリ直下の`AGENTS.md` | 実行ディレクトリや階層、ツール固有の探索規則を確認する |
+| Claude Code | `CLAUDE.md`、または条件を満たす`AGENTS.md` | Claude Code v2.1.277以降は`AGENTS.md`を直接読めるが、既定では上位階層を含めて`CLAUDE.md` / `CLAUDE.local.md`があるとそちらを優先する。旧版や一部環境では直接読み込めない |
+| その他のAI・手動開発 | 各ツールの公式に対応した指示ファイル、または開発者向けドキュメント | ファイル名だけで自動読み込みを仮定しない |
+
+複数ツールを併用する場合、同じ方針を別々に書いて矛盾させないようにします。例えば`AGENTS.md`に次の共通規則を置きます（プロジェクトの実際の記録先・運用に合わせて調整してください）。
+
+```md
+## PDDR recording
+- 将来も理由を参照すべきProject / Product / Process判断だけをPDDRに記録する。通常の作業ログをPDDRにしない。
+- 根拠のある人間の承認だけを`decision_status: accepted`として扱う。未確認なら`proposed`または`needs-confirmation`を使う。
+- `delivery_status`は承認状態と独立に扱い、検証Evidenceなしに`validated`にしない。
+- 節目でIssue / PR / Evidenceを棚卸しし、重要な記録漏れを確認する。該当がなければ追加記録なしでよい。
+- 記録の新規作成・編集を行ったら、差分・理由・根拠を人間が確認できる形で報告する。
+```
+
+Claude Codeの`CLAUDE.md`が既にある場合や`AGENTS.md`を直接読めないバージョンでは、`CLAUDE.md`に次のように**インポート**できます（これはClaude Code固有の記法です）。
+
+```md
+@AGENTS.md
+
+## Claude Code固有の補足
+<!-- 必要な場合だけ追記。共通PDDR規則を重複させない -->
+```
+
+Claude Codeで`AGENTS.md`のみを使う場合でも、上位の`CLAUDE.md` / `CLAUDE.local.md`の存在や読み込み設定を確認してください。`/context`のMemory filesやセッション開始時の表示で、必要なファイルが読み込まれているか検証できます。古い環境では`CLAUDE.md`に直接ルールを書いても構いません。ほかのAIツールでも、それぞれの公式の読み込み手順に従って動作を確認します。
+
+参照：[Claude Codeのメモリ・AGENTS.md仕様](https://code.claude.com/docs/en/memory)、[OpenAI CodexのAGENTS.md利用ガイド](https://developers.openai.com/cookbook/examples/gpt-5/codex_prompting_guide)。モデルへ指示ファイルを読み込ませることは**助言の提示**であり、承認・権限・CIチェックを技術的に強制する仕組みではありません。
+
 ## 作業記録と重要な判断を分ける
 
 Issue、タスク、実験ログなど既存の作業管理を、すべてPDDRへ移す必要はありません。例えば次のように責務を分けます。
