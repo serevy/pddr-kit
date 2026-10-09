@@ -16,6 +16,10 @@ PDDR Kit is in an early design-validation stage. Issues describing real use case
 - Do not mark a proposal as accepted or validated without evidence.
 - By contributing, you agree that your contribution is licensed under the repository's MIT License.
 
+## Optional Japanese documentation review
+
+For Japanese prose in `README.md`, `docs/adoption.md`, and `docs/skill-evaluation.md`, see the [opt-in yomiyasu review guide](docs/japanese-prose-review.md). Its workflow is manually dispatched and advisory; it is **not** an automatic PR gate or a required status check. Preserve decision authority, negations, qualifiers, identifiers and evidence while editing.
+
 ## Protected main branch
 
 The default branch `main` is protected by a repository ruleset.
