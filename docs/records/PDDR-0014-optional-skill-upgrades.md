@@ -4,7 +4,7 @@ title: Optional hash-tracked Agent Skill upgrades
 decision_date: 2026-10-09
 recorded_date: 2026-10-09
 decision_status: accepted
-delivery_status: in-progress
+delivery_status: validated
 scope:
   - product
   - process
@@ -12,6 +12,11 @@ owners:
   - serevy
 evidence:
   - "https://github.com/serevy/pddr-kit/issues/51"
+  - "https://github.com/serevy/pddr-kit/pull/58"
+  - "https://github.com/serevy/pddr-kit/pull/60"
+  - "https://github.com/serevy/pddr-kit/actions/runs/37894401566"
+  - "https://github.com/serevy/pddr-kit/actions/runs/37894850729"
+  - "tests/test_v030_integration.py"
   - "https://github.com/serevy/pddr-kit/blob/main/docs/records/PDDR-0007-safe-adoption-upgrades.md"
   - "https://github.com/serevy/pddr-kit/blob/main/docs/records/PDDR-0009-product-versioning.md"
   - "Maintainer approved optional non-destructive Skill update work, 2026-10-09 (private summary)"
@@ -73,9 +78,9 @@ Maintainerが2026-10-09に、実利用の要望に基づき以下の方針での
 
 ## Delivery and validation
 
-CLI、テスト、導入手順、versioning文書の変更をPRへ提案する段階であり、まだmainへ反映・受入検証した状態ではない。このため`delivery_status: in-progress`とする。
+PR #58でCLI、Skill manifest、競合時の事前停止、単体テスト、導入・versioningガイドをmainへ反映した。PR #60では一時consumerへ**実際にCLIをsubprocessで起動**し、`init` → Skill登録の`--dry-run` → 初回更新 → 保存先による再実行 → `validate --allow-empty`を通す統合テストを追加した。PR #58のmain CI（run 37894401566）とPR #60のmain CI（run 37894850729）で既存テスト・新テスト・PDDR検証が成功した。
 
-テストの対象は、初回登録、dry-run、保存した配置先による再更新、利用側変更・削除・未追跡ファイル、危険なパス・symlink、壊れたmanifest、および競合時のcore更新停止である。テスト結果とマージ後の反映証拠は別途PRへ残す。複数ファイル間のディスク障害時まで完全に原子的な更新を保証するものではない。
+これをもって、**Kitの指定したオプトイン更新経路**は`delivery_status: validated`とする。検証対象には、初回登録、クリーンな旧Skillからの更新、dry-run、保存済み配置先、利用側変更・削除・未追跡ファイル、危険なパス・symlink、不正manifest、および競合時のcore更新停止が含まれる。実際の第三者consumerの全設定や別OSの互換性を網羅した証拠ではない。複数ファイル間のディスク障害に対するトランザクション性も保証しない。
 
 ## Consequences
 
