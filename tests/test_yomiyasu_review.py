@@ -170,7 +170,8 @@ class YomiyasuReviewTests(unittest.TestCase):
 
     def test_advisory_script_is_valid_python(self):
         content = WORKFLOW.read_text(encoding='utf-8')
-        start = content.index("          python - <<'PY'\n") + len("          python - <<'PY'\n")
+        step = content.index('      - name: Produce an advisory lint report')
+        start = content.index("          python - <<'PY'\n", step) + len("          python - <<'PY'\n")
         end = content.index('\n          PY', start)
         code = textwrap.dedent(content[start:end])
         compile(code, str(WORKFLOW), 'exec')
