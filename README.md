@@ -71,18 +71,18 @@ python scripts/pddr.py upgrade --target /path/to/your-project
 
 GitHub Actionsを利用するプロジェクトでは、Agent Skillが常時観測しない変更経路を補完する**optional checkpoint CI**も利用できます。high-signal changeに対して棚卸し用のmarkerを残すだけで、PDDRの作成を強制しません。セットアップは[`docs/adoption.md`](docs/adoption.md#optional-checkpoint-ci)を参照してください。
 
-### AIツール連携とSkillの更新（v0.3.0開発版）
+### AIツール連携とSkillの更新（v0.3.0）
 
 PDDRをAIとの開発で利用する場合は、利用するツールが実際に読み込む規則ファイルへ運用ルールを接続してください。たとえばClaude Codeでは`CLAUDE.md`（設定・バージョンによっては`AGENTS.md`）、Codexでは`AGENTS.md`を利用できます。PDDR Kitはこれらのファイルを勝手に書き換えません。詳しくは[導入ガイド](docs/adoption.md)を参照してください。
 
-開発版`0.3.0-dev`では、明示的に登録した`pddr-recorder` Skillを、既存の管理ファイルとは別のmanifestで安全に追跡できます。以下は**新しいPDDR Kit側のディレクトリ**から実行する初回登録例です。
+v0.3.0では、明示的に登録した`pddr-recorder` Skillを、既存の管理ファイルとは別のmanifestで安全に追跡できます。以下は**新しいPDDR Kit側のディレクトリ**から実行する初回登録例です。
 
 ```bash
 python scripts/pddr.py upgrade --target /path/to/your-project --include-skill --skill-path .claude/skills/pddr-recorder/SKILL.md --dry-run
 python scripts/pddr.py upgrade --target /path/to/your-project --include-skill --skill-path .claude/skills/pddr-recorder/SKILL.md
 ```
 
-以降は`--include-skill`のみ指定すれば同じ配置先を更新できます。独自変更したSkillは自動で上書きせず、競合として停止します。**安定版v0.2.1にはこのオプションはありません。** 通常の`upgrade`は引き続きKit管理ファイルだけを更新します。
+以降は`--include-skill`のみ指定すれば同じ配置先を更新できます。独自変更したSkillは自動で上書きせず、競合として停止します。**このオプションはv0.3.0で追加されました。** 通常の`upgrade`は引き続きKit管理ファイルだけを更新します。
 
 意思決定を記録するときは、既に確認できる人間の承認を再利用できます。事実誤認などは理由と差分を残して訂正でき、AIによる変更は人間に見える形で報告します。PRの自動マージやCI成功だけで新たな人間の承認があったとはみなしません。並行するPRでPDDR番号が衝突する場合は[採番ガイド](docs/concurrent-record-ids.md)を参照してください。
 
@@ -94,9 +94,9 @@ python scripts/pddr.py upgrade --target /path/to/your-project --include-skill --
 
 ## 現在の段階
 
-現在の安定版は**v0.2.1**です。v0.2.0で追加したmilestone audit、product-level versioning contract、optional checkpoint CIの機能境界は維持しつつ、checkpoint CIをread-only signal workflowとtrusted marker writerへ権限分離しました。greenfield exampleでpending marker自動追記、completed回収、再実行時のmarker重複なしまでdogfoodしています。
+現在の安定版は**v0.3.0**です。v0.2.1のleast-privilege checkpoint CIを維持しながら、AIツール別の規則配置、明示的なSkill更新、判断・訂正の透明性、並行PRの採番ガイドを追加しました。Skillの新しい評価ケースは定義検証済みですが、実モデルforward-testは別途必要です。
 
-安定版の検証範囲は[`docs/releases/v0.2.1.md`](docs/releases/v0.2.1.md)、変更履歴は[`CHANGELOG.md`](CHANGELOG.md)を参照してください。
+安定版の検証範囲は[`docs/releases/v0.3.0.md`](docs/releases/v0.3.0.md)、変更履歴は[`CHANGELOG.md`](CHANGELOG.md)を参照してください。
 
 Jevなどの有償・外部サービスは任意の拡張です。分類・不足判定・関連PDDRのcontext selection・typed handoff連携を強化できますが、PDDRの基本運用には不要です。
 

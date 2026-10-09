@@ -71,18 +71,18 @@ Pour les instructions détaillées d’adoption et les exemples de CI, consultez
 
 Les projets utilisant GitHub Actions peuvent également adopter le **optional checkpoint CI** afin de couvrir les chemins de modification qu’un Agent Skill ne peut pas observer en permanence. Il se contente de laisser un marker de revue pour les changements à signal fort et n’impose pas la création d’un PDDR. Consultez [`docs/adoption.md`](docs/adoption.md#optional-checkpoint-ci) pour la configuration.
 
-### Intégration des outils d’IA et mise à jour du Skill (développement v0.3.0)
+### Intégration des outils d’IA et mise à jour du Skill (v0.3.0)
 
 Placez les règles PDDR dans les fichiers d’instructions **réellement chargés** par votre outil de développement assisté par IA. Par exemple, Claude Code peut utiliser `CLAUDE.md` (ou `AGENTS.md` selon sa version et sa configuration), tandis que Codex utilise `AGENTS.md`. PDDR Kit ne modifie pas les fichiers d’instructions propres au projet. Consultez le [guide d’adoption](docs/adoption.md).
 
-La version de développement `0.3.0-dev` permet de suivre et de mettre à jour, de façon explicite et non destructive, le Skill `pddr-recorder` enregistré dans un manifeste séparé. Depuis le **répertoire de la nouvelle version de PDDR Kit**, prévisualisez les changements avant d’enregistrer son emplacement :
+La version v0.3.0 permet de suivre et de mettre à jour, de façon explicite et non destructive, le Skill `pddr-recorder` enregistré dans un manifeste séparé. Depuis le **répertoire de la nouvelle version de PDDR Kit**, prévisualisez les changements avant d’enregistrer son emplacement :
 
 ```bash
 python scripts/pddr.py upgrade --target /path/to/your-project --include-skill --skill-path .claude/skills/pddr-recorder/SKILL.md --dry-run
 python scripts/pddr.py upgrade --target /path/to/your-project --include-skill --skill-path .claude/skills/pddr-recorder/SKILL.md
 ```
 
-Pour les mises à jour suivantes, `--include-skill` suffit : le chemin enregistré est réutilisé. Un Skill modifié localement n’est **jamais écrasé silencieusement** : la mise à jour s’arrête en cas de conflit. **Cette option n’existe pas dans la version stable v0.2.1.** La commande `upgrade` ordinaire ne met toujours à jour que les fichiers du noyau gérés par le Kit.
+Pour les mises à jour suivantes, `--include-skill` suffit : le chemin enregistré est réutilisé. Un Skill modifié localement n’est **jamais écrasé silencieusement** : la mise à jour s’arrête en cas de conflit. **Cette option a été ajoutée dans v0.3.0.** La commande `upgrade` ordinaire ne met toujours à jour que les fichiers du noyau gérés par le Kit.
 
 Pour enregistrer une décision, il est possible de réutiliser une approbation humaine explicite et vérifiable. Une erreur de transcription peut être corrigée avec un motif et un diff traçables ; toute modification initiée par une IA doit rester visible pour une personne. Ni le succès de la CI ni une fusion automatique de PR ne valent approbation humaine. En cas de numérotation concurrente dans plusieurs PR, consultez le [guide des identifiants](docs/concurrent-record-ids.md).
 
@@ -94,9 +94,9 @@ Le scénario et les Evidence sont entièrement fictifs et servent de référence
 
 ## Étape actuelle
 
-La version stable actuelle est **v0.2.1**. Elle conserve le périmètre fonctionnel de v0.2.0 tout en renforçant le optional checkpoint CI grâce à la séparation entre un PR signal workflow en lecture seule et un marker writer exécuté depuis la default branch de confiance. Le greenfield example a validé l’ajout automatique du pending marker, la collecte de l’état completed et l’absence de duplication des markers.
+La version stable actuelle est **v0.3.0**. Elle conserve l’architecture de moindre privilège du checkpoint CI de v0.2.1 et ajoute les instructions propres aux outils d’IA, la mise à jour explicite du Skill, des corrections de décisions traçables et des règles de numérotation pour les PR parallèles. Les nouvelles définitions des cas d’évaluation du Skill sont validées ; les tests indépendants avec un modèle restent à réaliser.
 
-Consultez [`docs/releases/v0.2.1.md`](docs/releases/v0.2.1.md) pour connaître le périmètre de vérification de la version stable, et [`CHANGELOG.md`](CHANGELOG.md) pour l’historique des modifications.
+Consultez [`docs/releases/v0.3.0.md`](docs/releases/v0.3.0.md) pour connaître le périmètre de vérification de la version stable, et [`CHANGELOG.md`](CHANGELOG.md) pour l’historique des modifications.
 
 Les services payants et externes tels que Jev sont des extensions facultatives. Ils peuvent renforcer la classification, la détection des informations manquantes, la context selection des PDDR associés et l’intégration de typed handoff, mais ils ne sont pas nécessaires au fonctionnement de base de PDDR.
 

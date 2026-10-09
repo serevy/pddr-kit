@@ -71,18 +71,18 @@ For detailed adoption instructions and CI examples, see [`docs/adoption.md`](doc
 
 Projects using GitHub Actions can also use the **optional checkpoint CI** to cover change paths that an Agent Skill may not continuously observe. It only leaves a review marker for high-signal changes and does not require creating a PDDR. See [`docs/adoption.md`](docs/adoption.md#optional-checkpoint-ci) for setup.
 
-### AI tool integration and Skill updates (v0.3.0 development)
+### AI tool integration and Skill updates (v0.3.0)
 
 Connect PDDR operating rules to the instruction files **actually loaded** by your AI coding tool. For example, Claude Code can use `CLAUDE.md` (or, under supported versions and configurations, `AGENTS.md`), while Codex uses `AGENTS.md`. PDDR Kit does not overwrite consumer-owned instruction files. See the [adoption guide](docs/adoption.md).
 
-The development version `0.3.0-dev` supports an explicit, non-destructive update path for an enrolled `pddr-recorder` Skill, tracked by a separate manifest. From the **new PDDR Kit checkout**, enroll a Skill destination after previewing the changes:
+Version `0.3.0` supports an explicit, non-destructive update path for an enrolled `pddr-recorder` Skill, tracked by a separate manifest. From the **new PDDR Kit checkout**, enroll a Skill destination after previewing the changes:
 
 ```bash
 python scripts/pddr.py upgrade --target /path/to/your-project --include-skill --skill-path .claude/skills/pddr-recorder/SKILL.md --dry-run
 python scripts/pddr.py upgrade --target /path/to/your-project --include-skill --skill-path .claude/skills/pddr-recorder/SKILL.md
 ```
 
-For subsequent updates, specify `--include-skill` without repeating the saved destination. Modified Skills are not silently overwritten: conflicts stop the update. **This option is not available in stable v0.2.1.** Plain `upgrade` still updates only the managed core.
+For subsequent updates, specify `--include-skill` without repeating the saved destination. Modified Skills are not silently overwritten: conflicts stop the update. **This option was introduced in v0.3.0.** Plain `upgrade` still updates only the managed core.
 
 Verified prior human approval can be reused when recording a decision. Factual transcription errors can be corrected with a traceable rationale and diff; AI-initiated changes must be visible to a human. CI success or unattended PR merge is not human decision approval. See the [concurrent ID guidance](docs/concurrent-record-ids.md) when multiple PRs allocate PDDR IDs.
 
@@ -94,9 +94,9 @@ The scenario and Evidence are entirely fictional and serve as a minimal referenc
 
 ## Current stage
 
-The current stable release is **v0.2.1**. It keeps the v0.2.0 feature boundary while hardening optional checkpoint CI by separating the read-only PR signal workflow from a trusted default-branch marker writer. The greenfield example dogfoods pending-marker creation, completed-state collection, and duplicate-marker prevention.
+The current stable release is **v0.3.0**. It retains the least-privilege checkpoint CI design of v0.2.1 while adding AI-tool instruction guidance, opt-in Skill upgrades, transparent record corrections, and concurrent PR ID-allocation guidance. The new Skill evaluation case definitions have been validated; independent model forward-tests remain pending.
 
-See [`docs/releases/v0.2.1.md`](docs/releases/v0.2.1.md) for the stable release’s verification scope, and [`CHANGELOG.md`](CHANGELOG.md) for the change history.
+See [`docs/releases/v0.3.0.md`](docs/releases/v0.3.0.md) for the stable release’s verification scope, and [`CHANGELOG.md`](CHANGELOG.md) for the change history.
 
 Paid and external services such as Jev are optional extensions. They can strengthen classification, missing-information detection, context selection for related PDDR records, and typed handoff integration, but they are not required for basic PDDR operation.
 
