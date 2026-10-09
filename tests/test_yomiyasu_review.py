@@ -36,6 +36,8 @@ class YomiyasuReviewTests(unittest.TestCase):
         self.assertIn('repository: nanaism/yomiyasu', content)
         self.assertIn('ref: ' + PINNED_UPSTREAM, content)
         self.assertIn('persist-credentials: false', content)
+        self.assertIn('python scripts/report_japanese_skill_candidates.py', content)
+        self.assertNotIn('python scripts/report_japanese_skill_candidates.py --include-user', content)
         for expected in (
             "'readme': 'README.md'",
             "'adoption': 'docs/adoption.md'",
@@ -72,34 +74,96 @@ class YomiyasuReviewTests(unittest.TestCase):
             self.assertEqual(sentinel.read_text(encoding='utf-8'), 'existing review tool\n')
 
     def test_existing_local_skill_is_reported_without_modification(self):
-        content = WORKFLOW.read_text(encoding='utf-8')
-        start = content.index('      - name: Report pre-existing project Skill candidates')
-        end = content.index('      - name: Set up Python', start)
-        part = content[start:end]
-        start_py = part.index("          python - <<'PY'\n") + len("          python - <<'PY'\n")
-        end_py = part.index('\n          PY', start_py)
-        script = textwrap.dedent(part[start_py:end_py])
-        compile(script, str(WORKFLOW), 'exec')
+        detector = ROOT / 'scripts' / 'report_japanese_skill_candidates.py'
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            destination = root / '.claude' / 'skills' / 'yomiyasu' / 'SKILL.md'
-            destination.parent.mkdir(parents=True)
-            destination.write_bytes(b'project-customized yomiyasu\n')
-            summary = root / 'summary.md'
+            def skill(relative, value):
+                path = root / relative
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text(value, encoding='utf-8')
+                return path
+
+            existing = skill('.claude/skills/yomiyasu/SKILL.md', 'custom yomiyasu\n')
+            alternative = skill(
+                '.agents/skills/natural-japanese/SKILL.md',
+                '---\nname: natural-japanese\ndescription: 日本語文章を校正する\n---\n',
+            )
+            nonoverlap = skill(
+                '.agents/skills/japanese-translator/SKILL.md',
+                '---\nname: japanese-translator\ndescription: Japanese translation\n---\n',
+            )
+            local_custom = skill(
+                '.codex/skills/custom-review/SKILL.md',
+                '---\nname: custom-review\ndescription: 日本語の文章を推敲する\n---\n',
+            )
             result = subprocess.run(
-                [sys.executable, '-c', script],
-                cwd=root, env={**os.environ, 'GITHUB_STEP_SUMMARY': str(summary)},
-                capture_output=True, text=True, check=False,
+                [sys.executable, str(detector), '--target', str(root)],
+                text=True, capture_output=True, check=False,
             )
             self.assertEqual(result.returncode, 0, result.stderr)
-            self.assertIn('.claude/skills/yomiyasu/SKILL.md', summary.read_text(encoding='utf-8'))
-            self.assertIn('presence only; active version not verified', summary.read_text(encoding='utf-8'))
-            self.assertEqual(destination.read_bytes(), b'project-customized yomiyasu\n')
+            for path in (
+                '.claude/skills/yomiyasu/SKILL.md',
+                '.agents/skills/natural-japanese/SKILL.md',
+                '.codex/skills/custom-review/SKILL.md',
+            ):
+                self.assertIn(path, result.stdout)
+            self.assertNotIn('japanese-translator/SKILL.md', result.stdout)
+            self.assertEqual(existing.read_bytes(), b'custom yomiyasu\n')
+            self.assertIn('natural-japanese', alternative.read_text(encoding='utf-8'))
+            self.assertIn('Japanese translation', nonoverlap.read_text(encoding='utf-8'))
+            self.assertIn('日本語の文章を推敲する', local_custom.read_text(encoding='utf-8'))
+
+    def test_user_scoped_skills_are_opt_in(self):
+        detector = ROOT / 'scripts' / 'report_japanese_skill_candidates.py'
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            project = root / 'project'
+            home = root / 'home'
+            project.mkdir()
+            skill = home / '.agents/skills/natural-japanese/SKILL.md'
+            skill.parent.mkdir(parents=True)
+            skill.write_text('---\nname: natural-japanese\n---\n', encoding='utf-8')
+            env = {**os.environ, 'HOME': str(home)}
+            args = [sys.executable, str(detector), '--target', str(project)]
+            basic = subprocess.run(args, env=env, text=True, capture_output=True, check=False)
+            extended = subprocess.run(
+                [*args, '--include-user'], env=env,
+                text=True, capture_output=True, check=False,
+            )
+            self.assertEqual(basic.returncode, 0, basic.stderr)
+            self.assertEqual(extended.returncode, 0, extended.stderr)
+            self.assertNotIn('natural-japanese/SKILL.md', basic.stdout)
+            self.assertIn('user: .agents/skills/natural-japanese/SKILL.md', extended.stdout)
+
+    def test_linked_parent_not_traversed(self):
+        detector = ROOT / 'scripts' / 'report_japanese_skill_candidates.py'
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            project = root / 'project'
+            outside = root / 'outside'
+            project.mkdir()
+            target = outside / 'skills' / 'natural-japanese' / 'SKILL.md'
+            target.parent.mkdir(parents=True)
+            target.write_text('---\nname: natural-japanese\n---\n', encoding='utf-8')
+            try:
+                (project / '.claude').symlink_to(outside, target_is_directory=True)
+            except OSError:
+                self.skipTest('symlinks not supported')
+            result = subprocess.run(
+                [sys.executable, str(detector), '--target', str(project)],
+                text=True, capture_output=True, check=False,
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertNotIn('natural-japanese/SKILL.md', result.stdout)
+            self.assertIn('linked parent directory not inspected', result.stdout)
+            self.assertEqual(target.read_text(encoding='utf-8'), '---\nname: natural-japanese\n---\n')
 
     def test_installation_guidance_prefers_reuse_and_disclaims_global_coverage(self):
         guide = (ROOT / 'docs' / 'japanese-prose-review.md').read_text(encoding='utf-8')
-        self.assertLess(guide.index('## 既存のyomiyasuがある場合'), guide.index('npx skills add'))
-        self.assertIn('新規インストールより再利用を優先', guide)
+        self.assertLess(guide.index('## 既存の日本語Skillがある場合'), guide.index('npx skills add'))
+        self.assertIn('新規インストールより既存の運用を優先', guide)
+        self.assertIn('別名の日本語推敲Skill', guide)
+        self.assertIn('report_japanese_skill_candidates.py', guide)
         self.assertIn('プラグイン', guide)
         self.assertIn('導入先へインストールせず', guide)
         self.assertIn('`pddr-recorder`のみ', guide)
