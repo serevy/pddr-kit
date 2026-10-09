@@ -88,7 +88,7 @@ Pour enregistrer une décision, il est possible de réutiliser une approbation h
 
 ## Exemple minimal
 
-[`pddr-greenfield-example`](https://github.com/serevy/pddr-greenfield-example) conserve l’historique de l’adoption initiale de `v0.1.0` dans un nouveau Project et fournit un exemple complet de PDDR reliant observations, options, décisions, livrables et Evidence de vérification. Son managed core est désormais mis à jour vers `v0.2.1`, et il sert aussi de dogfood pour le hardened optional checkpoint CI séparé entre un signal workflow en lecture seule et un trusted marker writer.
+[`pddr-greenfield-example`](https://github.com/serevy/pddr-greenfield-example) conserve l’historique de l’adoption initiale de `v0.1.0` dans un nouveau Project et fournit un exemple complet de PDDR reliant observations, options, décisions, livrables et Evidence de vérification. Son managed core est désormais mis à jour vers `v0.3.0`, et il sert aussi de dogfood pour le hardened optional checkpoint CI séparé entre un signal workflow en lecture seule et un trusted marker writer.
 
 Le scénario et les Evidence sont entièrement fictifs et servent de référence minimale pour comprendre la structure et le fonctionnement. Ils sont distincts des enregistrements d’expériences ou d’utilisations réelles.
 
