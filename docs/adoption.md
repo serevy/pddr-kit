@@ -59,7 +59,7 @@ docs/records/
 | 作業環境 | 接続先の例 | 読み込みの注意 |
 | --- | --- | --- |
 | Codex CLIなど`AGENTS.md`を読む環境 | リポジトリ直下の`AGENTS.md` | 実行ディレクトリや階層、ツール固有の探索規則を確認する |
-| Claude Code | `CLAUDE.md`、または条件を満たす`AGENTS.md` | Claude Code v2.1.277以降は`AGENTS.md`を直接読めるが、既定では上位階層を含めて`CLAUDE.md` / `CLAUDE.local.md`があるとそちらを優先する。旧版や一部環境では直接読み込めない |
+| Claude Code | `CLAUDE.md` / `.claude/CLAUDE.md`、または条件を満たす`AGENTS.md` | Claude Code v2.1.277以降は`AGENTS.md`を直接読めるが、既定では作業ディレクトリまたはその祖先階層に`CLAUDE.md` / `.claude/CLAUDE.md` / `CLAUDE.local.md`があるとそちらを優先する。旧版や一部環境では直接読み込めない |
 | その他のAI・手動開発 | 各ツールの公式に対応した指示ファイル、または開発者向けドキュメント | ファイル名だけで自動読み込みを仮定しない |
 
 複数ツールを併用する場合、同じ方針を別々に書いて矛盾させないようにします。例えば`AGENTS.md`に次の共通規則を置きます（プロジェクトの実際の記録先・運用に合わせて調整してください）。
