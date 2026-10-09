@@ -37,7 +37,13 @@ class YomiyasuReviewTests(unittest.TestCase):
         self.assertIn('ref: ' + PINNED_UPSTREAM, content)
         self.assertIn('persist-credentials: false', content)
         self.assertIn('python scripts/report_japanese_skill_candidates.py', content)
-        self.assertNotIn('python scripts/report_japanese_skill_candidates.py --include-user', content)
+        scanner_invocations = [
+            line.strip()
+            for line in content.splitlines()
+            if line.strip().startswith('python scripts/report_japanese_skill_candidates.py')
+        ]
+        self.assertEqual(len(scanner_invocations), 1)
+        self.assertNotIn('--include-user', scanner_invocations[0])
         for expected in (
             "'readme': 'README.md'",
             "'adoption': 'docs/adoption.md'",
