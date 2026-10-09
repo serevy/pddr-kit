@@ -86,6 +86,8 @@ Claude Codeで`AGENTS.md`のみを使う場合でも、上位の`CLAUDE.md` / `C
 
 参照：[Claude Codeのメモリ・AGENTS.md仕様](https://code.claude.com/docs/en/memory)、[OpenAI CodexのAGENTS.md利用ガイド](https://developers.openai.com/cookbook/examples/gpt-5/codex_prompting_guide)。モデルへ指示ファイルを読み込ませることは**助言の提示**であり、承認・権限・CIチェックを技術的に強制する仕組みではありません。
 
+日本語のREADMEや導入ガイドを読みやすく整えるときは、[任意のyomiyasu推敲手順](japanese-prose-review.md)を参照してください。変更はPRで確認し、判断の合意・条件・否定・適用範囲は変えません。日本語lintを通常のPR必須チェックにはしません。
+
 ## 作業記録と重要な判断を分ける
 
 Issue、タスク、実験ログなど既存の作業管理を、すべてPDDRへ移す必要はありません。例えば次のように責務を分けます。
@@ -97,7 +99,7 @@ Issue、タスク、実験ログなど既存の作業管理を、すべてPDDR�
 
 ## 節目でPDDRを棚卸しする
 
-個々の作業中にPDDR候補へ気づく運用だけでは、AI Skillを読み込まない経路や、複数Issueへ判断根拠が分散した場合に重要な判断を取りこぼすことがあります。導入先の`AGENTS.md`や開発者向け規則に、節目でrecent Issues / PRsを再点検するcheckpointを置くことを推奨します。
+個々の作業中に見つけたPDDR候補だけを記録する運用では、AI Skillを読み込まない作業経路や、判断根拠が複数のIssueに分散した場合に、重要な判断を取りこぼすことがあります。そのため、導入先の`AGENTS.md`などの開発者向け規則に、節目ごとに直近のIssueとPRを再点検するcheckpointを設けることを推奨します。
 
 代表的なcheckpointは次です。
 

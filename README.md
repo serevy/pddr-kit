@@ -4,7 +4,7 @@
 
 **Project Design Decision Record** — プロジェクトの判断・背景・実装・検証をつなぐための軽量キットです。
 
-PDDRは、最終的な決定だけでなく、観測や議論から提案が生まれ、採用され、実装・検証され、必要なら見直されるまでの流れを追跡可能にします。人とAIが「何を決めたか」だけでなく「なぜ現在の形になったか」を引き継げることを目指します。
+PDDRは、最終的な決定だけでなく、観測や議論から提案が生まれ、採用・実装・検証を経て、必要に応じて見直されるまでの経緯を追跡できます。人とAIが「何を決めたか」だけでなく、「なぜ現在の形になったか」も引き継げるようにすることを目指します。
 
 > PDDR (Project Design Decision Record) is a lightweight framework for preserving not only what a project decided, but how and why it evolved.
 
@@ -113,6 +113,8 @@ Jevなどの有償・外部サービスは任意の拡張です。分類・不�
 ## Contributing
 
 初期段階のため、まずはIssueでユースケースや課題を共有してください。変更提案は[`CONTRIBUTING.md`](CONTRIBUTING.md)を参照してください。
+
+日本語のREADMEや導入ガイドの任意レビューには、[yomiyasuを用いた推敲手順](docs/japanese-prose-review.md)を利用できます。文章の修正はPRで差分を確認し、PDDRの判断やEvidenceの意味を変えないようにします。
 
 ## License
 

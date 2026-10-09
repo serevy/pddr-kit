@@ -4,7 +4,14 @@
 
 `pddr-recorder`が、記録対象の選別、判断状態と提供状態の分離、Evidenceの扱い、履歴保全、権限境界を一貫して守れるかを評価します。
 
-記録作成・更新の評価ケースは[`evals/pddr-recorder/cases.json`](../evals/pddr-recorder/cases.json)、記録を安全に解釈する評価ケースは[`evals/pddr-recorder/consumption-cases.json`](../evals/pddr-recorder/consumption-cases.json)、milestone auditの追加forward-testケースは[`evals/pddr-recorder/milestone-audit-cases.json`](../evals/pddr-recorder/milestone-audit-cases.json)です。特定モデルの回答文を固定するのではなく、満たすべき行動と禁止する行動を定義します。
+評価ケースは、次の4種類に分けています。
+
+- 記録の作成・更新：[`cases.json`](../evals/pddr-recorder/cases.json)
+- 記録の安全な解釈：[`consumption-cases.json`](../evals/pddr-recorder/consumption-cases.json)
+- 節目での記録漏れ点検：[`milestone-audit-cases.json`](../evals/pddr-recorder/milestone-audit-cases.json)
+- 承認証拠の再利用・記録訂正：[`revision-cases.json`](../evals/pddr-recorder/revision-cases.json)
+
+これらのケースは特定モデルの回答文を固定するものではなく、各場面で満たすべき行動と禁止する行動を定義します。
 
 ## 評価する境界
 
@@ -30,6 +37,8 @@
 ```bash
 python scripts/validate_skill_evals.py
 python scripts/validate_skill_evals.py evals/pddr-recorder/consumption-cases.json
+python scripts/validate_skill_evals.py evals/pddr-recorder/milestone-audit-cases.json
+python scripts/validate_skill_evals.py evals/pddr-recorder/revision-cases.json
 ```
 
 CIでは、ケースID、期待するrouting、record action、状態値、必須の行動・禁止行動に欠落や矛盾がないことを検査します。これはSkillの実際の回答品質を証明するものではありません。
@@ -57,6 +66,12 @@ python scripts/validate_skill_eval_results.py
 semantic-decision-labでのdogfoodingを受け、節目の棚卸しが「PDDRを必ず作るイベント」にならないことと、複数のrecent Issues / PRsからdurable decisionだけを昇格できることを確認する2ケースを、独立した`milestone-audit-cases.json`として追加しました。
 
 2026-09-18の11ケースsuiteと既存resultsは固定Evidenceとして変更しません。新しい2ケースを過去のモデル結果へ混ぜず、独立forward-testとして評価します。追加ケースは定義・schema検証のみ完了しており、モデル合格済みとは扱いません。
+
+## 2026-10-09の承認・訂正ケース追加
+
+外部利用のフィードバックを受け、既存の承認証拠の再利用、Botによる自動マージと人間の合意の区別、誤記録の訂正、AIが変更理由を報告する手順、安全性に関わる方針変更の扱いについて5ケースを追加しました。
+
+新しい`revision-cases.json`はスキーマ・整合性の検証が完了していますが、**実モデルを使ったforward-testは未実施**です。過去の11ケースと4件のconsumption評価結果は、今回追加した5ケースの合格実績には含めません。yomiyasuによる日本語の推敲もSkillの行動評価の代わりにはなりません。
 
 ## 2026-09-18の記録作成・更新比較
 
