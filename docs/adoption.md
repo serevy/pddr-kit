@@ -166,7 +166,7 @@ signalとmarkerのtemplateには、それぞれ5分のjob timeoutを設定して
 cp .pddr/template.md docs/records/PDDR-0001-short-title.md
 ```
 
-テンプレートのID・タイトル・日付・状態を更新し、仕様に従って各セクションを記入します。PDDR番号は導入先リポジトリ内で一意にします。
+テンプレートのID・タイトル・日付・状態を更新し、仕様に従って各セクションを記入します。PDDR番号は導入先リポジトリ内で一意にします。 並行PRで同じ番号を取得してしまう場合があるため、[採番と衝突時の手順](concurrent-record-ids.md)も確認してください。
 
 ## 検証する
 
