@@ -1,0 +1,91 @@
+name: Japanese prose review (yomiyasu, optional)
+
+on:
+  workflow_dispatch:
+    inputs:
+      document:
+        description: Japanese prose document to inspect
+        required: true
+        type: choice
+        default: all
+        options:
+          - all
+          - readme
+          - adoption
+          - skill-evaluation
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out PDDR Kit (read-only)
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Check out pinned yomiyasu v1.1.0 (read-only)
+        uses: actions/checkout@v7
+        with:
+          repository: nanaism/yomiyasu
+          ref: c2ffae670994fec96daef92e0bc219f5c1923113
+          path: .external/yomiyasu
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.10'
+
+      - name: Produce an advisory lint report
+        env:
+          DOCUMENT: ${{ inputs.document }}
+          PYTHONUTF8: '1'
+        run: |
+          python - <<'PY'
+          import os
+          import subprocess
+          import sys
+          from pathlib import Path
+
+          allowed = {
+              'readme': 'README.md',
+              'adoption': 'docs/adoption.md',
+              'skill-evaluation': 'docs/skill-evaluation.md',
+          }
+          choice = os.environ.get('DOCUMENT', 'all')
+          if choice not in {'all', *allowed}:
+              raise SystemExit('Unsupported review target')
+
+          script = Path('.external/yomiyasu/skills/yomiyasu/scripts/yomiyasu_lint.py')
+          if not script.is_file():
+              raise SystemExit('Pinned yomiyasu linter is missing')
+          documents = list(allowed.values()) if choice == 'all' else [allowed[choice]]
+          summary = [
+              '# yomiyasu v1.1.0 — advisory Japanese prose review',
+              '',
+              'These are review candidates, not proof of semantic equivalence.',
+              'No files, PRs, or decisions are modified.',
+              '',
+          ]
+          failed = False
+          for filename in documents:
+              result = subprocess.run(
+                  [sys.executable, str(script), filename],
+                  capture_output=True, text=True, encoding='utf-8', check=False,
+              )
+              report = (result.stdout + '\n' + result.stderr).strip()
+              print(f'## {filename}\n{report}')
+              summary += [f'## `{filename}`', '', '```text', report[:5000].replace('```', "'''"), '```', '']
+              if result.returncode != 0:
+                  failed = True
+                  print(f'Yomiyasu could not complete {filename}: exit {result.returncode}', file=sys.stderr)
+
+          with Path(os.environ['GITHUB_STEP_SUMMARY']).open('a', encoding='utf-8') as output:
+              output.write('\n'.join(summary) + '\n')
+          if failed:
+              raise SystemExit(1)
+          PY
