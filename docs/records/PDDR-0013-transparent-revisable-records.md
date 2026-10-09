@@ -4,7 +4,7 @@ title: Keep decision records revisable, visible and authority-safe
 decision_date: 2026-10-09
 recorded_date: 2026-10-09
 decision_status: accepted
-delivery_status: not-started
+delivery_status: implemented
 scope:
   - product
   - process
@@ -12,6 +12,8 @@ owners:
   - serevy
 evidence:
   - "https://github.com/serevy/pddr-kit/issues/52"
+  - "https://github.com/serevy/pddr-kit/pull/56"
+  - "https://github.com/serevy/pddr-kit/actions/runs/37894850729"
   - "https://github.com/serevy/pddr-kit/issues/50"
   - "https://github.com/serevy/pddr-kit/issues/51"
   - "https://github.com/serevy/pddr-kit/issues/53"
@@ -80,7 +82,9 @@ Maintainerは2026-10-09に、以下をPDDR Kitの運用改善の基本方針と�
 
 ## Delivery and validation
 
-判断原則を本記録とIssue #52へ整理した段階。`docs/specification.md`、`docs/adoption.md`、`skills/pddr-recorder/SKILL.md`の仕様・手順・評価ケースへの反映は未着手であるため`delivery_status: not-started`とする。本記録をPRとしてレビューに出すことと、機能変更・運用検証の完了は区別する。
+PR #56で`docs/specification.md`と`skills/pddr-recorder/SKILL.md`に承認証拠の再利用、事実誤認と方針変更の区別、AIによる編集の可視性を反映し、5件の新規Skill評価ケースとCIでの定義検証を追加した。PR #55ではAI向け規則の読み込み先を導入ガイドへ追記した。これらの変更はmainへ反映され、統合テストを含むmain CI（run 37894850729）が成功したため、当初承認した改善の実装状態は`delivery_status: implemented`とする。
+
+**この提供状態は新しいSkillケースのモデル実行評価完了を意味しない。** 5件の追加ケースはスキーマ・整合性の検証までで、実モデルforward-testは未実施。実運用で承認や訂正の挙動が期待どおりかの独立検証は別途必要である。
 
 Issue #50、#51、#53はそれぞれAIツールへの導入、Agent Skill配布更新、並行PRでの採番に関する改善候補であり、本記録から具体的な解決手段まで自動採用されたとはみなさない。
 
