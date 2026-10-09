@@ -10,9 +10,50 @@
 - Kitでは`.github/workflows/yomiyasu-review.yml`を**手動実行（`workflow_dispatch`）専用**にします。`push`・`pull_request`・`workflow_run`では起動せず、required checkにもせず、PRコメントや文書へ自動で書き込みません。
 - Workflowは上流commitを固定して読み取り専用でチェックアウトし、Python標準ライブラリだけで静的lintを実行します。Skill本文そのもののモデルによる推敲は、自動化されていません。
 
+## 既存のyomiyasuがある場合（最初に確認）
+
+**新規インストールより再利用を優先**します。別のリポジトリにyomiyasuが導入済みでも、それが現在のプロジェクトのAIで有効とは限りません。作業前に、インストール方式、適用範囲（プロジェクト/ユーザー/プラグイン）、実際に読み込まれる配置先、カスタマイズの有無を確認してください。
+
+導入対象の**プロジェクトルート**で次の読み取り専用チェックを実行できます。既存ファイルの内容を変更せず、一般的なSkill配置先が存在するかだけを表示します。
+
+```bash
+python - <<'PY'
+from pathlib import Path
+
+locations = (
+    ".agents/skills/yomiyasu/SKILL.md",
+    ".claude/skills/yomiyasu/SKILL.md",
+    ".codex/skills/yomiyasu/SKILL.md",
+    ".cursor/skills/yomiyasu/SKILL.md",
+)
+found = False
+for scope, root in (("project", Path.cwd()), ("user", Path.home())):
+    for relative in locations:
+        path = root / relative
+        if path.exists() or path.is_symlink():
+            kind = "symlink" if path.is_symlink() else "file or directory"
+            print(f"{scope}: {path} ({kind})")
+            found = True
+if not found:
+    print("Common directories: no yomiyasu found. Check plugins/custom paths manually.")
+PY
+```
+
+このチェックは**全インストール先の検出を保証しません**。Claude Codeプラグインのインストール状況、エージェント固有のSkill一覧、上位ディレクトリの規則ファイルやカスタムパスも、それぞれのツールで確認してください。存在を確認しただけで、実際に読み込まれている、あるいはv1.1.0だと推定しません。symlinkは参照先を変更・削除せず、どこを指すかも必要に応じて人が確認します。
+
+| 確認結果 | 推奨する対応 |
+| --- | --- |
+| 既に利用するAIがyomiyasuを読み込む | **その既存版を再利用**し、新規インストール・重複したルールの追記はしない |
+| 版や由来が不明、古い版、独自に修正されている | **そのまま保持**。実際の版・差分・更新方法を確認し、明示承認なしに置換しない |
+| 複数の配置先・プラグインが見つかった | 有効な読み込み先と優先順位を確認し、同名Skillの二重実行・競合する日本語規則を避ける。既存のものを無断で無効化しない |
+| まだ必要な環境にない | はじめてインストールを検討する。ツールが提案する追加・変更・同期先を確認する |
+| 上流v1.1.0と結果を再現して比較したい | 既存のSkillを変更せず、別checkoutの**固定版スクリプト**か下記の手動Workflowを利用する |
+
+PDDR Kitの`pddr-recorder`は**判断・承認・Evidenceの解釈**を担当し、yomiyasuは**人間向け日本語の推敲**を担当します。複数Skillを使う際も、文章表現の改善を理由にPDDRの承認や提供状態を変えないでください。
+
 ## 任意のSkill利用とCLI検査
 
-上流が案内するAgent Skillの導入方法の一例は次のとおりです。**既存のSkillやAI向け規則ファイルを確認してから**利用し、ツールが既存の`.agents/skills/`や`.claude/skills/`を上書きしないか、提示される変更先を確かめてください。プロジェクト全体へインストールすることを必須とはしません。
+上記の事前確認を行い、**必要なAI環境にyomiyasuが存在しない場合だけ**新規インストールを検討してください。上流が案内するインストールコマンドの例は次のとおりです。すでにSkillがある環境では実行せず、インストールツールが提示する追加・上書き・同期先（`.agents/skills/`、`.claude/skills/`、`AGENTS.md`など）を確認してください。プロジェクト全体へのインストールは必須ではありません。
 
 ```bash
 npx skills add nanaism/yomiyasu
@@ -29,7 +70,7 @@ python /path/to/yomiyasu/skills/yomiyasu/scripts/yomiyasu_diff.py /tmp/before.md
 
 lintは表現やMarkdownの警告候補、diffは語・文末・構造の変化候補を示します。**警告ゼロ・スコア上昇は合格条件ではなく、意味の一致を証明しません。** 技術的な列挙や重要な否定は、自然な文章でも残ることがあります。
 
-手動Actions: [Japanese prose review (yomiyasu, optional)](https://github.com/serevy/pddr-kit/actions/workflows/yomiyasu-review.yml)。対象は `README.md`・`docs/adoption.md`・`docs/skill-evaluation.md` から選択します。実行結果はJob LogとJob Summaryへ**助言**として出力され、ファイル・PR・Issueは変更しません。
+手動Actions: [Japanese prose review (yomiyasu, optional)](https://github.com/serevy/pddr-kit/actions/workflows/yomiyasu-review.yml)。対象は `README.md`・`docs/adoption.md`・`docs/skill-evaluation.md` から選択します。WorkflowはSkillを導入先へインストールせず、上流の固定版を隔離した一時パスに取得してlintします。既に一時パスが存在する場合は**上書きせず失敗**します。既存のSkill候補がプロジェクト内にある場合は参考情報として表示し、そちらは変更・起動しません。ユーザーレベルやプラグインのSkillはWorkflowで自動検出しません。結果はJob LogとJob Summaryへ**助言**として出力され、ファイル・PR・Issueは変更しません。
 
 ## 推敲の対象と守る情報
 
