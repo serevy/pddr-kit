@@ -71,6 +71,21 @@ python scripts/pddr.py upgrade --target /path/to/your-project
 
 使用 GitHub Actions 的项目还可以采用 **optional checkpoint CI**，用于补充 Agent Skill 无法持续观察的变更路径。它只会针对高信号变更留下复盘 marker，并不会强制创建 PDDR。设置方法请参阅 [`docs/adoption.md`](docs/adoption.md#optional-checkpoint-ci)。
 
+### AI 工具集成与 Skill 更新（v0.3.0 开发版）
+
+请将 PDDR 的操作规则放在所用 AI 编程工具**实际会读取**的指令文件中。例如，Claude Code 可使用 `CLAUDE.md`（在支持的版本和配置下也可读取 `AGENTS.md`），Codex 使用 `AGENTS.md`。PDDR Kit 不会擅自修改项目自有的指令文件。详情参见[导入指南](docs/adoption.md)。
+
+开发版 `0.3.0-dev` 支持通过独立的 manifest 跟踪已明确登记的 `pddr-recorder` Skill，并以非破坏方式更新。从**新版 PDDR Kit 的目录**中，先预览再登记目标路径：
+
+```bash
+python scripts/pddr.py upgrade --target /path/to/your-project --include-skill --skill-path .claude/skills/pddr-recorder/SKILL.md --dry-run
+python scripts/pddr.py upgrade --target /path/to/your-project --include-skill --skill-path .claude/skills/pddr-recorder/SKILL.md
+```
+
+后续只需指定 `--include-skill`，无需重复传入已登记的路径。若 Skill 已被项目自行修改，更新将因冲突而停止，**不会静默覆盖**。**稳定版 v0.2.1 尚不支持此选项。** 普通的 `upgrade` 仍只更新 Kit 管理的核心文件。
+
+记录决策时，可以复用已有且可核实的人工批准证据。事实记录有误时，可保留修改理由和差异后进行更正；AI 发起的改动必须对人工可见。CI 成功或 PR 自动合并并不等同于人工批准决策。多个 PR 并行分配 PDDR 编号时，请参阅[编号冲突指南](docs/concurrent-record-ids.md)。
+
 ## 最小示例
 
 [`pddr-greenfield-example`](https://github.com/serevy/pddr-greenfield-example) 保留了在新 Project 中最初导入 `v0.1.0` 的历史，并提供了一个将观察、备选方案、决策、产出物和验证 Evidence 连接起来的完整 PDDR 示例。其 managed core 现已更新到 `v0.2.1`，并对拆分为只读 signal workflow 与可信 marker writer 的 hardened optional checkpoint CI 进行了 dogfood。
