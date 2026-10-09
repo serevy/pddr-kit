@@ -2,6 +2,8 @@
 
 [English](README.en.md) | **日本語** | [简体中文](README.zh-CN.md) | [한국어](README.ko.md) | [Français](README.fr.md)
 
+[![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/serevy/pddr-kit?utm_source=oss&utm_medium=github&utm_campaign=serevy%2Fpddr-kit&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews)](https://coderabbit.ai)
+
 **Project Design Decision Record** — プロジェクトの判断・背景・実装・検証をつなぐための軽量キットです。
 
 PDDRは、最終的な決定だけでなく、観測や議論から提案が生まれ、採用・実装・検証を経て、必要に応じて見直されるまでの経緯を追跡できます。人とAIが「何を決めたか」だけでなく、「なぜ現在の形になったか」も引き継げるようにすることを目指します。
