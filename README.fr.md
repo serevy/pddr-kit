@@ -71,6 +71,21 @@ Pour les instructions détaillées d’adoption et les exemples de CI, consultez
 
 Les projets utilisant GitHub Actions peuvent également adopter le **optional checkpoint CI** afin de couvrir les chemins de modification qu’un Agent Skill ne peut pas observer en permanence. Il se contente de laisser un marker de revue pour les changements à signal fort et n’impose pas la création d’un PDDR. Consultez [`docs/adoption.md`](docs/adoption.md#optional-checkpoint-ci) pour la configuration.
 
+### Intégration des outils d’IA et mise à jour du Skill (développement v0.3.0)
+
+Placez les règles PDDR dans les fichiers d’instructions **réellement chargés** par votre outil de développement assisté par IA. Par exemple, Claude Code peut utiliser `CLAUDE.md` (ou `AGENTS.md` selon sa version et sa configuration), tandis que Codex utilise `AGENTS.md`. PDDR Kit ne modifie pas les fichiers d’instructions propres au projet. Consultez le [guide d’adoption](docs/adoption.md).
+
+La version de développement `0.3.0-dev` permet de suivre et de mettre à jour, de façon explicite et non destructive, le Skill `pddr-recorder` enregistré dans un manifeste séparé. Depuis le **répertoire de la nouvelle version de PDDR Kit**, prévisualisez les changements avant d’enregistrer son emplacement :
+
+```bash
+python scripts/pddr.py upgrade --target /path/to/your-project --include-skill --skill-path .claude/skills/pddr-recorder/SKILL.md --dry-run
+python scripts/pddr.py upgrade --target /path/to/your-project --include-skill --skill-path .claude/skills/pddr-recorder/SKILL.md
+```
+
+Pour les mises à jour suivantes, `--include-skill` suffit : le chemin enregistré est réutilisé. Un Skill modifié localement n’est **jamais écrasé silencieusement** : la mise à jour s’arrête en cas de conflit. **Cette option n’existe pas dans la version stable v0.2.1.** La commande `upgrade` ordinaire ne met toujours à jour que les fichiers du noyau gérés par le Kit.
+
+Pour enregistrer une décision, il est possible de réutiliser une approbation humaine explicite et vérifiable. Une erreur de transcription peut être corrigée avec un motif et un diff traçables ; toute modification initiée par une IA doit rester visible pour une personne. Ni le succès de la CI ni une fusion automatique de PR ne valent approbation humaine. En cas de numérotation concurrente dans plusieurs PR, consultez le [guide des identifiants](docs/concurrent-record-ids.md).
+
 ## Exemple minimal
 
 [`pddr-greenfield-example`](https://github.com/serevy/pddr-greenfield-example) conserve l’historique de l’adoption initiale de `v0.1.0` dans un nouveau Project et fournit un exemple complet de PDDR reliant observations, options, décisions, livrables et Evidence de vérification. Son managed core est désormais mis à jour vers `v0.2.1`, et il sert aussi de dogfood pour le hardened optional checkpoint CI séparé entre un signal workflow en lecture seule et un trusted marker writer.
