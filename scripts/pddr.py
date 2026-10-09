@@ -188,7 +188,8 @@ def _skill_update_plan(
             raise ValueError(f"cannot read Skill manifest: {exc}") from exc
         if (
             not isinstance(installed, dict)
-            or installed.get("schema_version") != 1
+            or type(installed.get("schema_version")) is not int
+            or installed["schema_version"] != 1
             or not isinstance(installed.get("skill_path"), str)
             or not isinstance(installed.get("source_kit_version"), str)
             or not isinstance(installed.get("sha256"), str)
