@@ -311,7 +311,7 @@ python scripts/pddr.py upgrade \
 python scripts/pddr.py upgrade --target /path/to/your-project
 ```
 
-`upgrade`が更新するのは、`.pddr/manifest.json`でハッシュを追跡する次のKit管理ファイルだけです。
+既定の`upgrade`が更新するのは、`.pddr/manifest.json`でハッシュを追跡する次のKit管理ファイルだけです。
 
 - `.pddr/pddr.py`
 - `.pddr/specification.md`
@@ -320,6 +320,41 @@ python scripts/pddr.py upgrade --target /path/to/your-project
 `.pddr/config.json`、PDDR記録、導入先のREADME・AI向け規則・CIなどは更新しません。管理ファイルが導入後に編集されている、削除されている、または追跡外の同名ファイルがある場合は、すべての書き込み前に競合として停止します。
 
 導入先の`.pddr/pddr.py`自身からは更新せず、新しいPDDR Kit側の`scripts/pddr.py`を使います。
+
+
+### Agent Skillの明示的な導入・更新（任意）
+
+標準の`upgrade`は、導入先が所有する`AGENTS.md`、`CLAUDE.md`、SkillやCIを勝手に更新しません。`pddr-recorder` Skillに限り、**明示的に指定して登録した配置先**をハッシュで追跡し、その後も明示的に更新するオプションがあります。Python 3.10以降のみで動作し、ネットワーク・専用パッケージは不要です。
+
+初回登録の例（`SKILL.md`の配置先は利用するAIツールに合わせて調整します）:
+
+```bash
+# 必ず新しいPDDR Kit側のscripts/pddr.pyから実行する
+python scripts/pddr.py upgrade \
+  --target /path/to/your-project \
+  --include-skill \
+  --skill-path .claude/skills/pddr-recorder/SKILL.md \
+  --dry-run
+
+# 内容と競合がないことを確認してから実行
+python scripts/pddr.py upgrade \
+  --target /path/to/your-project \
+  --include-skill \
+  --skill-path .claude/skills/pddr-recorder/SKILL.md
+```
+
+初回登録時は`.pddr/skill-manifest.json`（**coreとは別の任意manifest**）へ、相対配置先、SkillのSHA-256、取り込んだKit source versionを記録します。配置先が空ならSkillをコピーし、配置済みでも **現在のsourceとバイト単位で一致**する場合に限り登録できます。異なる未登録ファイルは競合で停止します。旧版を手動コピー済みで差分がある場合は、差分をレビューしてから手動で移行してください。未知の既存Skillを無断で管理下に取り込みません。
+
+次回から配置先を繰り返し指定する必要はありません:
+
+```bash
+python scripts/pddr.py upgrade --target /path/to/your-project --include-skill --dry-run
+python scripts/pddr.py upgrade --target /path/to/your-project --include-skill
+```
+
+登録済みSkillが改変・削除されている場合、別の配置先への上書きが要求された場合、symlinkや不正な相対パスを含む場合は、**coreの更新を始める前に**競合として停止します。個別の手修正は自動上書きしません。新しい場所へ移すときは、導入先の所有するSkillとmanifestを手動レビューし、明示的に再登録してください。コマンドは競合を事前検査しますが、停電・ディスク障害などを含む複数ファイル間のトランザクションを保証するものではありません。
+
+Skillを登録していても`--include-skill`を省略した通常の`upgrade`ではSkillを更新しません。`.pddr/manifest.json`の`kit_version`もSkillの更新状態を保証しません。ほかのoptional integration（CI、AIの運用規則、checkpoint）は今回の対象外です。
 
 ### マニフェスト導入前のプロジェクト
 
