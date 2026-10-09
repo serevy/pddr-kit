@@ -88,7 +88,7 @@ python scripts/pddr.py upgrade --target /path/to/your-project --include-skill --
 
 ## 最小サンプル
 
-[`pddr-greenfield-example`](https://github.com/serevy/pddr-greenfield-example)では、新規プロジェクトへ最初に`v0.1.0`を導入した履歴と、観測・選択肢・判断・成果物・検証Evidenceを結んだPDDRの完成例を確認できます。現在はmanaged coreを`v0.2.1`へ更新し、read-only signal workflowとtrusted marker writerへ分離したhardened optional checkpoint CIもdogfoodしています。
+[`pddr-greenfield-example`](https://github.com/serevy/pddr-greenfield-example)では、新規プロジェクトへ最初に`v0.1.0`を導入した履歴と、観測・選択肢・判断・成果物・検証Evidenceを結んだPDDRの完成例を確認できます。現在はmanaged coreを`v0.3.0`へ更新し、read-only signal workflowとtrusted marker writerへ分離したhardened optional checkpoint CIもdogfoodしています。
 
 題材とEvidenceはすべて架空であり、構成と運用を理解するための最小リファレンスです。実験や実利用の記録とは分離しています。
 

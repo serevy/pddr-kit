@@ -88,7 +88,7 @@ Verified prior human approval can be reused when recording a decision. Factual t
 
 ## Minimal example
 
-[`pddr-greenfield-example`](https://github.com/serevy/pddr-greenfield-example) preserves the history of initially adopting `v0.1.0` in a new Project and provides a complete PDDR example linking observations, options, decisions, artifacts, and verification Evidence. Its managed core is now updated to `v0.2.1`, and it dogfoods the hardened optional checkpoint CI split into a read-only signal workflow and a trusted marker writer.
+[`pddr-greenfield-example`](https://github.com/serevy/pddr-greenfield-example) preserves the history of initially adopting `v0.1.0` in a new Project and provides a complete PDDR example linking observations, options, decisions, artifacts, and verification Evidence. Its managed core is now updated to `v0.3.0`, and it dogfoods the hardened optional checkpoint CI split into a read-only signal workflow and a trusted marker writer.
 
 The scenario and Evidence are entirely fictional and serve as a minimal reference for understanding the structure and operation. They are separate from records of experiments or real-world use.
 
