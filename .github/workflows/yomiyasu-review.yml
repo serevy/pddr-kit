@@ -42,42 +42,17 @@ jobs:
           path: .external/yomiyasu
           persist-credentials: false
 
-      - name: Report pre-existing project Skill candidates (read-only)
+      - name: Report project-local Japanese prose Skill candidates (read-only)
         env:
           PYTHONUTF8: '1'
         run: |
-          python - <<'PY'
-          import os
-          from pathlib import Path
-
-          candidates = (
-              '.agents/skills/yomiyasu/SKILL.md',
-              '.claude/skills/yomiyasu/SKILL.md',
-              '.codex/skills/yomiyasu/SKILL.md',
-              '.cursor/skills/yomiyasu/SKILL.md',
-              'skills/yomiyasu/SKILL.md',
-          )
-          found = []
-          for candidate in candidates:
-              path = Path(candidate)
-              if path.exists() or path.is_symlink():
-                  found.append(candidate)
-                  print(f'Existing project-local candidate (untouched): {candidate}')
-          if not found:
-              print('No Skill found at the common project paths; this does not prove absence.')
-          summary = [
-              '## Existing project-local yomiyasu candidates (advisory)',
-              '',
-              'The workflow does not load, install, update, or remove these Skills.',
-              'User-scoped Skills, plugins and custom paths are not inspected.',
-              '',
-              *(f'- `{p}` (presence only; active version not verified)' for p in found),
-              *(['- No candidate found at the listed project paths.'] if not found else []),
-              '',
-          ]
-          with Path(os.environ['GITHUB_STEP_SUMMARY']).open('a', encoding='utf-8') as output:
-              output.write('\n'.join(summary) + '\n')
-          PY
+          python scripts/report_japanese_skill_candidates.py
+          {
+            echo '## Japanese prose Skill coexistence review (advisory)'
+            echo 'See this job log for bounded project-local candidate inventory.'
+            echo 'Presence does not prove activation or conflict; plugin, user and custom rules are not inspected.'
+            echo 'No existing Skills were changed, disabled, or executed.'
+          } >> "$GITHUB_STEP_SUMMARY"
       - name: Set up Python
         uses: actions/setup-python@v7
         with:
