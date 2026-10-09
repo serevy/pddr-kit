@@ -79,7 +79,9 @@ def find_candidates(root: Path) -> tuple[list[str], list[str]]:
             metadata = " ".join(FRONT_FIELD.findall(header))
             searchable = f"{child.name} {metadata}"
             # Candidate for human inspection, not proof of an overlapping role.
-            if JAPANESE_HINT.search(searchable) and PROSE_HINT.search(searchable):
+            if child.name.casefold() == "yomiyasu" or (
+                JAPANESE_HINT.search(searchable) and PROSE_HINT.search(searchable)
+            ):
                 detected.append(f"{prefix}/{child.name}/SKILL.md")
     return detected, caveats
 
