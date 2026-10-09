@@ -71,18 +71,18 @@ python scripts/pddr.py upgrade --target /path/to/your-project
 
 使用 GitHub Actions 的项目还可以采用 **optional checkpoint CI**，用于补充 Agent Skill 无法持续观察的变更路径。它只会针对高信号变更留下复盘 marker，并不会强制创建 PDDR。设置方法请参阅 [`docs/adoption.md`](docs/adoption.md#optional-checkpoint-ci)。
 
-### AI 工具集成与 Skill 更新（v0.3.0 开发版）
+### AI 工具集成与 Skill 更新（v0.3.0）
 
 请将 PDDR 的操作规则放在所用 AI 编程工具**实际会读取**的指令文件中。例如，Claude Code 可使用 `CLAUDE.md`（在支持的版本和配置下也可读取 `AGENTS.md`），Codex 使用 `AGENTS.md`。PDDR Kit 不会擅自修改项目自有的指令文件。详情参见[导入指南](docs/adoption.md)。
 
-开发版 `0.3.0-dev` 支持通过独立的 manifest 跟踪已明确登记的 `pddr-recorder` Skill，并以非破坏方式更新。从**新版 PDDR Kit 的目录**中，先预览再登记目标路径：
+v0.3.0 支持通过独立的 manifest 跟踪已明确登记的 `pddr-recorder` Skill，并以非破坏方式更新。从**新版 PDDR Kit 的目录**中，先预览再登记目标路径：
 
 ```bash
 python scripts/pddr.py upgrade --target /path/to/your-project --include-skill --skill-path .claude/skills/pddr-recorder/SKILL.md --dry-run
 python scripts/pddr.py upgrade --target /path/to/your-project --include-skill --skill-path .claude/skills/pddr-recorder/SKILL.md
 ```
 
-后续只需指定 `--include-skill`，无需重复传入已登记的路径。若 Skill 已被项目自行修改，更新将因冲突而停止，**不会静默覆盖**。**稳定版 v0.2.1 尚不支持此选项。** 普通的 `upgrade` 仍只更新 Kit 管理的核心文件。
+后续只需指定 `--include-skill`，无需重复传入已登记的路径。若 Skill 已被项目自行修改，更新将因冲突而停止，**不会静默覆盖**。**此功能自 v0.3.0 起提供。** 普通的 `upgrade` 仍只更新 Kit 管理的核心文件。
 
 记录决策时，可以复用已有且可核实的人工批准证据。事实记录有误时，可保留修改理由和差异后进行更正；AI 发起的改动必须对人工可见。CI 成功或 PR 自动合并并不等同于人工批准决策。多个 PR 并行分配 PDDR 编号时，请参阅[编号冲突指南](docs/concurrent-record-ids.md)。
 
@@ -94,9 +94,9 @@ python scripts/pddr.py upgrade --target /path/to/your-project --include-skill --
 
 ## 当前阶段
 
-当前稳定版是 **v0.2.1**。本版保持 v0.2.0 的功能边界，同时将 optional checkpoint CI 拆分为只读的 PR signal workflow 与基于可信 default branch 的 marker writer，以强化最小权限边界。greenfield example 已验证 pending marker 自动写入、completed 状态回收以及 marker 不重复生成。
+当前稳定版是 **v0.3.0**。本版保留 v0.2.1 的最小权限 checkpoint CI 设计，并新增 AI 工具规则文件指南、显式登记的 Skill 更新、可追踪的记录更正以及并行 PR 的编号冲突处理。新增 Skill 评估用例已通过定义验证，但仍需独立的模型前向测试。
 
-有关稳定版的验证范围，请参阅 [`docs/releases/v0.2.1.md`](docs/releases/v0.2.1.md)；有关变更历史，请参阅 [`CHANGELOG.md`](CHANGELOG.md)。
+有关稳定版的验证范围，请参阅 [`docs/releases/v0.3.0.md`](docs/releases/v0.3.0.md)；有关变更历史，请参阅 [`CHANGELOG.md`](CHANGELOG.md)。
 
 Jev 等付费或外部服务属于可选扩展。它们可以增强分类、缺失判定、相关 PDDR 的 context selection 以及 typed handoff 集成，但并非 PDDR 基本运作所必需。
 
