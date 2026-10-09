@@ -71,6 +71,21 @@ For detailed adoption instructions and CI examples, see [`docs/adoption.md`](doc
 
 Projects using GitHub Actions can also use the **optional checkpoint CI** to cover change paths that an Agent Skill may not continuously observe. It only leaves a review marker for high-signal changes and does not require creating a PDDR. See [`docs/adoption.md`](docs/adoption.md#optional-checkpoint-ci) for setup.
 
+### AI tool integration and Skill updates (v0.3.0 development)
+
+Connect PDDR operating rules to the instruction files **actually loaded** by your AI coding tool. For example, Claude Code can use `CLAUDE.md` (or, under supported versions and configurations, `AGENTS.md`), while Codex uses `AGENTS.md`. PDDR Kit does not overwrite consumer-owned instruction files. See the [adoption guide](docs/adoption.md).
+
+The development version `0.3.0-dev` supports an explicit, non-destructive update path for an enrolled `pddr-recorder` Skill, tracked by a separate manifest. From the **new PDDR Kit checkout**, enroll a Skill destination after previewing the changes:
+
+```bash
+python scripts/pddr.py upgrade --target /path/to/your-project --include-skill --skill-path .claude/skills/pddr-recorder/SKILL.md --dry-run
+python scripts/pddr.py upgrade --target /path/to/your-project --include-skill --skill-path .claude/skills/pddr-recorder/SKILL.md
+```
+
+For subsequent updates, specify `--include-skill` without repeating the saved destination. Modified Skills are not silently overwritten: conflicts stop the update. **This option is not available in stable v0.2.1.** Plain `upgrade` still updates only the managed core.
+
+Verified prior human approval can be reused when recording a decision. Factual transcription errors can be corrected with a traceable rationale and diff; AI-initiated changes must be visible to a human. CI success or unattended PR merge is not human decision approval. See the [concurrent ID guidance](docs/concurrent-record-ids.md) when multiple PRs allocate PDDR IDs.
+
 ## Minimal example
 
 [`pddr-greenfield-example`](https://github.com/serevy/pddr-greenfield-example) preserves the history of initially adopting `v0.1.0` in a new Project and provides a complete PDDR example linking observations, options, decisions, artifacts, and verification Evidence. Its managed core is now updated to `v0.2.1`, and it dogfoods the hardened optional checkpoint CI split into a read-only signal workflow and a trusted marker writer.
