@@ -71,6 +71,21 @@ python scripts/pddr.py upgrade --target /path/to/your-project
 
 GitHub Actionsを利用するプロジェクトでは、Agent Skillが常時観測しない変更経路を補完する**optional checkpoint CI**も利用できます。high-signal changeに対して棚卸し用のmarkerを残すだけで、PDDRの作成を強制しません。セットアップは[`docs/adoption.md`](docs/adoption.md#optional-checkpoint-ci)を参照してください。
 
+### AIツール連携とSkillの更新（v0.3.0開発版）
+
+PDDRをAIとの開発で利用する場合は、利用するツールが実際に読み込む規則ファイルへ運用ルールを接続してください。たとえばClaude Codeでは`CLAUDE.md`（設定・バージョンによっては`AGENTS.md`）、Codexでは`AGENTS.md`を利用できます。PDDR Kitはこれらのファイルを勝手に書き換えません。詳しくは[導入ガイド](docs/adoption.md)を参照してください。
+
+開発版`0.3.0-dev`では、明示的に登録した`pddr-recorder` Skillを、既存の管理ファイルとは別のmanifestで安全に追跡できます。以下は**新しいPDDR Kit側のディレクトリ**から実行する初回登録例です。
+
+```bash
+python scripts/pddr.py upgrade --target /path/to/your-project --include-skill --skill-path .claude/skills/pddr-recorder/SKILL.md --dry-run
+python scripts/pddr.py upgrade --target /path/to/your-project --include-skill --skill-path .claude/skills/pddr-recorder/SKILL.md
+```
+
+以降は`--include-skill`のみ指定すれば同じ配置先を更新できます。独自変更したSkillは自動で上書きせず、競合として停止します。**安定版v0.2.1にはこのオプションはありません。** 通常の`upgrade`は引き続きKit管理ファイルだけを更新します。
+
+意思決定を記録するときは、既に確認できる人間の承認を再利用できます。事実誤認などは理由と差分を残して訂正でき、AIによる変更は人間に見える形で報告します。PRの自動マージやCI成功だけで新たな人間の承認があったとはみなしません。並行するPRでPDDR番号が衝突する場合は[採番ガイド](docs/concurrent-record-ids.md)を参照してください。
+
 ## 最小サンプル
 
 [`pddr-greenfield-example`](https://github.com/serevy/pddr-greenfield-example)では、新規プロジェクトへ最初に`v0.1.0`を導入した履歴と、観測・選択肢・判断・成果物・検証Evidenceを結んだPDDRの完成例を確認できます。現在はmanaged coreを`v0.2.1`へ更新し、read-only signal workflowとtrusted marker writerへ分離したhardened optional checkpoint CIもdogfoodしています。
