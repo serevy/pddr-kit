@@ -50,9 +50,16 @@ def find_candidates(root: Path) -> tuple[list[str], list[str]]:
     detected: list[str] = []
     caveats: list[str] = []
     for prefix in SKILL_DIRS:
-        parent = root / prefix
+        parent = root
+        linked_ancestor = False
+        for component in Path(prefix).parts:
+            parent = parent / component
+            if parent.is_symlink():
+                linked_ancestor = True
+                caveats.append(f"{prefix}: linked parent directory not inspected")
+                break
         # Do not follow linked folders that could point outside the requested root.
-        if parent.is_symlink() or not parent.is_dir():
+        if linked_ancestor or not parent.is_dir():
             continue
         try:
             children = sorted(parent.iterdir(), key=lambda p: p.name)
