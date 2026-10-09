@@ -222,8 +222,6 @@ class UpgradeTests(unittest.TestCase):
             )
 
 
-
-
 class SkillUpgradeTests(unittest.TestCase):
     SKILL_PATH = ".claude/skills/pddr-recorder/SKILL.md"
 
@@ -479,6 +477,47 @@ class ValidationTests(unittest.TestCase):
             )
             _, diagnostics = pddr_cli.validate_record(path)
             self.assertEqual(diagnostics, [])
+
+
+
+
+class ParallelIdTests(unittest.TestCase):
+    def test_each_branch_can_validate_but_combined_ids_must_be_unique(self):
+        """Two agents may choose the same number against a shared base."""
+        with tempfile.TemporaryDirectory() as directory:
+            parent = Path(directory)
+            branches = []
+            for suffix in ("first", "second"):
+                records = parent / suffix / "docs" / "records"
+                records.mkdir(parents=True)
+                (records / "PDDR-0001-test-record.md").write_text(
+                    VALID_RECORD, encoding="utf-8"
+                )
+                next_record = VALID_RECORD.replace("PDDR-0001", "PDDR-0002")
+                (records / f"PDDR-0002-{suffix}.md").write_text(
+                    next_record, encoding="utf-8"
+                )
+                args = type("Args", (), {"target": str(records.parents[1]), "records_dir": None, "allow_empty": False})()
+                self.assertEqual(pddr_cli.command_validate(args), 0)
+                branches.append(records)
+
+            combined = parent / "combined" / "docs" / "records"
+            combined.mkdir(parents=True)
+            for path in branches[0].glob("*.md"):
+                (combined / path.name).write_bytes(path.read_bytes())
+            second = branches[1] / "PDDR-0002-second.md"
+            (combined / second.name).write_bytes(second.read_bytes())
+            args = type("Args", (), {"target": str(combined.parents[1]), "records_dir": None, "allow_empty": False})()
+            self.assertEqual(pddr_cli.command_validate(args), 1)
+
+            # Renumber the still-pending second change, keeping its ID and filename aligned.
+            (combined / second.name).unlink()
+            (combined / "PDDR-0003-second.md").write_text(
+                second.read_text(encoding="utf-8").replace("PDDR-0002", "PDDR-0003"),
+                encoding="utf-8",
+            )
+            self.assertEqual(pddr_cli.command_validate(args), 0)
+
 
 
 if __name__ == "__main__":
